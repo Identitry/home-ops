@@ -1,0 +1,5 @@
+talos/bootstrap/*
+!talos/bootstrap/readme.md
+talos
+old
+*.old
