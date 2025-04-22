@@ -1,5 +1,58 @@
-talos/bootstrap/*
-!talos/bootstrap/readme.md
+# Hide Talos for now, this will be automated later.
 talos
+
+# Hide .old files and old directories.
 old
 *.old
+
+# macOS system files
+.DS_Store
+
+# Kubernetes config & temporary files
+*.backup
+*.tmp
+*.swp
+*.swm
+*.swo
+
+# Flux/SOPS secrets (you'll store encrypted versions only)
+*.secret.yaml
+*.agekey
+sops.age
+
+# Kube config or credentials
+kubeconfig*
+*.kubeconfig
+
+# Helm artifacts
+charts/
+Chart.lock
+*.tgz
+
+# VS Code
+.vscode/
+
+# Logs & local debugging
+*.log
+
+# Terraform (if used later)
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+
+# Python virtualenvs (if scripts involved)
+venv/
+__pycache__/
+
+# NodeJS dev tools (if you use frontend tools)
+node_modules/
+dist/
+
+# Ansible
+*.retry
+
+# Unencryted secrets
+*.unencrypted.yaml
+*.plain.yaml
+*.secret
