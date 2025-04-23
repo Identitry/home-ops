@@ -15,6 +15,9 @@ spec:
       kind: Namespace
       metadata:
         name: cozy-system
+        labels:
+          app: cozy-system
+
     - apiVersion: v1
       kind: ConfigMap
       metadata:
