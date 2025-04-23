@@ -38,7 +38,7 @@ spec:
       kind: Kustomization
       metadata:
         name: cozystack
-        namespace: flux-system
+        namespace: cozy-fluxcd
       spec:
         interval: 10m
         path: .
