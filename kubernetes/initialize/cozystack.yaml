@@ -12,6 +12,10 @@ metadata:
 spec:
   resources:
     - apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: cozy-system
+    - apiVersion: v1
       kind: ConfigMap
       metadata:
         name: cozystack
