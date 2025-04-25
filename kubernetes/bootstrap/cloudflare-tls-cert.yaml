@@ -1,13 +1,13 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: cloudflare-tls-cert
+  name: wildcard-le-tls-cert
   namespace: tenant-root
 spec:
   dnsNames:
     - "*.${DOMAIN}"
     - "${DOMAIN}"
-  secretName: cloudflare-tls
+  secretName: wildcard-cert
   issuerRef:
-    name: letsencrypt-dns01
+    name: letsencrypt-prod
     kind: ClusterIssuer
