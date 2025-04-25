@@ -12,8 +12,9 @@ spec:
   sourceRef:
     kind: GitRepository
     name: cozy-fluxcd
-  path: ./kubernetes/bootstrap
+    path: ./kubernetes/bootstrap
   prune: true
-  substituteFrom:
-    - kind: Secret
-      name: flux-secret
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: flux-secret
