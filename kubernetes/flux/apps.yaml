@@ -16,3 +16,7 @@ spec:
   dependsOn:
     - name: bootstrap
     - name: sources
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age

@@ -14,3 +14,7 @@ spec:
     name: cozy-fluxcd
   path: ./kubernetes/bootstrap
   prune: true
+  decryption:
+    provider: sops
+    secretRef:
+      name: sops-age
