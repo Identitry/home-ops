@@ -16,7 +16,7 @@ spec:
   dependsOn:
     - name: bootstrap
     - name: sources
-  decryption:
-    provider: sops
-    secretRef:
-      name: sops-age
+  postBuild:
+    substituteFrom:
+      - kind: Secret
+        name: flux-secret
