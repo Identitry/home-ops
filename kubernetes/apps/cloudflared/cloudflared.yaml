@@ -13,6 +13,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: cloudflared
+  decryption: true
   dependsOn:
     - apiVersion: v1
       kind: Secret
