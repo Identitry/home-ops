@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: cloudflare-tls-cert
+  namespace: tenant-root
+spec:
+  dnsNames:
+    - "*.${DOMAIN}"
+    - "${DOMAIN}"
+  secretName: cloudflare-tls
+  issuerRef:
+    name: letsencrypt-dns01
+    kind: ClusterIssuer

@@ -1,8 +1,11 @@
-# Hide Talos for now, this will be automated later.
-talos
+# Hide talos folder for now.
+/talos
+
+#Hide bootstrap folder for now.
+/bootstrap
 
 # Hide .old files and old directories.
-old
+/old
 *.old
 
 # macOS system files
