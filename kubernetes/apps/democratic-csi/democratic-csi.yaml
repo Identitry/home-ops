@@ -1,0 +1,121 @@
+# Namespace for Democratic CSI.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: democratic-csi
+  labels:
+    pod-security.kubernetes.io/enforce: privileged
+---
+# Democratic CSI Helm Repository.
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: democratic-csi
+  namespace: cozy-fluxcd
+spec:
+  interval: 1h
+  url: https://democratic-csi.github.io/charts/
+---
+# TrueNAS API Key secret, used by Democratic-CSI for authenticating with TrueNAS.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: truenas-api-key
+  namespace: democratic-csi
+type: Opaque
+stringData:
+  api-key: ${FILESERVER_API_KEY}
+---
+# Democratic CSI HelmRelease for NFS.
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: democratic-csi-nfs
+  namespace: democratic-csi
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: democratic-csi
+      version: "0.15.0"
+      sourceRef:
+        kind: HelmRepository
+        name: democratic-csi
+        namespace: cozy-fluxcd
+  values:
+    podAnnotations:
+      reloader.stakater.com/match: "truenas-api-key"
+    csiDriver:
+      name: "org.democratic-csi.nfs"
+      fsGroupPolicy: File
+      attachRequired: false
+      controller:
+        driver:
+          image:
+            registry: docker.io/democraticcsi/democratic-csi
+            tag: v1.8.6
+        externalHealthMonitorController:
+          enabled: true
+          image:
+            registry: registry.k8s.io/sig-storage/csi-external-health-monitor-controller
+            tag: v0.14.0
+      node:
+        driver:
+          image:
+            registry: docker.io/democraticcsi/democratic-csi
+            tag: v1.8.6
+          driverRegistrar:
+            image:
+              tag: v2.9.0
+    csiProxy:
+      image:
+        registry: docker.io/democraticcsi/csi-grpc-proxy
+        tag: v0.5.6
+    storageClasses:
+      - name: nfs
+        defaultClass: false
+        reclaimPolicy: Delete
+        volumeBindingMode: Immediate
+        allowVolumeExpansion: true
+        parameters:
+          fsType: nfs
+          detachedVolumesFromSnapshots: "false"
+        mountOptions:
+          - noatime
+          - nfsvers=4
+        secrets:
+          provisioner-secret:
+          controller-publish-secret:
+          node-stage-secret:
+          node-publish-secret:
+          controller-expand-secret:
+    volumeSnapshotClasses:
+      - name: nfs
+        parameters:
+          detachedSnapshots: "true"
+    driver:
+      config:
+        driver: freenas-api-nfs
+        instance_id: "truenas-nfs"
+        httpConnection:
+          protocol: ${FILESERVER_API_ENDPOINT_PROTOCOL}
+          host: ${FILESERVER_API_HOST}
+          port: ${FILESERVER_API_ENDPOINT_PORT}
+          apiKeySecret:
+            name: truenas-api-key
+            key: api-key
+          allowInsecure: false
+        zfs:
+          datasetParentName: ${FILESERVER_NFS_DATA_PARENTNAME}
+          detachedSnapshotsDatasetParentName: ${FILESERVER_NFS_SNAPSHOTS_PARENTNAME}
+          zvolBlocksize: 16K
+          datasetEnableQuotas: true
+          datasetEnableReservation: false
+          datasetPermissionsMode: "0777"
+          datasetPermissionsUser: 0
+          datasetPermissionsGroup: 0
+        nfs:
+          shareHost: ${FILESERVER_NFS_HOST}
+          shareAlldirs: true
+          shareMaprootUser: root
+          shareMaprootGroup: root

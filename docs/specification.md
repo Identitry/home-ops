@@ -80,7 +80,7 @@ Operating System: Talos 9.5 opionated with CozyStack 0.29 (2025-04-03)
 
 2. truenas-backup
 
-- Operating System: TrueNAS Scale ElectricEel-24.10.2
+- Operating System: TrueNAS Scale Fangtooth-24.04.0
 - Hostname: truenas-backup
 - IP: 192.168.1.201 (at remote location, connected using Tailscale)
 - Model: homebuild (ASRock Z87E-ITX motherboard)
@@ -117,7 +117,7 @@ Nice hyper-converged stack on top of Talos!
 - Reloader
 - and more...
 
-## GitOps - Flux CD
+## GitOps - Flux CD ✅s
 
 Will use SOPS/age for encrypting secrets.
 Public Github site that describes the cluster.
@@ -136,8 +136,8 @@ Settings to complete the cluster setup.
 - Linstor storage classes (local, replicated) ✅
 - MetalLB IP Pool (192.168.222.101-192.168.222.130) ✅
 - MetalLB L2Advertisement for the pool above ✅
-- Cert-Manager cluster-issuer for Cloudflare ☑️
-- Cert-Manager wildcard certificate for myk8s.se ☑️
+- Cert-Manager cluster-issuer for Cloudflare ✅
+- Cert-Manager wildcard certificate for myk8s.se ✅
 
 ### Apps
 
@@ -148,8 +148,8 @@ Settings to complete the cluster setup.
 
 #### Web Publishing
 
-- External-DNS - Operator, Manage DNS names against CloudFlare ☑️
-- Cloudflared ☑️
+- External-DNS - Operator, Manage DNS names against CloudFlare ✅
+- Cloudflared ✅
 - Cloudflare DDNS
 
 #### Management
@@ -215,7 +215,7 @@ Settings to complete the cluster setup.
 
 These apps are prepared, works and runs on current RKE2 cluster.
 
-- Plex (currently on truenas-stor) ☑️
+- Jellyfin
 - Sonarr (currently on truenas-stor) ☑️
 - Radarr (currently on truenas-stor) ☑️
 - Readarr (currently on truenas-stor) ☑️
@@ -242,7 +242,7 @@ These apps are prepared, works and runs on current RKE2 cluster.
 - Invidious
 - Brave
 - Coraza Web Application firewall (Ingress Middleware?)
-- Jellyfin (with GPU Passthrough)
+- Jellyfin (with GPU Passthrough - https://github.com/Pumba98/flux2-gitops/blob/main/apps/jellyfin/hr-jellyfin.yaml)
 - Vaultwarden
 - Guacamole
 - CompreFace/DeepStack
