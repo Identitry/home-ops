@@ -12,7 +12,7 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
   name: external-dns
-  namespace: flux-system
+  namespace: cozy-fluxcd
 spec:
   interval: 1h
   url: https://kubernetes-sigs.github.io/external-dns
@@ -42,7 +42,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: external-dns
-        namespace: flux-system
+        namespace: cozy-fluxcd
       interval: 1m
   values:
     serviceAccount:
