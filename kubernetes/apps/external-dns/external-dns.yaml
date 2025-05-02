@@ -1,0 +1,74 @@
+# Namespace for External DNS
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-dns
+  labels:
+    app.kubernetes.io/name: external-dns
+    app.kubernetes.io/instance: external-dns
+---
+# HelmRepository for ExternalDNS.
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: external-dns
+  namespace: flux-system
+spec:
+  interval: 1h
+  url: https://kubernetes-sigs.github.io/external-dns
+---
+# Cloudflare API Token secret, used by External DNS to authenticate with Cloudflare.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cloudflare-api-token
+  namespace: external-dns
+type: Opaque
+stringData:
+  api-token: ${CLOUDFLARE_API_TOKEN}
+---
+# Helmrelease for External DNS.
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: external-dns
+  namespace: external-dns
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: external-dns
+      version: "1.16.1" # Check latest version at https://artifacthub.io/packages/helm/external-dns/external-dns
+      sourceRef:
+        kind: HelmRepository
+        name: external-dns
+        namespace: flux-system
+      interval: 1m
+  values:
+    serviceAccount:
+      create: true
+      name: external-dns
+    replicaCount: 1
+    podAnnotations:
+      reloader.stakater.com/match: external-dns-cloudflare-api-token
+    image:
+      repository: registry.k8s.io/external-dns/external-dns
+      tag: v0.16.1
+      pullPolicy: IfNotPresent
+
+    provider: cloudflare # Supports AWS, Cloudflare, Google, DigitalOcean, etc.
+    policy: sync # Keep DNS records in sync with K8s Ingress
+    txtOwnerId: "k8s-external-dns"
+    sources:
+      - ingress
+      - service
+    domainFilters:
+      - ${DOMAIN} # Restrict changes to your domain
+    extraArgs:
+      - --cloudflare-proxied # If you use Cloudflare proxying (orange cloud)
+    env:
+      - name: CF_API_TOKEN
+        valueFrom:
+          secretKeyRef:
+            name: cloudflare-api-token
+            key: api-token

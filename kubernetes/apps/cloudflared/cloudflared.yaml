@@ -1,0 +1,52 @@
+# Cloudflared namespace.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cloudflared
+  labels:
+    app.kubernetes.io/name: cloudflared
+---
+# Cloudflared Helm repository.
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: cloudflare
+  namespace: cozy-fluxcd
+spec:
+  url: https://cloudflare.github.io/helm-charts
+  interval: 1h
+---
+# Cloudflared secret.
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cloudflared-cloudflare-tunnel-remote
+  namespace: cloudflared
+type: Opaque
+stringData:
+  tunnelToken: ${CLOUDFLARE_TUNNEL_TOKEN}
+---
+# Cloudflared helm release.
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cloudflared
+  namespace: cloudflared
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: cloudflare-tunnel-remote
+      version: "0.1.2"
+      sourceRef:
+        kind: HelmRepository
+        name: cloudflare
+        namespace: cozy-fluxcd
+      interval: 10m
+  values:
+    podAnnotations:
+      reloader.stakater.com/match: cloudflared-cloudflare-tunnel-remote
+    replicaCount: 2
+    image:
+      tag: "2025.4.0"
+      pullPolicy: IfNotPresent
