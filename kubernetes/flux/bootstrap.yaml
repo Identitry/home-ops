@@ -18,6 +18,8 @@ spec:
     substituteFrom:
       - kind: Secret
         name: flux-secret
+      - kind: Secret
+        name: universal-auth-credentials
   healthCheckExprs:
     - apiVersion: external-secrets.io/v1
       kind: ClusterSecretStore
