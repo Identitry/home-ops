@@ -15,6 +15,7 @@ spec:
   prune: true
   dependsOn:
     - name: bootstrap
+    - name: external-secrets-stores
   postBuild:
     substituteFrom:
       - kind: Secret
