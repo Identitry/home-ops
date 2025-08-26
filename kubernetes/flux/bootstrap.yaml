@@ -18,8 +18,10 @@ spec:
     substituteFrom:
       - kind: Secret
         name: flux-secret
+        namespace: cozy-fluxcd
       - kind: Secret
         name: universal-auth-credentials
+        namespace: external-secrets
   healthCheckExprs:
     - apiVersion: external-secrets.io/v1
       kind: ClusterSecretStore
