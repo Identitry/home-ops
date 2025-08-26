@@ -29,7 +29,7 @@ spec:
   retryInterval: 2m
   sourceRef:
     kind: GitRepository
-    name: flux-system
-    namespace: flux-system
+    name: cozy-fluxcd
+    namespace: cozy-fluxcd
   targetNamespace: *namespace
   timeout: 15m
