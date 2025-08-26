@@ -11,7 +11,7 @@ spec:
   prune: true
   wait: true
   # point to the ESO install folder
-  path: ./kubernetes/bootstrap/external-secrets/app
+  path: ./kubernetes/bootstrap/external-secrets
   sourceRef:
     kind: GitRepository
     name: cozy-fluxcd
@@ -34,7 +34,7 @@ spec:
   prune: true
   wait: true
   # point to the stores folder
-  path: ./kubernetes/bootstrap/external-secrets/stores
+  path: ./kubernetes/bootstrap/external-secrets-stores
   sourceRef:
     kind: GitRepository
     name: cozy-fluxcd
