@@ -1,0 +1,74 @@
+---
+# Grafana dashboard for Cert-Manager.
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: cert-manager
+  namespace: tenant-root
+spec:
+  folder: cert-manager
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  url: "https://grafana.com/api/dashboards/20842/revisions/3/download"
+---
+# Metrics scraping for cert-manager components.
+# cert-manager controller
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMServiceScrape
+metadata:
+  name: cert-manager
+  namespace: cozy-cert-manager
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: cert-manager
+      app.kubernetes.io/name: cert-manager
+      app.kubernetes.io/component: controller
+  namespaceSelector:
+    matchNames: ["cozy-cert-manager"]
+  endpoints:
+    - targetPort: 9402
+      path: /metrics
+      interval: 30s
+      honorLabels: true
+---
+# cainjector
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMServiceScrape
+metadata:
+  name: cert-manager-cainjector
+  namespace: cozy-cert-manager
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: cert-manager
+      app.kubernetes.io/name: cainjector
+      app.kubernetes.io/component: cainjector
+  namespaceSelector:
+    matchNames: ["cozy-cert-manager"]
+  endpoints:
+    - targetPort: 9402
+      path: /metrics
+      interval: 30s
+      honorLabels: true
+---
+# webhook
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMServiceScrape
+metadata:
+  name: cert-manager-webhook
+  namespace: cozy-cert-manager
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: cert-manager
+      app.kubernetes.io/name: webhook
+      app.kubernetes.io/component: webhook
+  namespaceSelector:
+    matchNames: ["cozy-cert-manager"]
+  endpoints:
+    - targetPort: 9402
+      path: /metrics
+      interval: 30s
+      honorLabels: true

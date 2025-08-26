@@ -48,5 +48,5 @@ spec:
       reloader.stakater.com/match: cloudflared-cloudflare-tunnel-remote
     replicaCount: 2
     image:
-      tag: "2025.4.0"
+      tag: "2025.6.1"
       pullPolicy: IfNotPresent

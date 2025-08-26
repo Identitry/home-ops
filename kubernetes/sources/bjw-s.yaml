@@ -1,9 +1,0 @@
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: bjw-s
-  namespace: cozy-fluxcd
-spec:
-  interval: 1h
-  type: oci
-  url: oci://ghcr.io/bjw-s/helm

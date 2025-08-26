@@ -31,7 +31,7 @@ Nodes will get their IP from DHCP, flagged as static in router.
 ### Kubernetes Nodes (Talos/CozyStack)
 
 Three schedulable control plane nodes.
-Operating System: Talos 9.5 opionated with CozyStack 0.29 (2025-04-03)
+Operating System: Talos 1.10.3 opionated with CozyStack 0.31.1 (2025-05-30)
 
 1. k8s01
 
@@ -65,7 +65,7 @@ Operating System: Talos 9.5 opionated with CozyStack 0.29 (2025-04-03)
 
 ### External storage, TrueNAS Scale:
 
-1. truenas-stor
+1. truenas-stor (truenas-stor.softconstruction.se)
 
 - Operating System: TrueNAS Scale Dragonfish-24.04.2 (Will be updated when apps are moved to cluster)
 - Hostname: truenas-stor
@@ -78,11 +78,11 @@ Operating System: Talos 9.5 opionated with CozyStack 0.29 (2025-04-03)
   - 4x12TB 7200rpm HGST/WD DC HC520 in 2 x MIRROR | 2 wide ZFS configuration
   - 1 256GB NVME (Gen3) SLOG drive
 
-2. truenas-backup
+2. backup (backup.myk8s.se)
 
 - Operating System: TrueNAS Scale Fangtooth-24.04.0
 - Hostname: truenas-backup
-- IP: 192.168.1.201 (at remote location, connected using Tailscale)
+- IP: 192.168.1.126 (DHCP) (at remote location, connected using Tailscale)
 - Model: homebuild (ASRock Z87E-ITX motherboard)
 - CPU: i5-4570S 2.9Ghz (4:th gen, 4 cores, 4 threads, Q1 2014)
 - RAM: 16GB (1333 Mhz)
@@ -91,7 +91,7 @@ Operating System: Talos 9.5 opionated with CozyStack 0.29 (2025-04-03)
 
 ## Kubernetes
 
-### Cozy Stack ✅
+### CozyStack ✅
 
 Nice hyper-converged stack on top of Talos!
 
@@ -110,11 +110,12 @@ Nice hyper-converged stack on top of Talos!
 - Victoria Metrics
 - Grafana - Operator (Integreatly) Data visualization
 - Goldpinger - Debugging tool for Kubernetes
-- External Secrets - Operator
+- External Secrets - Operator - Not updated, will likely be removed!!!
+- External DNS - Not updated, will likely be removed!!!
 - Nginx proxy
 - Kamaji - Operator (ControlPlane)
 - Vertical Pod Autoscaler - Operator
-- Reloader
+- Velero - Backups to Minio on Stor
 - and more...
 
 ## GitOps - Flux CD ✅s
@@ -128,7 +129,7 @@ Public Github site that describes the cluster.
   - Renovate - Cluster dependency management (on GitHub)
   - Reloader - Rolling upgrades on ConfigMap/Secret changes (in cluster)
 
-### Initial cluster settings
+### Initial cluster settings - Bootstrap
 
 Settings to complete the cluster setup.
 
@@ -138,12 +139,13 @@ Settings to complete the cluster setup.
 - MetalLB L2Advertisement for the pool above ✅
 - Cert-Manager cluster-issuer for Cloudflare ✅
 - Cert-Manager wildcard certificate for myk8s.se ✅
+- External Secrets Operator against Infisical SAAS.
 
 ### Apps
 
 #### Storage/Networking
 
-- Democratic CSI - For being able to schedule storage on truenas-stor (NFS or iSCSI) ❓
+- Democratic CSI - For being able to schedule storage on truenas-stor (NFS or iSCSI) ✅
 - Minio (On truenas-stor) For backups.
 
 #### Web Publishing
@@ -174,11 +176,11 @@ Settings to complete the cluster setup.
 
 #### Backup
 
-- Velero + Velero UI - Backup to S3 buckets, this requires Minio on TrueNAS Stor.
+- Velero UI - UI for Velero that is included in CozyStack
 
 #### Maybe in the future
 
-- InfluxDB (Currently on NAS)
+- InfluxDB (Currently included in HAOS VM)
 
 #### Startpage
 
@@ -216,6 +218,7 @@ Settings to complete the cluster setup.
 These apps are prepared, works and runs on current RKE2 cluster.
 
 - Jellyfin
+- Plex ?
 - Sonarr (currently on truenas-stor) ☑️
 - Radarr (currently on truenas-stor) ☑️
 - Readarr (currently on truenas-stor) ☑️
