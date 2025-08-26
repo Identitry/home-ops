@@ -3,33 +3,46 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app external-secrets
-  namespace: &namespace external-secrets
+  name: external-secrets
+  namespace: cozy-fluxcd
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
+  interval: 10m
+  timeout: 15m
+  prune: true
+  wait: true
+  # point to the ESO install folder
+  path: ./kubernetes/bootstrap/external-secrets/app
+  sourceRef:
+    kind: GitRepository
+    name: cozy-fluxcd
+  targetNamespace: external-secrets
   healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: *app
-      namespace: *namespace
-    - apiVersion: v1
-      kind: Secret
-      name: universal-auth-credentials
-      namespace: *namespace
+    - apiVersion: apps/v1
+      kind: Deployment
+      name: external-secrets
+      namespace: external-secrets
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: external-secrets-stores
+  namespace: cozy-fluxcd
+spec:
+  interval: 10m
+  timeout: 10m
+  prune: true
+  wait: true
+  # point to the stores folder
+  path: ./kubernetes/bootstrap/external-secrets/stores
+  sourceRef:
+    kind: GitRepository
+    name: cozy-fluxcd
+  dependsOn:
+    - name: external-secrets
+  # optional: add a readiness check for your store(s)
   healthCheckExprs:
     - apiVersion: external-secrets.io/v1
       kind: ClusterSecretStore
       failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')
       current: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'True')
-  interval: 1h
-  path: ./kubernetes/bootstrap/external-secrets/app
-  prune: true
-  retryInterval: 2m
-  sourceRef:
-    kind: GitRepository
-    name: cozy-fluxcd
-    namespace: cozy-fluxcd
-  targetNamespace: *namespace
-  timeout: 15m
