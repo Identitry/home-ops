@@ -1,0 +1,83 @@
+# ResourceSet for deploying cozy-nfs-driver.
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/fluxcd.controlplane.io/resourceset_v1.json
+apiVersion: fluxcd.controlplane.io/v1
+kind: ResourceSet
+metadata:
+  name: cozy-nfs-driver
+  namespace: cozy-fluxcd
+  annotations:
+    fluxcd.controlplane.io/reconcile: "enabled"
+    fluxcd.controlplane.io/reconcileEvery: "30m"
+    fluxcd.controlplane.io/reconcileTimeout: "5m"
+spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: cozy-nfs-driver
+  resources:
+    # cozy-nfs-driver namespace.
+    - apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: cozy-nfs-driver
+        labels:
+          app.kubernetes.io/name: cozy-nfs-driver
+
+    # cozy-nfs-driver helm release.
+    - apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      metadata:
+        labels:
+          cozystack.io/repository: system
+          cozystack.io/system-app: "true"
+        name: cozy-nfs-driver
+        namespace: cozy-nfs-driver
+      spec:
+        chart:
+          spec:
+            chart: cozy-nfs-driver
+            reconcileStrategy: Revision
+            sourceRef:
+              kind: HelmRepository
+              name: cozystack-system
+              namespace: cozy-system
+            version: ">= 0.0.0-0"
+        dependsOn:
+          - name: cilium
+            namespace: cozy-cilium
+          - name: kubeovn
+            namespace: cozy-kubeovn
+        targetNamespace: cozy-nfs-driver
+        install:
+          crds: CreateReplace
+          remediation:
+            retries: -1
+        interval: 5m
+        releaseName: nfs-driver
+        suspend: false
+        upgrade:
+          crds: CreateReplace
+          remediation:
+            retries: -1
+
+    # cozy-nfs-driver ExternalSecret.
+    - apiVersion: external-secrets.io/v1
+      kind: ExternalSecret
+      metadata:
+        name: es-cozy-nfs-driver-nfs-server
+        namespace: cozy-nfs-driver
+      spec:
+        refreshInterval: 1h
+        secretStoreRef:
+          kind: ClusterSecretStore
+          name: infisical
+        target:
+          name: cozy-nfs-driver-nfs-server
+          creationPolicy: Owner
+        data:
+          - secretKey: HOST_IP
+            remoteRef:
+              key: /FILESERVER/HOST_IP
+          - secretKey: SHARE_MEDIA_NFS_PATH
+            remoteRef:
+              key: /FILESERVER/SHARE_MEDIA_NFS_PATH
