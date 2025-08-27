@@ -186,28 +186,34 @@ spec:
                 shareAlldirs: true
                 shareMaprootUser: root
                 shareMaprootGroup: root
-          valuesFrom:
-            - kind: Secret
-              name: truenas-config
-              valuesKey: FILESERVER_API_ENDPOINT_PROTOCOL
-              targetPath: driver.config.httpConnection.protocol
-            - kind: Secret
-              name: truenas-config
-              valuesKey: FILESERVER_API_HOST
-              targetPath: driver.config.httpConnection.host
-            - kind: Secret
-              name: truenas-config
-              valuesKey: FILESERVER_API_ENDPOINT_PORT
-              targetPath: driver.config.httpConnection.port
-            - kind: Secret
-              name: truenas-config
-              valuesKey: FILESERVER_NFS_DATA_PARENTNAME
-              targetPath: driver.config.zfs.datasetParentName
-            - kind: Secret
-              name: truenas-config
-              valuesKey: FILESERVER_NFS_SNAPSHOTS_PARENTNAME
-              targetPath: driver.config.zfs.detachedSnapshotsDatasetParentName
-            - kind: Secret
-              name: truenas-config
-              valuesKey: FILESERVER_NFS_HOST
-              targetPath: driver.config.nfs.shareHost
+        valuesFrom:
+          - kind: Secret
+            name: truenas-config
+            valuesKey: FILESERVER_API_ENDPOINT_PROTOCOL
+            targetPath: driver.config.httpConnection.protocol
+            optional: false
+          - kind: Secret
+            name: truenas-config
+            valuesKey: FILESERVER_API_HOST
+            targetPath: driver.config.httpConnection.host
+            optional: false
+          - kind: Secret
+            name: truenas-config
+            valuesKey: FILESERVER_API_ENDPOINT_PORT
+            targetPath: driver.config.httpConnection.port
+            optional: false
+          - kind: Secret
+            name: truenas-config
+            valuesKey: FILESERVER_NFS_DATA_PARENTNAME
+            targetPath: driver.config.zfs.datasetParentName
+            optional: false
+          - kind: Secret
+            name: truenas-config
+            valuesKey: FILESERVER_NFS_SNAPSHOTS_PARENTNAME
+            targetPath: driver.config.zfs.detachedSnapshotsDatasetParentName
+            optional: false
+          - kind: Secret
+            name: truenas-config
+            valuesKey: FILESERVER_NFS_HOST
+            targetPath: driver.config.nfs.shareHost
+            optional: false
