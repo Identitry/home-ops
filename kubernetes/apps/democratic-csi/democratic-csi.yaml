@@ -135,10 +135,13 @@ spec:
                   - --csi-mode=controller
                   - --server-socket=/csi-data/csi.sock
               externalHealthMonitorController:
-                enabled: true
-                image:
-                  registry: registry.k8s.io/sig-storage/csi-external-health-monitor-controller
-                  tag: v0.14.0
+                enabled: false
+              externalAttacher:
+                enabled: false
+              externalResizer:
+                enabled: false
+              externalSnapshotter:
+                enabled: false
             node:
               driver:
                 image:
@@ -167,10 +170,6 @@ spec:
                 node-stage-secret:
                 node-publish-secret:
                 controller-expand-secret:
-          volumeSnapshotClasses:
-            - name: nfs
-              parameters:
-                detachedSnapshots: "true"
           driver:
             config:
               driver: freenas-api-nfs
