@@ -175,8 +175,6 @@ spec:
                   name: truenas-api-key
                   key: api-key
                 allowInsecure: true
-                protocol: http
-                port: 80
               zfs:
                 zvolBlocksize: 16K
                 datasetEnableQuotas: false
