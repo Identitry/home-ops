@@ -10,12 +10,13 @@ spec:
   timeout: 15m
   prune: true
   wait: true
-  # point to the ESO install folder
+  # Point to the components folder
   path: ./kubernetes/components
   sourceRef:
     kind: GitRepository
     name: cozy-fluxcd
   healthChecks:
+    # Health check for External Secrets Operator.
     - apiVersion: apps/v1
       kind: Deployment
       name: external-secrets

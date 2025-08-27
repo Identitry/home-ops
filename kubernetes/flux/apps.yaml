@@ -1,4 +1,6 @@
-# Kustomization for Readarr.
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+# Kustomization for Apps.
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
@@ -19,3 +21,18 @@ spec:
     substituteFrom:
       - kind: Secret
         name: flux-secret
+  wait: true
+  healthChecks:
+    # Healthchecks for Cloudflared app.
+    - apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      name: cloudflared
+      namespace: cloudflared
+    - apiVersion: v1
+      kind: Secret
+      name: cloudflared-cloudflare-tunnel-remote
+      namespace: cloudflared
+    - apiVersion: external-secrets.io/v1
+      kind: ExternalSecret
+      name: es-cloudflared-cloudflare-tunnel-remote
+      namespace: cloudflared
