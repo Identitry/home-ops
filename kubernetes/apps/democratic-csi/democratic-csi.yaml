@@ -175,6 +175,8 @@ spec:
                   name: truenas-api-key
                   key: api-key
                 allowInsecure: true
+                protocol: http
+                port: 80
               zfs:
                 zvolBlocksize: 16K
                 datasetEnableQuotas: false
@@ -187,21 +189,21 @@ spec:
                 shareMaprootUser: root
                 shareMaprootGroup: root
         valuesFrom:
-          - kind: Secret
-            name: truenas-config
-            valuesKey: FILESERVER_API_ENDPOINT_PROTOCOL
-            targetPath: driver.config.httpConnection.protocol
-            optional: false
+          #- kind: Secret
+          #  name: truenas-config
+          #  valuesKey: FILESERVER_API_ENDPOINT_PROTOCOL
+          #  targetPath: driver.config.httpConnection.protocol
+          #  optional: false
           - kind: Secret
             name: truenas-config
             valuesKey: FILESERVER_NFS_HOST #FILESERVER_API_HOST
             targetPath: driver.config.httpConnection.host
             optional: false
-          - kind: Secret
-            name: truenas-config
-            valuesKey: FILESERVER_API_ENDPOINT_PORT
-            targetPath: driver.config.httpConnection.port
-            optional: false
+          #- kind: Secret
+          #  name: truenas-config
+          # valuesKey: FILESERVER_API_ENDPOINT_PORT
+          #  targetPath: driver.config.httpConnection.port
+          # optional: false
           - kind: Secret
             name: truenas-config
             valuesKey: FILESERVER_NFS_DATA_PARENTNAME
