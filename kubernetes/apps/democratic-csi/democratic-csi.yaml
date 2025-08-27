@@ -177,7 +177,7 @@ spec:
                 allowInsecure: false
               zfs:
                 zvolBlocksize: 16K
-                datasetEnableQuotas: true
+                datasetEnableQuotas: false
                 datasetEnableReservation: false
                 datasetPermissionsMode: "0777"
                 datasetPermissionsUser: 0
