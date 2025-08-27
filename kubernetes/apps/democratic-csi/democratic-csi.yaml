@@ -125,7 +125,7 @@ spec:
             controller:
               driver:
                 image:
-                  registry: docker.io/democraticcsi/democratic-csi
+                  repository: docker.io/democraticcsi/democratic-csi
                   tag: v1.8.6
               externalHealthMonitorController:
                 enabled: true
@@ -135,14 +135,14 @@ spec:
             node:
               driver:
                 image:
-                  registry: docker.io/democraticcsi/democratic-csi
+                  repository: docker.io/democraticcsi/democratic-csi
                   tag: v1.8.6
                 driverRegistrar:
                   image:
                     tag: v2.9.0
           csiProxy:
             image:
-              registry: docker.io/democraticcsi/csi-grpc-proxy
+              repository: docker.io/democraticcsi/csi-grpc-proxy
               tag: v0.5.6
           storageClasses:
             - name: nfs
@@ -194,7 +194,7 @@ spec:
             optional: false
           - kind: Secret
             name: truenas-config
-            valuesKey: FILESERVER_NFS_HOST #FILESERVER_API_HOST
+            valuesKey: FILESERVER_NFS_HOST
             targetPath: driver.config.httpConnection.host
             optional: false
           - kind: Secret
