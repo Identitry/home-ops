@@ -126,9 +126,14 @@ spec:
               driver:
                 image:
                   repository: docker.io/democraticcsi/democratic-csi
-                  tag: v1.8.6
-                args: # add/merge with existing args
+                  tag: v1.9.0
+                args:
+                  - --csi-version=1.5.0
+                  - --csi-name=org.democratic-csi.nfs
+                  - --driver-config-file=/config/driver-config-file.yaml
                   - --log-level=debug
+                  - --csi-mode=controller
+                  - --server-socket=/csi-data/csi.sock
               externalHealthMonitorController:
                 enabled: true
                 image:
@@ -138,14 +143,12 @@ spec:
               driver:
                 image:
                   repository: docker.io/democraticcsi/democratic-csi
-                  tag: v1.8.6
+                  tag: v1.9.0
                 driverRegistrar:
                   image:
                     tag: v2.9.0
           csiProxy:
-            image:
-              repository: docker.io/democraticcsi/csi-grpc-proxy
-              tag: v0.5.6
+            enabled: false
           storageClasses:
             - name: nfs
               defaultClass: false
