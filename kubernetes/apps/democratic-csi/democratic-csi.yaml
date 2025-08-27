@@ -174,7 +174,7 @@ spec:
                 apiKeySecret:
                   name: truenas-api-key
                   key: api-key
-                allowInsecure: false
+                allowInsecure: true
               zfs:
                 zvolBlocksize: 16K
                 datasetEnableQuotas: false
@@ -194,7 +194,7 @@ spec:
             optional: false
           - kind: Secret
             name: truenas-config
-            valuesKey: FILESERVER_API_HOST
+            valuesKey: FILESERVER_NFS_HOST #FILESERVER_API_HOST
             targetPath: driver.config.httpConnection.host
             optional: false
           - kind: Secret
