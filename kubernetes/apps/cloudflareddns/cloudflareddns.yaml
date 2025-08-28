@@ -1,0 +1,78 @@
+---
+# Namespace for Cloudflare DDNS
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cloudflare-ddns
+  labels:
+    app.kubernetes.io/name: cloudflare-ddns
+    app.kubernetes.io/instance: cloudflare-ddns
+---
+# ExternalSecret to fetch the Cloudflare API token from external secret store
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: es-cloudflare-api-token
+  namespace: cloudflare-ddns
+  labels:
+    app.kubernetes.io/name: cloudflare-ddns
+    app.kubernetes.io/instance: cloudflare-ddns
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: infisical
+  target:
+    name: cloudflare-api-token
+  data:
+    - secretKey: apiToken
+      remoteRef:
+        key: /CLOUDFLARE/API_TOKEN
+---
+# HelmRepository for TrueCharts Helm charts
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: truecharts
+  namespace: cozy-fluxcd
+spec:
+  interval: 30m
+  url: https://charts.truecharts.org
+---
+# HelmRelease for Cloudflare DDNS updater
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cloudflare-dyndns
+  namespace: cloudflare-ddns
+  labels:
+    app.kubernetes.io/name: cloudflare-ddns
+    app.kubernetes.io/instance: cloudflare-ddns
+spec:
+  interval: 5m
+  chart:
+    spec:
+      chart: cloudflareddns
+      version: "12.3.3"
+      sourceRef:
+        kind: HelmRepository
+        name: truecharts
+        namespace: cozy-fluxcd
+  valuesFrom:
+    - kind: Secret
+      name: cloudflare-api-token
+      valuesKey: apiToken
+      targetPath: cloudflareddns.api_token
+  values:
+    cloudflareddns:
+      interval: 300 # seconds
+      detect_mode: dig-whoami.cloudflare
+      detect_override: dig-google.com
+      log_level: 3
+      host_zone_record:
+        - domain: ${DOMAIN}
+          zone: ${DOMAIN}
+          record: A
+        - domain: "vpn.${DOMAIN}"
+          zone: ${DOMAIN}
+          record: A

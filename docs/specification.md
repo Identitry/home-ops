@@ -146,6 +146,7 @@ Settings to complete the cluster setup.
 #### Storage/Networking
 
 - Cozy NFS Driver - For being able to connect to storage on truenas-stor. ✅
+- Media NFS PVs (Read write/Read Only) ✅
 - Minio (on truenas-stor) For backups.
 
 #### Web Publishing
