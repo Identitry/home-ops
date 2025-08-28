@@ -74,3 +74,9 @@ spec:
         - domain: "vpn.${DOMAIN}"
           zone: ${DOMAIN}
           record: A
+        - domain: ${DOMAIN_OLD}
+          zone: ${DOMAIN_OLD}
+          record: A
+        - domain: "vpn.${DOMAIN_OLD}"
+          zone: ${DOMAIN_OLD}
+          record: A
