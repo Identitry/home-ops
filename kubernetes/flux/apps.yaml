@@ -36,3 +36,16 @@ spec:
       kind: ExternalSecret
       name: es-cloudflared-cloudflare-tunnel-remote
       namespace: cloudflared
+    # Healthchecks for External-DNS app.
+    - apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      name: external-dns
+      namespace: external-dns
+    - apiVersion: v1
+      kind: Secret
+      name: cloudflare-api-token
+      namespace: external-dns
+    - apiVersion: external-secrets.io/v1
+      kind: ExternalSecret
+      name: es-cloudflare-api-token
+      namespace: external-dns

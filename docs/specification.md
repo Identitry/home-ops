@@ -95,27 +95,27 @@ Operating System: Talos 1.10.3 opionated with CozyStack 0.31.1 (2025-05-30)
 
 Nice hyper-converged stack on top of Talos!
 
-- Flux CD - Operator (ControlPlane)
-- Cilium, Kube-OVN - Network CNI
-- Linstor, DRDB - Operator (Piraeus), Storage
-- Cert-Manager - Operator, Let´s Encrypt/Cloudflare
-- MetalB - Load Balancer
-- Kubevirt - Operator, Virtual machines in kubernetes
-- PostgreSQL - Operator (CNPG), Database
-- Maria DB - Operator, Database
-- Clickhouse - Operator (Altinity), Database
-- Redis - Operator (Spotahome), Key-Value database
-- Kafka - Operator (Strimzi), Distributed event streaming platform
-- RabbitMQ - Operator, Messaging and streaming broker
-- Victoria Metrics
-- Grafana - Operator (Integreatly) Data visualization
-- Goldpinger - Debugging tool for Kubernetes
+- Flux CD - Operator (ControlPlane) ✅
+- Cilium, Kube-OVN - Network CNI ✅
+- Linstor, DRDB - Operator (Piraeus), Storage ✅
+- Cert-Manager - Operator, Let´s Encrypt/Cloudflare ✅
+- MetalB - Load Balancer ✅
+- Kubevirt - Operator, Virtual machines in kubernetes ✅
+- PostgreSQL - Operator (CNPG), Database ✅
+- Maria DB - Operator, Database ✅
+- Clickhouse - Operator (Altinity), Database ✅
+- Redis - Operator (Spotahome), Key-Value database ✅
+- Kafka - Operator (Strimzi), Distributed event streaming platform ✅
+- RabbitMQ - Operator, Messaging and streaming broker ✅
+- Victoria Metrics ✅
+- Grafana - Operator (Integreatly) Data visualization ✅
+- Goldpinger - Debugging tool for Kubernetes ✅
 - External Secrets - Operator - Not updated, will likely be removed!!!
 - External DNS - Not updated, will likely be removed!!!
-- Nginx proxy
-- Kamaji - Operator (ControlPlane)
-- Vertical Pod Autoscaler - Operator
-- Velero - Backups to Minio on Stor
+- Nginx proxy ✅
+- Kamaji - Operator (ControlPlane) ✅
+- Vertical Pod Autoscaler - Operator ✅
+- Velero - Backups to Minio on Stor (Needs to be enabled in cozy config "bundle-enable") ✅
 - and more...
 
 ## GitOps - Flux CD ✅s
@@ -139,22 +139,22 @@ Settings to complete the cluster setup.
 - MetalLB L2Advertisement for the pool above ✅
 - Cert-Manager cluster-issuer for Cloudflare ✅
 - Cert-Manager wildcard certificate for myk8s.se ✅
-- External Secrets Operator against Infisical SAAS.
+- External Secrets Operator against Infisical SAAS. ✅
 
 ### Apps
 
 #### Storage/Networking
 
-- Democratic CSI - For being able to schedule storage on truenas-stor (NFS or iSCSI) ✅
-- Minio (On truenas-stor) For backups.
+- Cozy NFS Driver - For being able to connect to storage on truenas-stor. ✅
+- Minio (on truenas-stor) For backups.
 
 #### Web Publishing
 
 - External-DNS - Operator, Manage DNS names against CloudFlare ✅
 - Cloudflared ✅
-- Cloudflare DDNS
+- Cloudflare DDNS (https://hotio.dev/containers/cloudflareddns)
 
-#### Management
+#### Management/Security
 
 - Goldilocks ?
 - Polaris ?
@@ -166,8 +166,9 @@ Settings to complete the cluster setup.
 
 #### PXE Boot
 
-- Netboot.xyz? ☑️
+- Netboot.xyz?
 - Matchbox?
+- Tinkerbell?
 
 #### GPU-support
 
@@ -176,6 +177,7 @@ Settings to complete the cluster setup.
 
 #### Backup
 
+- Velero configuration (https://cozystack.io/docs/kubernetes/backup-and-recovery/)
 - Velero UI - UI for Velero that is included in CozyStack
 
 #### Maybe in the future
@@ -184,7 +186,7 @@ Settings to complete the cluster setup.
 
 #### Startpage
 
-- Flame (https://charts.gabe565.com/charts/flame/)
+- Homepage (http://gethomepage.dev/)
 
 #### Development Server
 
@@ -241,10 +243,9 @@ These apps are prepared, works and runs on current RKE2 cluster.
 #### Maybe in the future
 
 - Gaseous Server (Old games (ROMS) in the browser)
-- Authentik
-- Invidious
-- Brave
-- Coraza Web Application firewall (Ingress Middleware?)
+- Authentik (Authentication)
+- Invidious (YouTube UI - no adds)
+- Brave (Browser with ad blocking and privacy in mind)
 - Jellyfin (with GPU Passthrough - https://github.com/Pumba98/flux2-gitops/blob/main/apps/jellyfin/hr-jellyfin.yaml)
 - Vaultwarden
 - Guacamole
@@ -258,4 +259,5 @@ These apps are prepared, works and runs on current RKE2 cluster.
 - Unpackerr
 - exportarr - exports metrics for Sonarr, Radarr, Lidarr, Prowlarr, Readarr, Bazarr and Sabnzbd
 - Atuin (shell history server)
+- Gatus - uptime monitoring of services.
 - ...more to come
