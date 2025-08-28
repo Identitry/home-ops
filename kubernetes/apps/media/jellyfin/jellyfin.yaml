@@ -100,6 +100,9 @@ spec:
         className: tenant-root
         annotations:
           cert-manager.io/cluster-issuer: letsencrypt-prod
+          external-dns.alpha.kubernetes.io/target: ${CLOUDFLARE_TUNNEL_TARGET}
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+          external-dns.alpha.kubernetes.io/hostname: "jellyfin.${DOMAIN}"
         hosts:
           - host: jellyfin.${DOMAIN}
             paths:
