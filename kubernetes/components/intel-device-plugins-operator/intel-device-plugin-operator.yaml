@@ -6,6 +6,12 @@ metadata:
   labels:
     app.kubernetes.io/name: intel-device-plugins
     app.kubernetes.io/instance: eintel-device-plugins
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/enforce-version: latest
+    pod-security.kubernetes.io/audit: privileged
+    pod-security.kubernetes.io/audit-version: latest
+    pod-security.kubernetes.io/warn: privileged
+    pod-security.kubernetes.io/warn-version: latest
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/source.toolkit.fluxcd.io/ocirepository_v1.json
 apiVersion: source.toolkit.fluxcd.io/v1
