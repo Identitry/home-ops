@@ -153,7 +153,7 @@ Settings to complete the cluster setup.
 
 - External-DNS - Operator, Manage DNS names against CloudFlare ✅
 - Cloudflared ✅
-- Cloudflare DDNS (https://hotio.dev/containers/cloudflareddns)
+- Cloudflare DDNS (https://github.com/trueforge-org/truecharts/tree/master/charts/stable/cloudflareddns) ✅
 
 #### Management/Security
 
