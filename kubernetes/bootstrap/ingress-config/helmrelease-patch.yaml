@@ -7,7 +7,9 @@ metadata:
   name: ingress-nginx-system # adjust if your release name differs
   namespace: tenant-root # Cozystack’s ingress namespace
 spec:
+  interval: 1m0s
   values:
-    controller:
-      extraArgs:
-        default-ssl-certificate: tenant-root/wildcard-cert
+    ingress-nginx:
+      controller:
+        extraArgs:
+          default-ssl-certificate: tenant-root/wildcard-cert
