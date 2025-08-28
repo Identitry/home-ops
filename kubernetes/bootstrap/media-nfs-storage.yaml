@@ -1,5 +1,5 @@
 ---
-# Namespace for External DNS
+# Namespace for Media.
 apiVersion: v1
 kind: Namespace
 metadata:
