@@ -1,3 +1,14 @@
+---
+# Namespace for External DNS
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-dns
+  labels:
+    app.kubernetes.io/name: external-dns
+    app.kubernetes.io/instance: external-dns
+---
+# Media ReadWriteMany Persistent Volume.
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -22,6 +33,7 @@ spec:
     server: ${FILESERVER_NFS_HOST}
     path: ${FILESERVER_SHARE_MEDIA_NFS_PATH}
 ---
+# Media ReadOnlyMany Persistent Volume.
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -47,6 +59,7 @@ spec:
     server: ${FILESERVER_NFS_HOST}
     path: ${FILESERVER_SHARE_MEDIA_NFS_PATH}
 ---
+# Media ReadWriteMany Persistent Volume Claim.
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -64,6 +77,7 @@ spec:
     matchLabels:
       media-nfs: rwx
 ---
+# Media ReadOnlyMany Persistent Volume Claim.
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
