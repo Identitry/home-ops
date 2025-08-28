@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# HelmRelease patch to set default SSL certificate for ingress-nginx.
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ingress-nginx-system # adjust if your release name differs
+  namespace: tenant-root # Cozystack’s ingress namespace
+spec:
+  values:
+    controller:
+      extraArgs:
+        default-ssl-certificate: tenant-root/wildcard-cert

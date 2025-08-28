@@ -146,8 +146,8 @@ Settings to complete the cluster setup.
 #### Storage/Networking
 
 - Cozy NFS Driver - For being able to connect to storage on truenas-stor. ✅
-- Media NFS PVs (Read write/Read Only) ✅
-- Minio (on truenas-stor) For backups.
+- Media NFS PVs (Read Write/Read Only) ✅
+- Minio (on truenas-stor when it has been updated) For backups.
 
 #### Web Publishing
 
@@ -155,11 +155,18 @@ Settings to complete the cluster setup.
 - Cloudflared ✅
 - Cloudflare DDNS (https://github.com/trueforge-org/truecharts/tree/master/charts/stable/cloudflareddns) ✅
 
-#### Management/Security
+#### Media
 
-- Goldilocks ?
-- Polaris ?
-- Kyverno ?
+Most of these apps are running on TrueNAS stor and needs to be moved to the cluster before the NAS can be upgraded.
+
+- Jellyfin (new, replaces Plex)
+- Plex
+- Sonarr (currently on truenas-stor) ☑️
+- Radarr (currently on truenas-stor) ☑️
+- Readarr (currently on truenas-stor) ☑️
+- Prowlarr (currently on truenas-stor) ☑️
+- QBitTorrent (currently on truenas-stor) with GlueTun for NordVPN ☑️
+- Sabnzbd (new)
 
 #### Virtual Machines
 
@@ -170,11 +177,6 @@ Settings to complete the cluster setup.
 - Netboot.xyz?
 - Matchbox?
 - Tinkerbell?
-
-#### GPU-support
-
-- Intel
-  https://github.com/onedr0p/home-ops/tree/main/kubernetes/apps/kube-system/intel-device-plugin-operator
 
 #### Backup
 
@@ -216,18 +218,6 @@ Settings to complete the cluster setup.
 - Blocky - on Postgres and Redis (Configured with DOP, maybe behind NordVPN)
 - Grafana "Blocky Dashboard for Postgres"
 
-#### Media
-
-These apps are prepared, works and runs on current RKE2 cluster.
-
-- Jellyfin
-- Plex ?
-- Sonarr (currently on truenas-stor) ☑️
-- Radarr (currently on truenas-stor) ☑️
-- Readarr (currently on truenas-stor) ☑️
-- Prowlarr (currently on truenas-stor) ☑️
-- QBitTorrent (currently on truenas-stor) with GlueTun for NordVPN ☑️
-
 #### Home Automation
 
 - Generic Device Plugin (for connecting node USB device to pod)
@@ -240,6 +230,12 @@ These apps are prepared, works and runs on current RKE2 cluster.
 
 - Mainsail
 - Obico
+
+#### Management/Security
+
+- Goldilocks ?
+- Polaris ?
+- Kyverno ?
 
 #### Maybe in the future
 

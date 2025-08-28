@@ -21,7 +21,8 @@ spec:
       kind: Deployment
       name: external-secrets
       namespace: external-secrets
-    #- apiVersion: apps/v1
-    #  kind: Deployment
-    #  name: nfs-subdir-external-provisioner
-    #  namespace: cozy-nfs-driver
+    # Health check for wildcard TLS certificate in tenant-root namespace.
+    - apiVersion: v1
+      kind: Secret
+      name: wildcard-cert
+      namespace: tenant-root
