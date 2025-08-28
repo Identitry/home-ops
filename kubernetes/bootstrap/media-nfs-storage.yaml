@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: media-nfs-rwx
+  labels:
+    media-nfs: rwx
+spec:
+  capacity:
+    storage: 10Ti
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  mountOptions:
+    - nfsvers=4.2
+    - hard
+    - noatime
+    - timeo=600
+    - retrans=2
+  nfs:
+    server: ${FILESERVER_NFS_HOST}
+    path: ${FILESERVER_SHARE_MEDIA_NFS_PATH}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: media-nfs-rox
+  labels:
+    media-nfs: rox
+spec:
+  capacity:
+    storage: 10Ti
+  accessModes:
+    - ReadOnlyMany
+  volumeMode: Filesystem
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  mountOptions:
+    - ro # enforce read-only at the client
+    - nfsvers=4.2
+    - hard
+    - noatime
+    - timeo=600
+    - retrans=2
+  nfs:
+    server: ${FILESERVER_NFS_HOST}
+    path: ${FILESERVER_SHARE_MEDIA_NFS_PATH}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-rwx
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 10Ti
+  storageClassName: ""
+  selector:
+    matchLabels:
+      media-nfs: rwx
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-rox
+  namespace: media
+spec:
+  accessModes:
+    - ReadOnlyMany
+  volumeMode: Filesystem
+  resources:
+    requests:
+      storage: 10Ti
+  storageClassName: ""
+  selector:
+    matchLabels:
+      media-nfs: rox
