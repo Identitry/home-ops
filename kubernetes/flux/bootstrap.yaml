@@ -19,6 +19,12 @@ spec:
     substituteFrom:
       - kind: Secret
         name: flux-secret
+  healthChecks:
+    # Ensure the Flux secret is present.
+    - apiVersion: v1
+      kind: Secret
+      name: flux-secret
+      namespace: cozy-fluxcd
   healthCheckExprs:
     # Health checks for External Secrets ClusterSecretStore.
     - apiVersion: external-secrets.io/v1
