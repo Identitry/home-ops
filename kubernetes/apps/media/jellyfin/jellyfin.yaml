@@ -108,6 +108,9 @@ spec:
             paths:
               - path: /
                 pathType: Prefix
+        tls:
+          - hosts:
+              - jellyfin.${DOMAIN}
     persistence:
       config:
         existingClaim: jellyfin-config
