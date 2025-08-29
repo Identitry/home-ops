@@ -111,6 +111,7 @@ spec:
         tls:
           - hosts:
               - jellyfin.${DOMAIN}
+            secretName: ""
     persistence:
       config:
         existingClaim: jellyfin-config
