@@ -95,3 +95,5 @@ spec:
     sharedDevNum: 99
     securityContext:
       privileged: true
+      seLinuxOptions:
+        type: container_device_plugin_t
