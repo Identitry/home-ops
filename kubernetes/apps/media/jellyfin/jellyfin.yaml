@@ -89,6 +89,9 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups:
+          - 44 # video
+          - 107 # render
     service:
       app:
         ports:
@@ -126,6 +129,13 @@ spec:
         existingClaim: media-rox
         globalMounts:
           - path: /media
+            readOnly: true
+      gpu:
+        type: hostPath
+        hostPath: /dev/dri
+        hostPathType: Directory
+        globalMounts:
+          - path: /dev/dri
             readOnly: true
       tmpfs:
         type: emptyDir
