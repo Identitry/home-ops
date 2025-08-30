@@ -36,7 +36,7 @@ metadata:
   name: truecharts-cloudflareddns
   namespace: cozy-fluxcd
 spec:
-  interval: 30m
+  interval: 1h
   url: oci://oci.trueforge.org/truecharts/cloudflareddns
   ref:
     semver: ">= 12.3.5"
