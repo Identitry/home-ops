@@ -92,9 +92,9 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
-        supplementalGroups:
-          - 44 # video
-          - 107 # render
+        #supplementalGroups:
+        #  - 44 # video
+        #  - 107 # render
     service:
       app:
         ports:
