@@ -95,12 +95,19 @@ spec:
     sharedDevNum: 99
   postRenderers:
     - kustomize:
-        patches:
-          - target:
-              kind: DaemonSet
+        patchesStrategicMerge:
+          - |
+            apiVersion: apps/v1
+            kind: DaemonSet
+            metadata:
               name: intel-gpu-plugin-i915
-            patch: |
-              - op: add
-                path: /spec/template/spec/containers/0/securityContext
-                value:
-                  privileged: true
+            spec:
+              template:
+                spec:
+                  containers:
+                    - name: intel-gpu-plugin
+                      securityContext:
+                        privileged: true
+                      env:
+                        - name: LOG_LEVEL
+                          value: debug
