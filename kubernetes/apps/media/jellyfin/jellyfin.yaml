@@ -55,6 +55,10 @@ spec:
             env:
               TZ: ${TZ}
               LIBVA_DRIVER_NAME: iHD
+            ports:
+              - name: http
+                containerPort: 8096
+                protocol: TCP
             probes:
               liveness: &probes
                 enabled: true
@@ -97,9 +101,11 @@ spec:
           - 107 # render
     service:
       app:
+        controller: jellyfin
         ports:
           http:
             port: *port
+            targetPort: http
     ingress:
       app:
         enabled: true
