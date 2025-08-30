@@ -30,16 +30,27 @@ spec:
         key: /CLOUDFLARE/API_TOKEN
 ---
 # OCIRepository for TrueCharts (OCI)
+#apiVersion: source.toolkit.fluxcd.io/v1
+#kind: OCIRepository
+#metadata:
+#  name: truecharts-cloudflareddns
+#  namespace: cozy-fluxcd
+#spec:
+#  interval: 1h
+#  url: oci://oci.trueforge.org/truecharts/cloudflareddns
+#  ref:
+#    semver: ">= 12.3.5"
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/source.toolkit.fluxcd.io/helmrepository_v1.json
 apiVersion: source.toolkit.fluxcd.io/v1
-kind: OCIRepository
+kind: HelmRepository
 metadata:
-  name: truecharts-cloudflareddns
+  name: truecharts
   namespace: cozy-fluxcd
 spec:
-  interval: 1h
-  url: oci://oci.trueforge.org/truecharts/cloudflareddns
-  ref:
-    semver: ">= 12.3.5"
+  type: oci
+  interval: 5m
+  url: oci://tccr.io/truecharts
 ---
 # HelmRelease for Cloudflare DDNS updater
 apiVersion: helm.toolkit.fluxcd.io/v2
@@ -52,10 +63,18 @@ metadata:
     app.kubernetes.io/instance: cloudflare-ddns
 spec:
   interval: 5m
-  chartRef:
-    kind: OCIRepository
-    name: truecharts-cloudflareddns
-    namespace: cozy-fluxcd
+  chart:
+    spec:
+      chart: cloudflareddns
+      version: 12.3.5
+      sourceRef:
+        kind: HelmRepository
+        name: truecharts
+        namespace: cozy-fluxcd
+  #chartRef:
+  #  kind: OCIRepository
+  #  name: truecharts-cloudflareddns
+  #  namespace: cozy-fluxcd
   valuesFrom:
     - kind: Secret
       name: cloudflare-api-token
