@@ -54,6 +54,7 @@ spec:
               tag: 10.10.7@sha256:e4d1dc5374344446a3a78e43dd211247f22afba84ea2e5a13cbe1a94e1ff2141
             env:
               TZ: ${TZ}
+              LIBVA_DRIVER_NAME: iHD
             probes:
               liveness: &probes
                 enabled: true
@@ -80,8 +81,10 @@ spec:
               requests:
                 cpu: 100m
                 memory: 512Mi
+                gpu.intel.com/i915: "1"
               limits:
                 memory: 8Gi
+                gpu.intel.com/i915: "1"
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -129,13 +132,6 @@ spec:
         existingClaim: media-rox
         globalMounts:
           - path: /media
-            readOnly: true
-      gpu:
-        type: hostPath
-        hostPath: /dev/dri
-        hostPathType: Directory
-        globalMounts:
-          - path: /dev/dri
             readOnly: true
       tmpfs:
         type: emptyDir
