@@ -119,6 +119,8 @@ spec:
               - jellyfin.${DOMAIN}
             secretName: ""
     persistence:
+      gpu:
+        enabled: false
       config:
         existingClaim: jellyfin-config
         globalMounts:
