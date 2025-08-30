@@ -37,7 +37,7 @@ metadata:
   namespace: cozy-fluxcd
 spec:
   interval: 30m
-  url: oci://tccr.io/truecharts/cloudflareddns
+  url: oci://tccr.io/trueforge/cloudflareddns
   ref:
     semver: ">= 12.3.3"
 ---
