@@ -93,5 +93,14 @@ spec:
     name: i915
     nodeFeatureRule: false
     sharedDevNum: 99
-    securityContext:
-      privileged: true
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: DaemonSet
+              name: intel-gpu-plugin-i915
+            patch: |
+              - op: add
+                path: /spec/template/spec/containers/0/securityContext
+                value:
+                  privileged: true
