@@ -93,21 +93,5 @@ spec:
     name: i915
     nodeFeatureRule: false
     sharedDevNum: 99
-  postRenderers:
-    - kustomize:
-        patchesStrategicMerge:
-          - |
-            apiVersion: apps/v1
-            kind: DaemonSet
-            metadata:
-              name: intel-gpu-plugin-i915
-            spec:
-              template:
-                spec:
-                  containers:
-                    - name: intel-gpu-plugin
-                      securityContext:
-                        privileged: true
-                      env:
-                        - name: LOG_LEVEL
-                          value: debug
+    securityContext:
+      privileged: true
