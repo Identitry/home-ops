@@ -141,7 +141,7 @@ Settings to complete the cluster setup.
 - MetalLB L2Advertisement for the pool above ✅
 - Cert-Manager cluster-issuer for Cloudflare ✅
 - Cert-Manager wildcard certificate for myk8s.se ✅
-- External Secrets Operator against Infisical SAAS. ✅
+- External Secrets Operator, connected to against Infisical SAAS. ✅
 - Intel Device Plugin Operator ✅
 - Cozy NFS Driver (CSI NFS Driver for Kubernetes) - For being able to connect to storage on truenas-stor. ✅
 - Media NFS PVs (Read Write/Read Only) ✅
