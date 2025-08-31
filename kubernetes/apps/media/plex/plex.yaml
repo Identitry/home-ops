@@ -64,7 +64,7 @@ spec:
                 custom: true
                 spec:
                   httpGet:
-                    path: /identity
+                    path: /web
                     port: 32400
                   initialDelaySeconds: 0
                   periodSeconds: 10
