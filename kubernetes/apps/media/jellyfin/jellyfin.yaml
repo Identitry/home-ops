@@ -112,6 +112,9 @@ spec:
           external-dns.alpha.kubernetes.io/target: ${CLOUDFLARE_TUNNEL_TARGET}
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
           external-dns.alpha.kubernetes.io/hostname: "jellyfin.${DOMAIN}"
+          nginx.ingress.kubernetes.io/proxy-read-timeout: "180"
+          nginx.ingress.kubernetes.io/proxy-send-timeout: "180"
+          nginx.ingress.kubernetes.io/proxy-connect-timeout: "60"
         hosts:
           - host: jellyfin.${DOMAIN}
             paths:
