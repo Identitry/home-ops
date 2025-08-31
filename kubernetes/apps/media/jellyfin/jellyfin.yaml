@@ -59,6 +59,9 @@ spec:
               - name: http
                 containerPort: 8096
                 protocol: TCP
+              - name: https
+                containerPort: 8920
+                protocol: TCP
             probes:
               liveness: &probes
                 enabled: true
@@ -103,8 +106,11 @@ spec:
         loadBalancerIP: 192.168.222.110
         ports:
           http:
-            port: *port
+            port: 8096
             targetPort: http
+          https:
+            port: 8920
+            targetPort: https
         annotations:
           external-dns.alpha.kubernetes.io/hostname: jellyfin.${DOMAIN}
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
