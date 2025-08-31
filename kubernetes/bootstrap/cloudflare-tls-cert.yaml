@@ -3,16 +3,17 @@ kind: Certificate
 metadata:
   name: wildcard-le-tls-cert
   namespace: tenant-root
-  annotations:
-    reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
-    reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
-    reflector.v1.k8s.emberstack.com/allowed-namespaces: "media"
-    reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "media"
 spec:
   dnsNames:
     - "*.${DOMAIN}"
     - "${DOMAIN}"
   secretName: wildcard-cert
+  secretTemplate:
+    annotations:
+      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+      reflector.v1.k8s.emberstack.com/allowed-namespaces: "media"
+      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "media"
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
