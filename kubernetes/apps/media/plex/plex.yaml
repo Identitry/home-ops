@@ -98,33 +98,12 @@ spec:
         type: LoadBalancer
         annotations:
           lbipam.cilium.io/ips: 192.168.222.111
+          external-dns.alpha.kubernetes.io/hostname: plex.${DOMAIN}
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+          external-dns.alpha.kubernetes.io/target: "212.107.149.106" # updated by cloudflare-ddns.
         ports:
           http:
             port: *port
-    route:
-      app:
-        hostnames:
-          - "plex.${DOMAIN}"
-        parentRefs:
-          - name: external
-            namespace: kube-system
-            sectionName: https
-        rules:
-          - backendRefs:
-              - identifier: app
-                port: *port
-            filters:
-              - type: RequestHeaderModifier
-                requestHeaderModifier:
-                  remove:
-                    - Range
-            matches:
-              - path:
-                  type: PathPrefix
-                  value: /library/streams
-          - backendRefs:
-              - identifier: app
-                port: *port
     persistence:
       config:
         existingClaim: "plex-config"
