@@ -31,7 +31,7 @@ Nodes will get their IP from DHCP, flagged as static in router.
 ### Kubernetes Nodes (Talos/CozyStack)
 
 Three schedulable control plane nodes.
-Operating System: Talos 1.10.3 opionated with CozyStack 0.31.1 (2025-05-30)
+Operating System: Talos 1.10.6 opionated with CozyStack 0.35.2 (2025-08-31)
 
 1. k8s01
 
@@ -39,6 +39,7 @@ Operating System: Talos 1.10.3 opionated with CozyStack 0.31.1 (2025-05-30)
 - IP: 102.168.222.21
 - Model: Dell Optiplex 5090M
 - CPU: Intel i5-10500T 2,3GHz (10:th gen, 6 cores/12 threads Q2 2020)
+- GPU: Intel UHD 630 iGPU
 - RAM: 64GB (2x 32GB Kingston Fury DDR4 3200Mhz)
 - Boot drive: 250GB SATA-SSD (PNY CS900)
 - Storage drive: 1TB NVME Storage Drive (Kingston Fury Renegade PCIe 4.0)
@@ -49,6 +50,7 @@ Operating System: Talos 1.10.3 opionated with CozyStack 0.31.1 (2025-05-30)
 - IP: 102.168.222.22
 - Model: Dell Optiplex 5090M
 - CPU: Intel i5-10500T 2,3GHz (10:th gen, 6 cores/12 threads Q2 2020)
+- GPU: Intel UHD 630 iGPU
 - RAM: 64GB (2x 32GB Kingston Fury DDR4 3200MHz)
 - Boot drive: 250GB SATA-SSD (PNY CS900)
 - Storage drive: 1TB NVME (Kingston Fury Renegade PCIe 4.0)
@@ -59,6 +61,7 @@ Operating System: Talos 1.10.3 opionated with CozyStack 0.31.1 (2025-05-30)
 - IP: 192.168.222.23
 - Model: Intel NUC NUC10i7FNH
 - CPU: Intel i7-10710U 1,1GHz CPU (10:th gen, 6 cores/12 threads Q3 2019)
+- GPU: Intel® UHD Graphics for 10th Gen Intel® Processors (UHD630 successor)
 - RAM: 64GB (2x 32GB Kingston Fury DDR4 3200MHz)
 - Boot drive: 250GB SATA-SSD (PNY CS900)
 - Storage drive: 1TB NVME (Kingston Fury Renegade PCIe 4.0)
@@ -78,7 +81,7 @@ Operating System: Talos 1.10.3 opionated with CozyStack 0.31.1 (2025-05-30)
   - 4x12TB 7200rpm HGST/WD DC HC520 in 2 x MIRROR | 2 wide ZFS configuration
   - 1 256GB NVME (Gen3) SLOG drive
 
-2. backup (backup.myk8s.se)
+2. backup (backup.myk8s.se) - Remote location backup
 
 - Operating System: TrueNAS Scale Fangtooth-24.04.0
 - Hostname: truenas-backup
@@ -95,32 +98,31 @@ Operating System: Talos 1.10.3 opionated with CozyStack 0.31.1 (2025-05-30)
 
 Nice hyper-converged stack on top of Talos!
 
-- Flux CD - Operator (ControlPlane) ✅
+- Flux CD Operator (ControlPlane) ✅
 - Cilium, Kube-OVN - Network CNI ✅
-- Linstor, DRDB - Operator (Piraeus), Storage ✅
-- Cert-Manager - Operator, Let´s Encrypt/Cloudflare ✅
+- Linstor DRDB Operator (Piraeus) - Storage ✅
+- Cert-Manager Operator - Let´s Encrypt/Cloudflare ✅
 - MetalB - Load Balancer ✅
-- Kubevirt - Operator, Virtual machines in kubernetes ✅
-- PostgreSQL - Operator (CNPG), Database ✅
-- Maria DB - Operator, Database ✅
-- Clickhouse - Operator (Altinity), Database ✅
-- Redis - Operator (Spotahome), Key-Value database ✅
-- Kafka - Operator (Strimzi), Distributed event streaming platform ✅
-- RabbitMQ - Operator, Messaging and streaming broker ✅
+- Kubevirt Operator - Virtual machines in kubernetes ✅
+- PostgreSQL Operator (CNPG) - Database ✅
+- Maria DB Operator - Database ✅
+- Clickhouse Operator (Altinity) - Database ✅
+- Redis Operator (Spotahome) - Key-Value database ✅
+- Kafka Operator (Strimzi) - Distributed event streaming platform ✅
+- RabbitMQ Operator - Messaging and streaming broker ✅
 - Victoria Metrics ✅
-- Grafana - Operator (Integreatly) Data visualization ✅
+- Grafana Operator (Integreatly) - Data visualization ✅
 - Goldpinger - Debugging tool for Kubernetes ✅
-- External Secrets - Operator - Not updated, will likely be removed!!!
-- External DNS - Not updated, will likely be removed!!!
+- External Secrets Operator - Not being updated in CozyStack, installed separately.
+- External DNS Operator - Not being updated in CozyStack, installed separately.
 - Nginx proxy ✅
-- Kamaji - Operator (ControlPlane) ✅
-- Vertical Pod Autoscaler - Operator ✅
-- Velero - Backups to Minio on Stor (Needs to be enabled in cozy config "bundle-enable") ✅
+- Kamaji Operator (ControlPlane) ✅
+- Vertical Pod Autoscaler Operator ✅
+- Velero Operator - Backups to Minio on Stor (Needs to be enabled in cozy config "bundle-enable") ✅
 - and more...
 
-## GitOps - Flux CD ✅s
+## GitOps - Flux CD
 
-Will use SOPS/age for encrypting secrets.
 Public Github site that describes the cluster.
 
 ### Setup
@@ -129,7 +131,7 @@ Public Github site that describes the cluster.
   - Renovate - Cluster dependency management (on GitHub)
   - Reloader - Rolling upgrades on ConfigMap/Secret changes (in cluster)
 
-### Initial cluster settings - Bootstrap
+### Initial cluster settings - Components/Bootstrap
 
 Settings to complete the cluster setup.
 
@@ -140,13 +142,14 @@ Settings to complete the cluster setup.
 - Cert-Manager cluster-issuer for Cloudflare ✅
 - Cert-Manager wildcard certificate for myk8s.se ✅
 - External Secrets Operator against Infisical SAAS. ✅
+- Intel Device Plugin Operator ✅
+- Cozy NFS Driver (CSI NFS Driver for Kubernetes) - For being able to connect to storage on truenas-stor. ✅
+- Media NFS PVs (Read Write/Read Only) ✅
 
 ### Apps
 
 #### Storage/Networking
 
-- Cozy NFS Driver - For being able to connect to storage on truenas-stor. ✅
-- Media NFS PVs (Read Write/Read Only) ✅
 - Minio (on truenas-stor when it has been updated) For backups.
 
 #### Web Publishing
@@ -159,13 +162,13 @@ Settings to complete the cluster setup.
 
 Most of these apps are running on TrueNAS stor and needs to be moved to the cluster before the NAS can be upgraded.
 
-- Jellyfin (new, replaces Plex)
-- Plex
-- Sonarr (currently on truenas-stor) ☑️
-- Radarr (currently on truenas-stor) ☑️
-- Readarr (currently on truenas-stor) ☑️
-- Prowlarr (currently on truenas-stor) ☑️
-- QBitTorrent (currently on truenas-stor) with GlueTun for NordVPN ☑️
+- Jellyfin (new, replaces Plex) ✅
+- Plex - keep this?
+- Sonarr (currently on truenas-stor)
+- Radarr (currently on truenas-stor)
+- Readarr (currently on truenas-stor)
+- Prowlarr (currently on truenas-stor)
+- QBitTorrent (currently on truenas-stor) with GlueTun for NordVPN
 - Sabnzbd (new)
 
 #### Virtual Machines
@@ -201,12 +204,12 @@ Most of these apps are running on TrueNAS stor and needs to be moved to the clus
   - VirtCtl
   - etcdctl
   - Flux CLI
-  - GitOps VSCode extension
+  - VSCode GitOps VSCode extension
   - Git
-  - Yaml Extension
-  - Kubernetes Extension
-  - SQL Tools with Postgres and Maria DB drivers
-  - HomeAssistant extension
+  - VSCode Yaml Extension
+  - VSCode Kubernetes Extension
+  - VSCode SQL Tools with Postgres and Maria DB drivers
+  - VSCode HomeAssistant extension
   - More???
 
 #### Virtual Machines
@@ -243,10 +246,9 @@ Most of these apps are running on TrueNAS stor and needs to be moved to the clus
 - Authentik (Authentication)
 - Invidious (YouTube UI - no adds)
 - Brave (Browser with ad blocking and privacy in mind)
-- Jellyfin (with GPU Passthrough - https://github.com/Pumba98/flux2-gitops/blob/main/apps/jellyfin/hr-jellyfin.yaml)
 - Vaultwarden
 - Guacamole
-- CompreFace/DeepStack
+- CompreFace/DeepStack (Face Recognition is included in Frigate now, skip this?)
 - Plex Debrid
 - Streamio
 - Immich
