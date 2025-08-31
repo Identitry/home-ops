@@ -1,3 +1,26 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/kubernetes-external-secrets/main/deploy/crds/external-secrets.io_externalsecrets.yaml
+# External secret that contains the PKCS#12 password for the PKCS12 file created with the Wild Card cert.
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: es-wildcard-cert-pkcs12-pass
+  namespace: tenant-root
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: infisical
+  target:
+    name: wildcard-cert-pkcs12-pass
+    creationPolicy: Owner
+  data:
+    - secretKey: password
+      remoteRef:
+        key: /CERT-MANAGER/WILDCARD-CERT-PKCS12-PASS
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/jetstack/cert-manager/main/deploy/crds/cert-manager.io_certificates.yaml
+# Wildcard TLS certificate for *.myk8s.se and myk8s.se, issued by Let's Encrypt.
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
@@ -7,7 +30,7 @@ spec:
   dnsNames:
     - "*.${DOMAIN}"
     - "${DOMAIN}"
-  secretName: wildcard-cert
+  secretName: wildcard-le-tls-cert-myk8s-se
   secretTemplate:
     annotations:
       reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
@@ -17,3 +40,10 @@ spec:
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
+  keystores:
+    pkcs12:
+      create: true
+      passwordSecretRef:
+        name: wildcard-cert-pkcs12-pass
+        key: password
+      profile: Modern2023
