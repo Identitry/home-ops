@@ -66,6 +66,10 @@ spec:
         - domain: "vpn.${DOMAIN}"
           zone: ${DOMAIN}
           record: A
+        - domain: "jellyfin.${DOMAIN}"
+          zone: ${DOMAIN}
+          record: A
+        # These two below are for the old domain, to keep it working until DNS is fully switched over
         - domain: ${DOMAIN_OLD}
           zone: ${DOMAIN_OLD}
           record: A
