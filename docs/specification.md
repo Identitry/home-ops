@@ -145,6 +145,7 @@ Settings to complete the cluster setup.
 - Intel Device Plugin Operator for iGPUs, will be removed when K8s 1.34 with stable DRA is deployed ✅
 - Cozy NFS Driver (CSI NFS Driver for Kubernetes) - For being able to connect to storage on truenas-stor. ✅
 - Media NFS PVs (Read Write/Read Only) ✅
+- Reflector - Tool for syncing certs/config maps between namespaces, mainly use for syncing wildcard TLS cert. ✅
 
 ### Apps
 
