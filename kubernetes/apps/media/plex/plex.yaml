@@ -56,7 +56,7 @@ spec:
               tag: 1.42.1.10060@sha256:04563be281364ba2462285aacb2ca13d7ef7e1d0b19e1203f4c19b4a56840c5c
             env:
               TZ: ${TZ}
-              PLEX_ADVERTISE_URL: http://212.107.149.106:32400
+              PLEX_ADVERTISE_URL: http://192.168.222.111:32400
               PLEX_NO_AUTH_NETWORKS: 192.168.0.0/24
             probes: # Cant get probes to work...
               liveness: &probes
@@ -127,8 +127,3 @@ spec:
                 subPath: transcode
               - path: /tmp
                 subPath: tmp
-      tls-cert:
-        type: secret
-        name: wildcard-le-tls-cert-myk8s-se
-        globalMounts:
-          - path: /tls
