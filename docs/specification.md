@@ -121,17 +121,16 @@ Nice hyper-converged stack on top of Talos!
 - Velero Operator - Backups to Minio on Stor (Needs to be enabled in cozy config "bundle-enable") ✅
 - and more...
 
-## GitOps - Flux CD
+### GitOps - Flux CD ✅
 
-Public Github site that describes the cluster.
+Public Github site that describes the cluster. ✅
 
-### Setup
+### Update and restart management
 
-- Public GitHub repo for cluster configuration, deployed with Flux.
-  - Renovate - Cluster dependency management (on GitHub)
-  - Reloader - Rolling upgrades on ConfigMap/Secret changes (in cluster)
+- Renovate - Cluster dependency management (on GitHub)
+- Reloader - Rolling upgrades on ConfigMap/Secret changes (in cluster)
 
-### Initial cluster settings - Components/Bootstrap
+### Initial cluster settings - Components/Bootstrap ✅
 
 Settings to complete the cluster setup.
 
@@ -145,7 +144,7 @@ Settings to complete the cluster setup.
 - Intel Device Plugin Operator for iGPUs, will be removed when K8s 1.34 with stable DRA is deployed ✅
 - Cozy NFS Driver (CSI NFS Driver for Kubernetes) - For being able to connect to storage on truenas-stor. ✅
 - Media NFS PVs (Read Write/Read Only) ✅
-- Reflector - Tool for syncing certs/config maps between namespaces, mainly use for syncing wildcard TLS cert. ✅
+- Reflector - Tool for syncing certs and config maps between namespaces, mainly use for syncing wildcard TLS cert. ✅
 
 ### Apps
 
@@ -153,7 +152,7 @@ Settings to complete the cluster setup.
 
 - Minio (on truenas-stor when it has been updated) For backups.
 
-#### Web Publishing
+#### Web Publishing ✅
 
 - External-DNS - Operator, Manage DNS names against CloudFlare ✅
 - Cloudflared ✅
@@ -164,7 +163,7 @@ Settings to complete the cluster setup.
 Most of these apps are running on TrueNAS stor and needs to be moved to the cluster before the NAS can be upgraded.
 
 - Jellyfin (new, replaces Plex) ✅
-- Plex - keep this?
+- Plex ✅
 - Sonarr (currently on truenas-stor)
 - Radarr (currently on truenas-stor)
 - Readarr (currently on truenas-stor)
@@ -178,9 +177,7 @@ Most of these apps are running on TrueNAS stor and needs to be moved to the clus
 
 #### PXE Boot
 
-- Netboot.xyz?
-- Matchbox?
-- Tinkerbell?
+- Netboot.xyz or Matchbox or Tinkerbell?
 
 #### Backup
 
