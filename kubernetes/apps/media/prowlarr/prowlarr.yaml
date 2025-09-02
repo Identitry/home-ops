@@ -15,14 +15,14 @@ spec:
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: prowlarr-api-key
+  name: se-prowlarr-api-key
   namespace: media
 spec:
   secretStoreRef:
     kind: ClusterSecretStore
     name: infisical
   target:
-    name: prowlarr-secret
+    name: prowlarr-api-key
     creationPolicy: Owner
   data:
     - secretKey: prowlarr-api-key
@@ -70,7 +70,7 @@ spec:
               TZ: ${TZ}
             envFrom:
               - secretRef:
-                  name: prowlarr-secret
+                  name: prowlarr-api-key
             ports:
               - name: http
                 containerPort: 80
