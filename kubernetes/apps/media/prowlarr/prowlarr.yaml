@@ -70,7 +70,11 @@ spec:
               TZ: ${TZ}
             envFrom:
               - secretRef:
-                  name: prowlarr-api-key
+                  name: prowlarr-secret
+            ports:
+              - name: http
+                containerPort: 80
+                protocol: TCP
             probes:
               liveness: &probes
                 enabled: true
@@ -106,6 +110,7 @@ spec:
         ports:
           http:
             port: 80
+            targetPort: http
     ingress:
       prowlarr:
         enabled: true
