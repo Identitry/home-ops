@@ -47,11 +47,13 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: sonarr
+  namespace: media
 spec:
   interval: 1h
   chartRef:
     kind: OCIRepository
     name: sonarr
+    namespace: cozy-fluxcd
   install:
     remediation:
       retries: -1
