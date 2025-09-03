@@ -81,6 +81,10 @@ spec:
               SONARR__SERVER__PORT: &port 8989
               SONARR__UPDATE__BRANCH: develop
               TZ: ${TZ}
+            ports:
+              - name: http
+                containerPort: *port
+                protocol: TCP
             envFrom:
               - secretRef:
                   name: sonarr-api-key
