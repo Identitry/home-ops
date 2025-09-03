@@ -9,25 +9,6 @@ metadata:
     app.kubernetes.io/instance: media
     ingress.svc.egress: allow # <--- opt-in label for ingress-controller traffic
 ---
-# NetworkPolicy to allow ingress-nginx to reach services in the media namespace.
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-ingress-from-ingress-nginx
-  namespace: media
-spec:
-  podSelector: {} # apply to all pods
-  policyTypes:
-    - Ingress
-  ingress:
-    - from:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: tenant-root
-          podSelector:
-            matchLabels:
-              app.kubernetes.io/name: ingress-nginx
----
 # Media ReadWriteMany Persistent Volume.
 apiVersion: v1
 kind: PersistentVolume
@@ -120,7 +101,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-tenant-root-bidirectional
+  name: media-allow-tenant-root-bidirectional
   namespace: media
 spec:
   podSelector: {} # Apply to all pods in the namespace
