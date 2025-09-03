@@ -114,10 +114,31 @@ spec:
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
     service:
-      app:
+      radarr:
+        controller: radarr
         ports:
           http:
             port: *port
+            targetPort: http
+    ingress:
+      radarr:
+        enabled: true
+        className: tenant-root
+        annotations:
+          external-dns.alpha.kubernetes.io/target: ${CLOUDFLARE_TUNNEL_TARGET}
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+          external-dns.alpha.kubernetes.io/hostname: "r-arr.${DOMAIN}"
+        hosts:
+          - host: r-arr.${DOMAIN}
+            paths:
+              - path: /
+                service:
+                  identifier: radarr
+                  port: http
+        tls:
+          - hosts:
+              - r-arr.${DOMAIN}
+            secretName: wildcard-le-tls-cert-myk8s-se
     persistence:
       config:
         existingClaim: radarr-config
