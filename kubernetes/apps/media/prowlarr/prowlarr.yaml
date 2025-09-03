@@ -36,11 +36,11 @@ metadata:
   name: prowlarr
   namespace: media
 spec:
-  interval: 1h
   chartRef:
     kind: OCIRepository
     name: app-template
     namespace: cozy-fluxcd
+  interval: 1h
   install:
     remediation:
       retries: -1
@@ -51,67 +51,53 @@ spec:
   values:
     controllers:
       prowlarr:
-        annotations:
-          reloader.stakater.com/auto: "true"
         containers:
-          app:
+          prowlarr:
             image:
               repository: ghcr.io/home-operations/prowlarr
               tag: 2.0.5.5160@sha256:47cede4c9e57c53af75b8b6e1382576ede241b9d847733ba449d723ca8cb51c8
+              pullPolicy: IfNotPresent
             env:
+              TZ: ${TZ}
               PROWLARR__APP__INSTANCENAME: Prowlarr
               PROWLARR__APP__THEME: dark
-              PROWLARR__AUTH__METHOD: External
+              #PROWLARR__AUTH__METHOD: External
               PROWLARR__AUTH__REQUIRED: DisabledForLocalAddresses
               PROWLARR__LOG__DBENABLED: "False"
               PROWLARR__LOG__LEVEL: info
-              PROWLARR__SERVER__PORT: 9696
-              PROWLARR__SERVER__BINDADDRESS: 0.0.0.0
-              PROWLARR__UPDATE__BRANCH: develop
-              TZ: ${TZ}
             envFrom:
               - secretRef:
                   name: prowlarr-api-key
-            ports:
-              - name: http
-                containerPort: 9696
-                protocol: TCP
             probes:
-              liveness: &probes
+              startup:
                 enabled: true
-                custom: true
                 spec:
-                  httpGet:
-                    path: /ping
-                    port: 9696
-                  initialDelaySeconds: 0
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
+                  failureThreshold: 30
+                  periodSeconds: 5
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
             securityContext:
-              allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
-            resources:
-              requests:
-                cpu: 100m
-              limits:
-                memory: 1Gi
-    defaultPodOptions:
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        runAsGroup: 1000
-        fsGroup: 1000
-        fsGroupChangePolicy: OnRootMismatch
+        pod:
+          securityContext:
+            fsGroup: 568
+            fsGroupChangePolicy: OnRootMismatch
+
     service:
       prowlarr:
         controller: prowlarr
         ports:
           http:
-            port: 80
-            targetPort: http
+            port: 9696
+
+    persistence:
+      config:
+        existingClaim: prowlarr-config
+      tmp:
+        type: emptyDir
+
     ingress:
       prowlarr:
         enabled: true
@@ -131,33 +117,3 @@ spec:
           - hosts:
               - p-arr.${DOMAIN}
             secretName: wildcard-le-tls-cert-myk8s-se
-    persistence:
-      config:
-        existingClaim: prowlarr-config
-      tmp:
-        type: emptyDir
-
----
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-prowlarr-from-ingress-and-namespace
-  namespace: media
-spec:
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/name: prowlarr
-      app.kubernetes.io/instance: prowlarr
-  policyTypes:
-    - Ingress
-  ingress:
-    - from:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: tenant-root
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: media
-      ports:
-        - protocol: TCP
-          port: 9696
