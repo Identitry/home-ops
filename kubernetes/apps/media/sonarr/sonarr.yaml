@@ -52,7 +52,7 @@ spec:
   interval: 1h
   chartRef:
     kind: OCIRepository
-    name: sonarr
+    name: app-template
     namespace: cozy-fluxcd
   install:
     remediation:
