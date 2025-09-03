@@ -7,7 +7,7 @@ metadata:
   labels:
     app.kubernetes.io/name: media
     app.kubernetes.io/instance: media
-    ingress-allowed: "true" # <--- opt-in label for ingress-controller traffic
+    ingress.svc.egress: allow # <--- opt-in label for ingress-controller traffic
 ---
 # NetworkPolicy to allow ingress-nginx to reach services in the media namespace.
 apiVersion: networking.k8s.io/v1
@@ -114,3 +114,26 @@ spec:
   selector:
     matchLabels:
       media-nfs: rox
+
+---
+# NetworkPolicy to allow ingress from and egress to tenant-root (e.g., for backbone namespaces).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-tenant-root-bidirectional
+  namespace: media
+spec:
+  podSelector: {} # Apply to all pods in the namespace
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tenant-root
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tenant-root
