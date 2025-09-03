@@ -1,0 +1,155 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: radarr-config
+  namespace: media
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: local
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: radarr-cache
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: local
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: se-radarr-api-key
+  namespace: media
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: infisical
+  target:
+    name: radarr-api-key
+    creationPolicy: Owner
+  data:
+    - secretKey: RADARR__AUTH__APIKEY
+      remoteRef:
+        key: /MEDIA/RADARR_API_KEY
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: radarr
+  namespace: media
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: cozy-fluxcd
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      radarr:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/home-operations/radarr
+              tag: 5.27.5.10198@sha256:d7af98ace197411f38fcacbdc0bb5530ac5669a27cab9e28889aa531b5a1b536
+            env:
+              RADARR__APP__INSTANCENAME: Radarr
+              RADARR__APP__THEME: dark
+              RADARR__AUTH__METHOD: External
+              RADARR__AUTH__REQUIRED: DisabledForLocalAddresses
+              RADARR__LOG__DBENABLED: "False"
+              RADARR__LOG__LEVEL: info
+              RADARR__SERVER__PORT: &port 7878
+              RADARR__UPDATE__BRANCH: develop
+              TZ: ${TZ}
+            envFrom:
+              - secretRef:
+                  name: radarr-api-key
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /ping
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 100m
+              limits:
+                memory: 4Gi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      radarr:
+        controller: radarr
+        ports:
+          http:
+            port: *port
+            targetPort: http
+    ingress:
+      radarr:
+        enabled: true
+        className: tenant-root
+        annotations:
+          external-dns.alpha.kubernetes.io/target: ${CLOUDFLARE_TUNNEL_TARGET}
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+          external-dns.alpha.kubernetes.io/hostname: "r-arr.${DOMAIN}"
+        hosts:
+          - host: r-arr.${DOMAIN}
+            paths:
+              - path: /
+                service:
+                  identifier: radarr
+                  port: http
+        tls:
+          - hosts:
+              - r-arr.${DOMAIN}
+            secretName: wildcard-le-tls-cert-myk8s-se
+    persistence:
+      config:
+        existingClaim: radarr-config
+      config-cache:
+        existingClaim: radarr-cache
+        globalMounts:
+          - path: /config/MediaCover
+      media:
+        type: persistentVolumeClaim
+        existingClaim: media-rwx
+        globalMounts:
+          - path: /media
+      tmp:
+        type: emptyDir
