@@ -205,6 +205,10 @@ spec:
                 service:
                   identifier: qbittorrent
                   port: 8080
+        tls:
+          - hosts:
+              - qbt-vue.${DOMAIN}
+            secretName: wildcard-le-tls-cert-myk8s-se
 
       # vuetorrent service worker.
       vuetorrent-sw:
@@ -218,3 +222,7 @@ spec:
                 service:
                   identifier: vuetorrent
                   port: http
+        tls:
+          - hosts:
+              - qbt-vue.${DOMAIN}
+            secretName: wildcard-le-tls-cert-myk8s-se
