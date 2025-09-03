@@ -208,7 +208,7 @@ spec:
         tls:
           - hosts:
               - qbt-vue.${DOMAIN}
-          - secretName: wildcard-le-tls-cert-myk8s-se
+            secretName: wildcard-le-tls-cert-myk8s-se
 
       # vuetorrent service worker.
       vuetorrent-sw:
@@ -225,4 +225,4 @@ spec:
         tls:
           - hosts:
               - qbt-vue.${DOMAIN}
-          - secretName: wildcard-le-tls-cert-myk8s-se
+            secretName: wildcard-le-tls-cert-myk8s-se
