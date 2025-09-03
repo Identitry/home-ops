@@ -84,6 +84,9 @@ spec:
             envFrom:
               - secretRef:
                   name: radarr-api-key
+            ports:
+              - name: http
+                containerPort: 7878
             probes:
               liveness: &probes
                 enabled: true
