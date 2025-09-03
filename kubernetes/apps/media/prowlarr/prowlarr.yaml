@@ -25,7 +25,7 @@ spec:
     name: prowlarr-api-key
     creationPolicy: Owner
   data:
-    - secretKey: prowlarr-api-key
+    - secretKey: PROWLARR__AUTH__APIKEY
       remoteRef:
         key: /MEDIA/PROWLARR_API_KEY
 ---
