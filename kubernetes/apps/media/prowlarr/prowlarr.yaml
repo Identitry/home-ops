@@ -109,7 +109,7 @@ spec:
         controller: prowlarr
         ports:
           http:
-            port: 9696
+            port: 80
             targetPort: http
     ingress:
       prowlarr:
