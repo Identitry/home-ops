@@ -120,6 +120,9 @@ spec:
           http:
             port: *port
             targetPort: http
+        selector:
+          app.kubernetes.io/instance: radarr
+          app.kubernetes.io/name: radarr
     ingress:
       radarr:
         enabled: true
