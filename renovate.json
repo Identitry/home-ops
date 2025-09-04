@@ -15,7 +15,7 @@
     "helm-values",
     "dockerfile",
     "github-actions",
-    "custom.regex"
+    "regex"
   ],
   "packageRules": [
     {
@@ -44,7 +44,7 @@
         "helm-values",
         "dockerfile",
         "github-actions",
-        "custom.regex"
+        "regex"
       ],
       "addLabels": [
         "deps",
@@ -65,9 +65,8 @@
       ]
     }
   ],
-  "customManagers": [
+  "regexManagers": [
     {
-      "customType": "regex",
       "description": "Catch image repository/tag pairs in YAML not detected by helm-values",
       "fileMatch": [
         "(^|/)kubernetes/.+\\.ya?ml$"
@@ -78,7 +77,6 @@
       "datasourceTemplate": "docker"
     },
     {
-      "customType": "regex",
       "description": "Catch single-line image: repo:tag in YAML",
       "fileMatch": [
         "(^|/)kubernetes/.+\\.ya?ml$"
@@ -89,7 +87,6 @@
       "datasourceTemplate": "docker"
     },
     {
-      "customType": "regex",
       "description": "Bump HelmRelease chart.spec.version for Cloudflare charts",
       "fileMatch": [
         "(^|/)kubernetes/.+\\.ya?ml$"
@@ -99,9 +96,7 @@
       ],
       "depNameTemplate": "cloudflare-tunnel-remote",
       "datasourceTemplate": "helm",
-      "registryUrlsTemplate": [
-        "https://cloudflare.github.io/helm-charts"
-      ]
+      "registryUrlTemplate": "https://cloudflare.github.io/helm-charts"
     }
   ],
   "vulnerabilityAlerts": {
