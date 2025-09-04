@@ -11,53 +11,73 @@
   "rangeStrategy": "bump",
   "prHourlyLimit": 2,
   "prConcurrentLimit": 10,
-
   "enabledManagers": [
     "helm-values",
     "dockerfile",
     "github-actions",
-    "regex"
+    "custom.regex"
   ],
-
   "packageRules": [
     {
       "description": "Group minor/patch updates per app (values files)",
-      "matchManagers": ["helm-values"],
+      "matchManagers": [
+        "helm-values"
+      ],
       "groupName": "helm-values ({{packageFile}})"
     },
     {
       "description": "Automerge safe upgrades: Docker digest bumps + patch releases",
-      "matchManagers": ["dockerfile", "helm-values"],
-      "matchUpdateTypes": ["digest", "patch"],
+      "matchManagers": [
+        "dockerfile",
+        "helm-values"
+      ],
+      "matchUpdateTypes": [
+        "digest",
+        "patch"
+      ],
       "automerge": true,
       "automergeType": "pr"
     },
     {
       "description": "Labels for visibility (apply to all updates)",
-      "matchManagers": ["helm-values", "dockerfile", "github-actions", "regex"],
-      "addLabels": ["deps", "renovate"]
+      "matchManagers": [
+        "helm-values",
+        "dockerfile",
+        "github-actions",
+        "custom.regex"
+      ],
+      "addLabels": [
+        "deps",
+        "renovate"
+      ]
     },
     {
       "description": "Schedule noisy updates off-hours (non-urgent)",
-      "matchManagers": ["dockerfile", "helm-values", "github-actions"],
+      "matchManagers": [
+        "dockerfile",
+        "helm-values",
+        "github-actions"
+      ],
       "schedule": [
-        "after 22:00 and before 06:00 every weekday",
-        "every weekend"
+        "after 22:00 every weekday",
+        "every weekend",
+        "before 06:00 every weekday"
       ]
     }
   ],
-
-  "regexManagers": [
+  "customManagers": [
     {
+      "customType": "regex",
       "description": "Catch image repository/tag pairs in YAML not detected by helm-values",
-      "fileMatch": ["(^|/)kubernetes/.+\\.ya?ml$"],
+      "managerFilePatterns": [
+        "/(^|/)kubernetes/.+\\.ya?ml$/"
+      ],
       "matchStrings": [
         "repository:\\s*(?<depName>[^\\s#]+)[\\s\\S]*?\\ntag:\\s*(?<currentValue>[^\\s#]+)"
       ],
       "datasourceTemplate": "docker"
     }
   ],
-
   "vulnerabilityAlerts": {
     "enabled": true
   }
