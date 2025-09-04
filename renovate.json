@@ -34,7 +34,8 @@
       "automergeType": "pr"
     },
     {
-      "description": "Labels for visibility",
+      "description": "Labels for visibility (apply to all updates)",
+      "matchManagers": ["helm-values", "dockerfile", "github-actions", "regex"],
       "addLabels": ["deps", "renovate"]
     },
     {
