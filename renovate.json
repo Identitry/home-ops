@@ -129,19 +129,6 @@
     },
     {
       "customType": "regex",
-      "description": "Bump HelmRelease chart.spec.version for Intel Device Plugins Operator",
-      "managerFilePatterns": [
-        "/(^|/)kubernetes/.+\\.ya?ml$/"
-      ],
-      "matchStrings": [
-        "chart:\\s*intel-device-plugins-operator[\\s\\S]*?\\n\\s*version:\\s*\"(?<currentValue>[^\"]+)\""
-      ],
-      "depNameTemplate": "intel-device-plugins-operator",
-      "datasourceTemplate": "helm",
-      "registryUrlTemplate": "oci://ghcr.io/home-operations/charts-mirror/intel-device-plugins-operator"
-    },
-    {
-      "customType": "regex",
       "description": "Intel Device Plugins Operator (OCIRepository tag): bump spec.ref.tag",
       "managerFilePatterns": [
         "/(^|/)kubernetes/.+\\.ya?ml$/"
