@@ -127,8 +127,8 @@ Public Github site that describes the cluster. ✅
 
 ### Update and restart management
 
-- Renovate - Cluster dependency management (on GitHub)
-- Reloader - Rolling upgrades on ConfigMap/Secret changes (in cluster)
+- Renovate - Cluster dependency management (on GitHub) ✅
+- Reloader - Rolling upgrades on ConfigMap/Secret changes (in cluster) ✅
 
 ### Initial cluster settings - Components/Bootstrap ✅
 
