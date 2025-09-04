@@ -97,6 +97,54 @@
       "depNameTemplate": "cloudflare-tunnel-remote",
       "datasourceTemplate": "helm",
       "registryUrlTemplate": "https://cloudflare.github.io/helm-charts"
+    },
+    {
+      "description": "Bump HelmRelease chart.spec.version for TrueCharts cloudflareddns",
+      "fileMatch": [
+        "(^|/)kubernetes/.+\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "chart:\\s*cloudflareddns[\\s\\S]*?\\n\\s*version:\\s*\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "cloudflareddns",
+      "datasourceTemplate": "helm",
+      "registryUrlTemplate": "https://charts.truecharts.org"
+    },
+    {
+      "description": "Bump HelmRelease chart.spec.version for External Secrets",
+      "fileMatch": [
+        "(^|/)kubernetes/.+\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "chart:\\s*external-secrets[\\s\\S]*?\\n\\s*version:\\s*\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "external-secrets",
+      "datasourceTemplate": "helm",
+      "registryUrlTemplate": "https://charts.external-secrets.io"
+    },
+    {
+      "description": "Bump HelmRelease chart.spec.version for Intel Device Plugins Operator",
+      "fileMatch": [
+        "(^|/)kubernetes/.+\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "chart:\\s*intel-device-plugins-operator[\\s\\S]*?\\n\\s*version:\\s*\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "intel-device-plugins-operator",
+      "datasourceTemplate": "helm",
+      "registryUrlTemplate": "https://intel.github.io/helm-charts"
+    },
+    {
+      "description": "Bump HelmRelease chart.spec.version for EmberStack Reflector",
+      "fileMatch": [
+        "(^|/)kubernetes/.+\\.ya?ml$"
+      ],
+      "matchStrings": [
+        "chart:\\s*reflector[\\s\\S]*?\\n\\s*version:\\s*\"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "reflector",
+      "datasourceTemplate": "helm",
+      "registryUrlTemplate": "https://emberstack.github.io/helm-charts"
     }
   ],
   "vulnerabilityAlerts": {
