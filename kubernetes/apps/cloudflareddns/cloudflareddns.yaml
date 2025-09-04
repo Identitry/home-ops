@@ -54,6 +54,8 @@ spec:
       valuesKey: apiToken
       targetPath: cloudflareddns.api_token
   values:
+    podAnnotations:
+      reloader.stakater.com/match: cloudflare-api-token
     cloudflareddns:
       interval: 300 # seconds
       detect_mode: dig-whoami.cloudflare

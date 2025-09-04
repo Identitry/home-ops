@@ -37,9 +37,6 @@ spec:
   values:
     priorityClassName: system-cluster-critical
 
-    #podLabels:
-    #  policy.gabe565.com/egress-kubeapi: "true"
-
     securityContext:
       readOnlyRootFilesystem: true
 

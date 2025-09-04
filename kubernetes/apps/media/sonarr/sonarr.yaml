@@ -81,13 +81,13 @@ spec:
               SONARR__SERVER__PORT: &port 8989
               SONARR__UPDATE__BRANCH: develop
               TZ: ${TZ}
+            envFrom:
+              - secretRef:
+                  name: sonarr-api-key
             ports:
               - name: http
                 containerPort: *port
                 protocol: TCP
-            envFrom:
-              - secretRef:
-                  name: sonarr-api-key
             probes:
               liveness: &probes
                 enabled: true
