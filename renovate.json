@@ -15,7 +15,7 @@
     "helm-values",
     "dockerfile",
     "github-actions",
-    "regex"
+    "custom.regex"
   ],
   "packageRules": [
     {
@@ -44,7 +44,7 @@
         "helm-values",
         "dockerfile",
         "github-actions",
-        "regex"
+        "custom.regex"
       ],
       "addLabels": [
         "deps",
@@ -65,11 +65,12 @@
       ]
     }
   ],
-  "regexManagers": [
+  "customManagers": [
     {
+      "customType": "regex",
       "description": "Catch image repository/tag pairs in YAML not detected by helm-values",
-      "fileMatch": [
-        "(^|/)kubernetes/.+\\.ya?ml$"
+      "managerFilePatterns": [
+        "/(^|/)kubernetes/.+\\.ya?ml$/"
       ],
       "matchStrings": [
         "repository:\\s*(?<depName>[^\\s#]+)[\\s\\S]*?\\n\\s*tag:\\s*(?<currentValue>[^\\s#]+)"
@@ -77,9 +78,10 @@
       "datasourceTemplate": "docker"
     },
     {
+      "customType": "regex",
       "description": "Catch single-line image: repo:tag in YAML",
-      "fileMatch": [
-        "(^|/)kubernetes/.+\\.ya?ml$"
+      "managerFilePatterns": [
+        "/(^|/)kubernetes/.+\\.ya?ml$/"
       ],
       "matchStrings": [
         "(?:^|\\n)\\s*image:\\s*(?<depName>[^:\\s#]+):(?<currentValue>[^\\s#@]+)"
@@ -87,9 +89,10 @@
       "datasourceTemplate": "docker"
     },
     {
+      "customType": "regex",
       "description": "Bump HelmRelease chart.spec.version for Cloudflare charts",
-      "fileMatch": [
-        "(^|/)kubernetes/.+\\.ya?ml$"
+      "managerFilePatterns": [
+        "/(^|/)kubernetes/.+\\.ya?ml$/"
       ],
       "matchStrings": [
         "chart:\\s*cloudflare-tunnel-remote[\\s\\S]*?\\n\\s*version:\\s*\"(?<currentValue>[^\"]+)\""
@@ -99,9 +102,10 @@
       "registryUrlTemplate": "https://cloudflare.github.io/helm-charts"
     },
     {
+      "customType": "regex",
       "description": "Bump HelmRelease chart.spec.version for TrueCharts cloudflareddns",
-      "fileMatch": [
-        "(^|/)kubernetes/.+\\.ya?ml$"
+      "managerFilePatterns": [
+        "/(^|/)kubernetes/.+\\.ya?ml$/"
       ],
       "matchStrings": [
         "chart:\\s*cloudflareddns[\\s\\S]*?\\n\\s*version:\\s*\"(?<currentValue>[^\"]+)\""
@@ -111,9 +115,10 @@
       "registryUrlTemplate": "https://charts.truecharts.org"
     },
     {
+      "customType": "regex",
       "description": "Bump HelmRelease chart.spec.version for External Secrets",
-      "fileMatch": [
-        "(^|/)kubernetes/.+\\.ya?ml$"
+      "managerFilePatterns": [
+        "/(^|/)kubernetes/.+\\.ya?ml$/"
       ],
       "matchStrings": [
         "chart:\\s*external-secrets[\\s\\S]*?\\n\\s*version:\\s*\"(?<currentValue>[^\"]+)\""
@@ -123,9 +128,10 @@
       "registryUrlTemplate": "https://charts.external-secrets.io"
     },
     {
+      "customType": "regex",
       "description": "Bump HelmRelease chart.spec.version for Intel Device Plugins Operator",
-      "fileMatch": [
-        "(^|/)kubernetes/.+\\.ya?ml$"
+      "managerFilePatterns": [
+        "/(^|/)kubernetes/.+\\.ya?ml$/"
       ],
       "matchStrings": [
         "chart:\\s*intel-device-plugins-operator[\\s\\S]*?\\n\\s*version:\\s*\"(?<currentValue>[^\"]+)\""
@@ -135,9 +141,10 @@
       "registryUrlTemplate": "https://intel.github.io/helm-charts"
     },
     {
+      "customType": "regex",
       "description": "Bump HelmRelease chart.spec.version for EmberStack Reflector",
-      "fileMatch": [
-        "(^|/)kubernetes/.+\\.ya?ml$"
+      "managerFilePatterns": [
+        "/(^|/)kubernetes/.+\\.ya?ml$/"
       ],
       "matchStrings": [
         "chart:\\s*reflector[\\s\\S]*?\\n\\s*version:\\s*\"(?<currentValue>[^\"]+)\""
