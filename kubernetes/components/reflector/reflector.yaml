@@ -15,8 +15,6 @@ metadata:
 spec:
   interval: 1h
   url: https://emberstack.github.io/helm-charts
-  ref:
-    tag: 9.1.27
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
