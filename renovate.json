@@ -97,9 +97,11 @@
       "matchStrings": [
         "chart:\\s*cloudflare-tunnel-remote[\\s\\S]*?\\n\\s*version:\\s*\"(?<currentValue>[^\"]+)\""
       ],
-      "depNameTemplate": "cloudflare/cloudflare-tunnel-remote",
+      "depNameTemplate": "cloudflare-tunnel-remote",
       "datasourceTemplate": "helm",
-      "registryUrlTemplate": "https://cloudflare.github.io/helm-charts"
+      "registryUrlsTemplate": [
+        "https://cloudflare.github.io/helm-charts"
+      ]
     }
   ],
   "vulnerabilityAlerts": {
