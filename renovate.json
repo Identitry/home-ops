@@ -1,18 +1,61 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
+  "extends": [
+    "config:recommended",
+    ":semanticCommits",
+    ":preserveSemverRanges",
+    "github>renovatebot/presets-graph:dockerVersions"
+  ],
+  "timezone": "Europe/Stockholm",
   "dependencyDashboard": true,
-  "enabledManagers": ["helm-values", "regex", "dockerfile", "github-actions"],
+  "rebaseWhen": "behind-base-branch",
+  "rangeStrategy": "bump",
+  "prHourlyLimit": 2,
+  "prConcurrentLimit": 10,
+
+  "enabledManagers": [
+    "helm-values",
+    "dockerfile",
+    "github-actions",
+    "regex"
+  ],
+
   "packageRules": [
     {
+      "description": "Group minor/patch updates per app (values files)",
       "matchManagers": ["helm-values"],
-      "matchPackagePatterns": ["app-template"],
-      "groupName": "Helm app-template upgrades"
+      "groupName": "helm-values ({{packageFile}})"
     },
     {
-      "matchDatasources": ["docker"],
-      "groupName": "Docker image updates",
-      "schedule": ["before 6am on sunday"]
+      "description": "Automerge safe upgrades: Docker digest bumps + patch releases",
+      "matchManagers": ["dockerfile", "helm-values"],
+      "matchUpdateTypes": ["digest", "patch"],
+      "automerge": true,
+      "automergeType": "pr"
+    },
+    {
+      "description": "Labels for visibility",
+      "addLabels": ["deps", "renovate"]
+    },
+    {
+      "description": "Schedule noisy updates off-hours (non-urgent)",
+      "matchManagers": ["dockerfile", "helm-values", "github-actions"],
+      "schedule": ["after 22:00 and before 06:00 every weekday", "every weekend"]
     }
-  ]
+  ],
+
+  "regexManagers": [
+    {
+      "description": "Catch image repository/tag pairs in YAML not detected by helm-values",
+      "fileMatch": ["(^|/)kubernetes/.+\\.ya?ml$"],
+      "matchStrings": [
+        "repository:\\s*(?<depName>[^\\s#]+)[\\s\\S]*?\\ntag:\\s*(?<currentValue>[^\\s#]+)"
+      ],
+      "datasourceTemplate": "docker"
+    }
+  ],
+
+  "vulnerabilityAlerts": {
+    "enabled": true
+  }
 }
