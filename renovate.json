@@ -3,8 +3,7 @@
   "extends": [
     "config:recommended",
     ":semanticCommits",
-    ":preserveSemverRanges",
-    "github>renovatebot/presets-graph:dockerVersions"
+    ":preserveSemverRanges"
   ],
   "timezone": "Europe/Stockholm",
   "dependencyDashboard": true,
@@ -41,7 +40,10 @@
     {
       "description": "Schedule noisy updates off-hours (non-urgent)",
       "matchManagers": ["dockerfile", "helm-values", "github-actions"],
-      "schedule": ["after 22:00 and before 06:00 every weekday", "every weekend"]
+      "schedule": [
+        "after 22:00 and before 06:00 every weekday",
+        "every weekend"
+      ]
     }
   ],
 
