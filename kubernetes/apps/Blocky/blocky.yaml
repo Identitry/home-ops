@@ -140,11 +140,12 @@ spec:
         enabled: true
         type: configMap
         name: blocky-config
-        subPath:
-          enabled: true
-          path: config.yml
+        items:
+          - key: config.yml
+            path: config.yml
         globalMounts:
           - path: /app/config/config.yml
+            subPath: config.yml
 
     podAnnotations:
       reloader.stakater.com/match: blocky-config,gluetun-env
