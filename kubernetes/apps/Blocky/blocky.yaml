@@ -103,7 +103,7 @@ spec:
 
     additionalContainers:
       - name: gluetun
-        image: qmcgaw/gluetun:v3.39
+        image: qmcgaw/gluetun:v3.40
         securityContext:
           capabilities:
             add:
