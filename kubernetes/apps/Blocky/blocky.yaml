@@ -140,9 +140,11 @@ spec:
         enabled: true
         type: configMap
         name: blocky-config
-        mountPath: /app/config
-        subPath: config.yml
-        defaultMode: 420
+        subPath:
+          enabled: true
+          path: config.yml
+        globalMounts:
+          - path: /app/config/config.yml
 
     podAnnotations:
-      reloader.stakater.com/match: blocky-config
+      reloader.stakater.com/match: blocky-config,gluetun-env
