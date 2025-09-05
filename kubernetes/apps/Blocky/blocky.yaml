@@ -1,0 +1,148 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: blocky
+  labels:
+    app.kubernetes.io/name: blocky
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/kubernetes-external-secrets/main/deploy/crds/external-secrets.io_externalsecrets.yaml
+# External secret that contains the environment variables for the Gluetun container.
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: gluetun-env
+  namespace: blocky
+  annotations:
+    reloader.stakater.com/match: "true"
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: infisical
+  target:
+    name: gluetun-env
+    creationPolicy: Owner
+  data:
+    - secretKey: NORDVPN_WG_PRIVATE_KEY
+      remoteRef:
+        key: /GLUETUN/NORDVPN_WG_PRIVATE_KEY
+    - secretKey: PUBLICIP_API
+      remoteRef:
+        key: /GLUETUN/PUBLICIP_API
+    - secretKey: SERVER_COUNTRIES
+      remoteRef:
+        key: /GLUETUN/SERVER_COUNTRIES
+    - secretKey: VPN_SERVICE_PROVIDER
+      remoteRef:
+        key: /GLUETUN/VPN_SERVICE_PROVIDER
+    - secretKey: VPN_TYPE
+      remoteRef:
+        key: /GLUETUN/VPN_TYPE
+    - secretKey: DOT_PROVIDERS
+      remoteRef:
+        key: /GLUETUN/DOT_PROVIDERS
+---
+# ConfigMap that contains the Blocky configuration file.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: blocky-config
+  namespace: blocky
+data:
+  config.yml: |
+    upstream:
+      default:
+        - https://1.1.1.1/dns-query
+        - https://dns.quad9.net/dns-query
+    blocking:
+      blackLists:
+        ads:
+          - https://s3.amazonaws.com/lists.disconnect.me/simple_ad.txt
+      clientGroupsBlock:
+        default:
+          - ads
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/spotahome/redis-operator/master/config/crd/bases/databases.spotahome.com_redisfailovers.yaml
+# RedisFailover for Blocky, used for syncing the Blocky cache between multiple replicas.
+apiVersion: databases.spotahome.com/v1
+kind: RedisFailover
+metadata:
+  name: blocky-redis
+  namespace: blocky
+spec:
+  sentinel:
+    replicas: 3
+  redis:
+    replicas: 3
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd/helm-controller/main/config/crd/bases/helm.toolkit.fluxcd.io_helmreleases.yaml
+# HelmRelease for Blocky, a DNS server for ad-blocking and more.
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: blocky
+  namespace: blocky
+spec:
+  interval: 10m
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: cozy-fluxcd
+  values:
+    controller:
+      type: daemonset
+
+    image:
+      repository: ghcr.io/0xerr0r/blocky
+      tag: v0.23
+
+    env:
+      - name: REDIS_URL
+        value: redis://blocky-redis:6379/0
+
+    additionalContainers:
+      - name: gluetun
+        image: qmcgaw/gluetun:v3.39
+        securityContext:
+          capabilities:
+            add:
+              - NET_ADMIN
+        envFrom:
+          - secretRef:
+              name: gluetun-env
+        resources:
+          requests:
+            cpu: 10m
+            memory: 64Mi
+          limits:
+            cpu: 200m
+            memory: 128Mi
+
+    service:
+      main:
+        enabled: true
+        type: LoadBalancer
+        annotations:
+          metallb.universe.tf/address-pool: default
+        externalIPs:
+          - 192.168.222.100
+        ports:
+          dns:
+            port: 53
+            protocol: UDP
+          dns-tcp:
+            port: 53
+            protocol: TCP
+
+    persistence:
+      config:
+        enabled: true
+        type: configMap
+        name: blocky-config
+        mountPath: /app/config
+        subPath: config.yml
+        defaultMode: 420
+
+    podAnnotations:
+      reloader.stakater.com/match: blocky-config

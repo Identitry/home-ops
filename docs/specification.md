@@ -121,15 +121,6 @@ Nice hyper-converged stack on top of Talos!
 - Velero Operator - Backups to Minio on Stor (Needs to be enabled in cozy config "bundle-enable") ✅
 - and more...
 
-### GitOps - Flux CD ✅
-
-Public Github site that describes the cluster. ✅
-
-### Update and restart management
-
-- Renovate - Cluster dependency management (on GitHub) ✅
-- Reloader - Rolling upgrades on ConfigMap/Secret changes (in cluster) ✅
-
 ### Initial cluster settings - Components/Bootstrap ✅
 
 Settings to complete the cluster setup.
@@ -146,7 +137,16 @@ Settings to complete the cluster setup.
 - Media NFS PVs (Read Write/Read Only) ✅
 - Reflector - Tool for syncing certs and config maps between namespaces, mainly use for syncing wildcard TLS cert. ✅
 
-### Apps
+#### Apps
+
+#### GitOps - Flux CD ✅
+
+Public Github site that describes the cluster. ✅
+
+### Update and configuration management
+
+- Renovate - Cluster dependency management (on GitHub) ✅
+- Reloader - Rolling upgrades on ConfigMap/Secret changes (in cluster) ✅
 
 #### Storage/Networking
 
@@ -164,10 +164,10 @@ Most of these apps are running on TrueNAS stor and needs to be moved to the clus
 
 - Jellyfin (new, replaces Plex) ✅
 - Plex ✅
-- Sonarr (currently on truenas-stor)
-- Radarr (currently on truenas-stor)
-- Readarr (currently on truenas-stor)
-- Prowlarr (currently on truenas-stor)
+- Sonarr (currently on truenas-stor) ✅
+- Radarr (currently on truenas-stor) ✅
+- Readarr (currently on truenas-stor) - Not sure if I should have this?
+- Prowlarr (currently on truenas-stor) ✅
 - QBitTorrent (currently on truenas-stor) with GlueTun for NordVPN
 - Sabnzbd (new)
 
@@ -177,7 +177,7 @@ Most of these apps are running on TrueNAS stor and needs to be moved to the clus
 
 #### PXE Boot
 
-- Netboot.xyz or Matchbox or Tinkerbell?
+- Netboot.xyz or Matchbox or Tinkerbell or...?
 
 #### Backup
 
@@ -216,7 +216,7 @@ Most of these apps are running on TrueNAS stor and needs to be moved to the clus
 
 #### DNS/Ad Blocking
 
-- Blocky - on Postgres and Redis (Configured with DOP, maybe behind NordVPN)
+- Blocky + Redis (Sync) - on Postgres and Redis (Configured with DOP, maybe behind NordVPN)
 - Grafana "Blocky Dashboard for Postgres"
 
 #### Home Automation
@@ -248,7 +248,7 @@ Most of these apps are running on TrueNAS stor and needs to be moved to the clus
 - Guacamole
 - CompreFace/DeepStack (Face Recognition is included in Frigate now, skip this?)
 - Plex Debrid
-- Streamio
+- Streamio Server (https://github.com/tsaridas/stremio-docker) + MediaFusion (Debrid support) + GlueTun
 - Immich
 - Sabnzbd
 - TDArr
