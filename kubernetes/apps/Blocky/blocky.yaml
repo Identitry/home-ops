@@ -90,40 +90,77 @@ spec:
     name: app-template
     namespace: cozy-fluxcd
   values:
-    controller:
-      type: daemonset
-      enabled: true
+    controllers:
+      blocky:
+        annotations:
+          reloader.stakater.com/match: blocky-config,gluetun-env
+        type: daemonset
+        enabled: true
 
-    image:
-      repository: ghcr.io/0xerr0r/blocky
-      tag: v0.23
+        initContainers:
+          vpn:
+            image:
+              repository: qmcgaw/gluetun
+              tag: v3.40.0@sha256:2b42bfa046757145a5155acece417b65b4443c8033fb88661a8e9dcf7fda5a00
+              pullPolicy: IfNotPresent
+            restartPolicy: Always
+            env:
+              HEALTH_VPN_DURATION_INITIAL: 120s
+              HEALTH_SUCCESS_WAIT_DURATION: 120s
+              PUBLICIP_API: ${GLUETUN_PUBLICIP_API}
+              VPN_SERVICE_PROVIDER: ${GLUETUN_VPN_SERVICE_PROVIDER}
+              VPN_INTERFACE: wireguard0
+              VPN_TYPE: ${GLUETUN_VPN_TYPE}
+              DOT: "on"
+              DOT_PROVIDERS: ${GLUETUN_DOT_PROVIDERS}
+              VERSION_INFORMATION: "off"
+              WIREGUARD_PRIVATE_KEY: ${NORDVPN_WG_PRIVATE_KEY}
+              SERVER_COUNTRIES: ${GLUETUN_SERVER_COUNTRIES}
+              #FIREWALL_VPN_INPUT_PORTS: 6881
+              #FIREWALL_INPUT_PORTS: "8080"
+            securityContext:
+              capabilities:
+                add:
+                  - NET_ADMIN
+                  - SYS_MODULE
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  exec: &exec
+                    command: [/gluetun-entrypoint, healthcheck]
+                  periodSeconds: 60
+              startup:
+                <<: *probe
+                spec:
+                  exec: *exec
+                  periodSeconds: 5
 
-    env:
-      - name: REDIS_URL
-        value: redis://blocky-redis:6379/0
+        containers:
+          app:
+            image:
+              repository: ghcr.io/0xerr0r/blocky
+              tag: v0.26.2@sha256:46150ee0a8a414170ac861343ab7640eb0182a736f7d59f4c0c41383443932fd
 
-    additionalContainers:
-      - name: gluetun
-        image: qmcgaw/gluetun:v3.39
-        securityContext:
-          capabilities:
-            add:
-              - NET_ADMIN
-        envFrom:
-          - secretRef:
-              name: gluetun-env
-        resources:
-          requests:
-            cpu: 10m
-            memory: 64Mi
-          limits:
-            cpu: 200m
-            memory: 128Mi
+            env:
+              - name: REDIS_URL
+                value: redis://blocky-redis:6379/0
+
+            probes:
+              liveness:
+                enabled: true
+              readiness:
+                enabled: true
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 5
 
     service:
-      main:
-        enabled: true
-        controller: DaemonSet
+      blocky:
+        controller: blocky
         type: LoadBalancer
         annotations:
           metallb.universe.tf/address-pool: cozystack
@@ -136,6 +173,26 @@ spec:
           dns-tcp:
             port: 53
             protocol: TCP
+          ui:
+            port: 4000
+            protocol: TCP
+
+    ingress:
+      blocky:
+        enabled: true
+        className: tenant-root
+        annotations:
+          nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+          nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+        hosts:
+          - host: blocky.${DOMAIN}
+            paths:
+              - path: /
+                pathType: Prefix
+        tls:
+          - hosts:
+              - blocky.${DOMAIN}
+            secretName: wildcard-le-tls-cert-myk8s-se
 
     persistence:
       config:
@@ -148,6 +205,3 @@ spec:
         globalMounts:
           - path: /app/config/config.yml
             subPath: config.yml
-
-    podAnnotations:
-      reloader.stakater.com/match: blocky-config,gluetun-env
