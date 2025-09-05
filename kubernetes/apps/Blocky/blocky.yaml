@@ -125,7 +125,7 @@ spec:
         controller: ds
         type: LoadBalancer
         annotations:
-          metallb.universe.tf/address-pool: default
+          metallb.universe.tf/address-pool: cozystack
         externalIPs:
           - 192.168.222.100
         ports:
