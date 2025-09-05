@@ -122,6 +122,7 @@ spec:
     service:
       main:
         enabled: true
+        controller: daemonset
         type: LoadBalancer
         annotations:
           metallb.universe.tf/address-pool: default
