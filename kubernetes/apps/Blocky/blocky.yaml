@@ -92,6 +92,7 @@ spec:
   values:
     controller:
       type: daemonset
+      enabled: true
 
     image:
       repository: ghcr.io/0xerr0r/blocky

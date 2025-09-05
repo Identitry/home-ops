@@ -18,7 +18,7 @@ This is a spcification of everything that should be included in the cluster impl
 - Network: 192.168.222.0/24 "Server"
 - DHCP range: 192.168.222.21-100
 - Control plane shared IP: 192.168.222.20
-- MetalLB load balancer IP-range: 192.168.222.101-192.168.222.130
+- MetalLB load balancer IP-range: 192.168.222.100-192.168.222.130
 - Network manufacturer: Ubiquiti Unifi
 - Public domain name: myk8s.se
 - Most services will be published over authenticated (Entra ID) Cloudflare tunnel.
