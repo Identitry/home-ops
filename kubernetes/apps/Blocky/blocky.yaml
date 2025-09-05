@@ -5,6 +5,7 @@ metadata:
   name: blocky
   labels:
     app.kubernetes.io/name: blocky
+    pod-security.kubernetes.io/enforce: privileged
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/kubernetes-external-secrets/main/deploy/crds/external-secrets.io_externalsecrets.yaml
 # External secret that contains the environment variables for the Gluetun container.
