@@ -58,11 +58,6 @@ data:
         - sentinel:26379
       required: true
 
-    - https://dns.quad9.net/dns-query
-          - https://dns.google/dns-query
-          - https://cloudflare-dns.com/dns-query
-
-
     bootstrapDns:
       - https://1.1.1.1/dns-query
       - https://9.9.9.9/dns-query
