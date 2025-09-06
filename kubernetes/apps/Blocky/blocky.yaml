@@ -106,6 +106,7 @@ spec:
               pullPolicy: IfNotPresent
             restartPolicy: Always
             env:
+              DISABLE_IPV6: "on"
               HEALTH_VPN_DURATION_INITIAL: 120s
               HEALTH_SUCCESS_WAIT_DURATION: 120s
               PUBLICIP_API: ${GLUETUN_PUBLICIP_API}
