@@ -58,11 +58,21 @@ data:
         - sentinel:26379
       required: true
 
+    - https://dns.quad9.net/dns-query
+          - https://dns.google/dns-query
+          - https://cloudflare-dns.com/dns-query
+
+
     bootstrapDns:
-      ips:
-        - 1.1.1.1
-        - 9.9.9.9
-        - 8.8.4.4
+      - upstream: https://dns.quad9.net/dns-query
+        ips:
+          - 9.9.9.9
+      - upstream: https://dns.google/dns-query
+        ips:
+          - 8.8.4.4
+      - upstream: https://cloudflare-dns.com/dns-query
+        ips:
+          - 1.1.1.1
 
     minTlsServeVersion: "1.3"
     certFile: /tls/tls.crt
