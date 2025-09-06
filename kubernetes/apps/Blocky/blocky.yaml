@@ -31,7 +31,9 @@ data:
         ads:
           - https://v.firebog.net/hosts/static/w3kbl.txt
           - https://v.firebog.net/hosts/Easyprivacy.txt
+          - https://v.firebog.net/hosts/Easylist.txt
           - https://v.firebog.net/hosts/Prigent-Ads.txt
+          - https://v.firebog.net/hosts/Prigent-Crypto.txt
           - https://v.firebog.net/hosts/RPiList-Phishing.txt
           - https://v.firebog.net/hosts/RPiList-Malware.txt
           - https://big.oisd.nl/domainswild
