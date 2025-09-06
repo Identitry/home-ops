@@ -7,43 +7,6 @@ metadata:
     app.kubernetes.io/name: blocky
     pod-security.kubernetes.io/enforce: privileged
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/kubernetes-external-secrets/main/deploy/crds/external-secrets.io_externalsecrets.yaml
-# External secret that contains the environment variables for the Gluetun container.
-apiVersion: external-secrets.io/v1
-kind: ExternalSecret
-metadata:
-  name: gluetun-env
-  namespace: blocky
-  annotations:
-    reloader.stakater.com/match: "true"
-spec:
-  refreshInterval: 1h
-  secretStoreRef:
-    kind: ClusterSecretStore
-    name: infisical
-  target:
-    name: gluetun-env
-    creationPolicy: Owner
-  data:
-    - secretKey: NORDVPN_WG_PRIVATE_KEY
-      remoteRef:
-        key: /GLUETUN/NORDVPN_WG_PRIVATE_KEY
-    - secretKey: PUBLICIP_API
-      remoteRef:
-        key: /GLUETUN/PUBLICIP_API
-    - secretKey: SERVER_COUNTRIES
-      remoteRef:
-        key: /GLUETUN/SERVER_COUNTRIES
-    - secretKey: VPN_SERVICE_PROVIDER
-      remoteRef:
-        key: /GLUETUN/VPN_SERVICE_PROVIDER
-    - secretKey: VPN_TYPE
-      remoteRef:
-        key: /GLUETUN/VPN_TYPE
-    - secretKey: DOT_PROVIDERS
-      remoteRef:
-        key: /GLUETUN/DOT_PROVIDERS
----
 # ConfigMap that contains the Blocky configuration file.
 apiVersion: v1
 kind: ConfigMap
@@ -94,50 +57,9 @@ spec:
     controllers:
       blocky:
         annotations:
-          reloader.stakater.com/match: blocky-config,gluetun-env
+          reloader.stakater.com/match: blocky-config
         type: daemonset
         enabled: true
-
-        initContainers:
-          vpn:
-            image:
-              repository: qmcgaw/gluetun
-              tag: v3.40.0@sha256:2b42bfa046757145a5155acece417b65b4443c8033fb88661a8e9dcf7fda5a00
-              pullPolicy: IfNotPresent
-            restartPolicy: Always
-            env:
-              DISABLE_IPV6: "on"
-              HEALTH_VPN_DURATION_INITIAL: 120s
-              HEALTH_SUCCESS_WAIT_DURATION: 120s
-              PUBLICIP_API: ${GLUETUN_PUBLICIP_API}
-              VPN_SERVICE_PROVIDER: ${GLUETUN_VPN_SERVICE_PROVIDER}
-              VPN_INTERFACE: wireguard0
-              VPN_TYPE: ${GLUETUN_VPN_TYPE}
-              DOT: "on"
-              DOT_PROVIDERS: ${GLUETUN_DOT_PROVIDERS}
-              VERSION_INFORMATION: "off"
-              WIREGUARD_PRIVATE_KEY: ${NORDVPN_WG_PRIVATE_KEY}
-              SERVER_COUNTRIES: ${GLUETUN_SERVER_COUNTRIES}
-              #FIREWALL_VPN_INPUT_PORTS: 6881
-              #FIREWALL_INPUT_PORTS: "8080"
-            securityContext:
-              capabilities:
-                add:
-                  - NET_ADMIN
-                  #- SYS_MODULE
-            probes:
-              liveness: &probe
-                enabled: true
-                custom: true
-                spec:
-                  exec: &exec
-                    command: [/gluetun-entrypoint, healthcheck]
-                  periodSeconds: 60
-              startup:
-                <<: *probe
-                spec:
-                  exec: *exec
-                  periodSeconds: 5
 
         containers:
           app:
