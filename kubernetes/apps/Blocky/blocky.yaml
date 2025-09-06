@@ -105,8 +105,6 @@ spec:
               tag: v3.40.0@sha256:2b42bfa046757145a5155acece417b65b4443c8033fb88661a8e9dcf7fda5a00
               pullPolicy: IfNotPresent
             restartPolicy: Always
-            command: ["/gluetun-entrypoint"]
-            args: ["run"]
             env:
               HEALTH_VPN_DURATION_INITIAL: 120s
               HEALTH_SUCCESS_WAIT_DURATION: 120s
