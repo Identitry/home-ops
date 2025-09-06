@@ -206,4 +206,36 @@ spec:
   egress:
     - {}
 ---
-
+# webhook
+# yaml-language-server: $schema=https://raw.githubusercontent.com/operator-framework/operator-lifecycle-manager/main/deploy/upstream/quickstart/crds/operators.operatorframework.io_clusterserviceversions.yaml
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VMServiceScrape
+metadata:
+  name: blocky-webhook
+  namespace: blocky
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: blocky
+      app.kubernetes.io/name: blocky
+  namespaceSelector:
+    matchNames: ["blocky"]
+  endpoints:
+    - port: doh
+      path: /metrics
+      interval: 30s
+      honorLabels: true
+---
+# Grafana dashboard for Cert-Manager.
+# yaml-language-server: $schema=https://raw.githubusercontent.com/grafana-operator/grafana-operator/main/config/crd/bases/grafana.integreatly.org_grafanadashboards.yaml
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: blocky
+  namespace: blocky
+spec:
+  folder: blocky
+  instanceSelector:
+    matchLabels:
+      dashboards: "blocky"
+  url: "https://grafana.com/api/dashboards/13768/revisions/7/download"
