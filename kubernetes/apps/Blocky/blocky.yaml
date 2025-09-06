@@ -27,7 +27,7 @@ data:
 
     # Ad blocking options
     blocking:
-      denylists
+      denylists:
         ads:
           - https://v.firebog.net/hosts/static/w3kbl.txt
           - https://v.firebog.net/hosts/Easyprivacy.txt
