@@ -55,7 +55,7 @@ data:
     redis:
       address: blocky-redis:6379
       sentinelAddresses:
-        - sentinel:26379
+        - blocky-redis-sentinel:26379
       required: true
 
     bootstrapDns:
