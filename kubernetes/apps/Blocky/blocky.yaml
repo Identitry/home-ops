@@ -229,6 +229,7 @@ spec:
 ---
 # Grafana dashboard for Cert-Manager.
 # yaml-language-server: $schema=https://raw.githubusercontent.com/grafana-operator/grafana-operator/main/config/crd/bases/grafana.integreatly.org_grafanadashboards.yaml
+# not working - need troubleshooting...
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
 metadata:
