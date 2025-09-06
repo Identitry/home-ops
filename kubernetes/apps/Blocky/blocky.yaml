@@ -218,6 +218,7 @@ spec:
     matchLabels:
       app.kubernetes.io/instance: blocky
       app.kubernetes.io/name: blocky
+      app.kubernetes.io/component: controller
   namespaceSelector:
     matchNames: ["blocky"]
   endpoints:
