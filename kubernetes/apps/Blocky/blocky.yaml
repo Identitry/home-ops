@@ -123,7 +123,7 @@ spec:
               capabilities:
                 add:
                   - NET_ADMIN
-                  - SYS_MODULE
+                  #- SYS_MODULE
             probes:
               liveness: &probe
                 enabled: true
