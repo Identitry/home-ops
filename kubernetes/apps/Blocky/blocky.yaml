@@ -97,7 +97,7 @@ spec:
     controllers:
       blocky:
         annotations:
-          reloader.stakater.com/match: blocky-config
+          reloader.stakater.com/match: blocky-config, wildcard-le-tls-cert-myk8s-se
         type: daemonset
         enabled: true
 
