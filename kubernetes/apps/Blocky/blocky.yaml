@@ -16,7 +16,7 @@ metadata:
 data:
   config.yml: |
     # Upstream DNS options.
-    upstream:
+    upstreams:
       groups:
         default:
           - https://dns.quad9.net/dns-query
