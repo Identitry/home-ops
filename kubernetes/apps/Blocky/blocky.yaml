@@ -130,7 +130,7 @@ spec:
           - key: config.yml
             path: config.yml
         globalMounts:
-          - path: /app/config/config.yml
+          - path: /app/config.yml
             subPath: config.yml
 ---
 apiVersion: networking.k8s.io/v1
