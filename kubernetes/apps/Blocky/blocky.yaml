@@ -59,9 +59,10 @@ data:
       required: true
 
     bootstrapDns:
-    - tcp+udp:1.1.1.1
-    - tcp+udp:9.9.9.9
-    - tcp+udp:8.8.4.4
+      ips:
+      - 1.1.1.1
+      - 9.9.9.9
+      - 8.8.4.4
 
     minTlsServeVersion: "1.3"
     certFile: /tls/tls.crt
