@@ -58,6 +58,11 @@ data:
         - sentinel:26379
       required: true
 
+    bootstrapDns:
+    - tcp+udp:1.1.1.1
+    - tcp+udp:9.9.9.9
+    - tcp+udp:8.8.4.4
+
     minTlsServeVersion: "1.3"
     certFile: /tls/tls.crt
     keyFile: /tls/tls.key
