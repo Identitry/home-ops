@@ -26,6 +26,7 @@ data:
       clientGroupsBlock:
         default:
           - ads
+    httpPort: 4000
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/spotahome/redis-operator/master/config/crd/bases/databases.spotahome.com_redisfailovers.yaml
 # RedisFailover for Blocky, used for syncing the Blocky cache between multiple replicas.
