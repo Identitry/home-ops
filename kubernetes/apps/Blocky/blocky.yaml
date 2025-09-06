@@ -237,5 +237,5 @@ spec:
   folder: blocky
   instanceSelector:
     matchLabels:
-      dashboards: "blocky"
+      dashboards: "grafana"
   url: "https://grafana.com/api/dashboards/13768/revisions/7/download"
