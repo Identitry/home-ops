@@ -25,7 +25,7 @@ data:
       # strategy: parallel_best (default)
       # timeout: 2s (default)
 
-    # Ad blocking options
+    # Ad blocking options (most taken from https://firebog.net/)
     blocking:
       denylists:
         ads:
