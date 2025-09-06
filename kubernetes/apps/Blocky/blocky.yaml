@@ -64,15 +64,9 @@ data:
 
 
     bootstrapDns:
-      - upstream: https://dns.quad9.net/dns-query
-        ips:
-          - 9.9.9.9
-      - upstream: https://dns.google/dns-query
-        ips:
-          - 8.8.4.4
-      - upstream: https://cloudflare-dns.com/dns-query
-        ips:
-          - 1.1.1.1
+      - https://1.1.1.1/dns-query
+      - https://9.9.9.9/dns-query
+      - https://8.8.8.8/dns-query
 
     minTlsServeVersion: "1.3"
     certFile: /tls/tls.crt
