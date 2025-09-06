@@ -53,9 +53,9 @@ data:
 
     # Redis cache options.
     redis:
-      address: rfrm-blocky-redis.blocky.svc.cozy.local:6379
+      address: rfrm-blocky-redis.blocky.svc.cozy.local #:6379
       sentinelAddresses:
-        - rfs-blocky-redis.blocky.svc.cozy.local:26379
+        - rfs-blocky-redis.blocky.svc.cozy.local #:26379
       required: true
 
     bootstrapDns:
