@@ -7,79 +7,29 @@ metadata:
     app.kubernetes.io/name: blocky
     pod-security.kubernetes.io/enforce: privileged
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/kubernetes-external-secrets/main/deploy/crds/external-secrets.io_externalsecret.yaml
 # ConfigMap that contains the Blocky configuration file.
-apiVersion: v1
-kind: ConfigMap
+# Docs: https://0xerr0r.github.io/blocky/latest/configuration/
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
 metadata:
-  name: blocky-config
+  name: se-blocky-config
   namespace: blocky
-data:
-  config.yml: |
-    # Upstream DNS options.
-    upstreams:
-      groups:
-        default:
-          - https://dns.quad9.net/dns-query
-          - https://dns.google/dns-query
-          - https://cloudflare-dns.com/dns-query
-      # strategy: parallel_best (default)
-      # timeout: 2s (default)
-
-    ports:
-      # optional: DNS listener port(s) and bind ip address(es), default 53 (UDP and TCP). Example: 53, :53, "127.0.0.1:5353,[::1]:5353"
-      dns: 53
-      # optional: Port(s) and bind ip address(es) for DoT (DNS-over-TLS) listener. Example: 853, 127.0.0.1:853
-      tls: 853
-      # optional: Port(s) and optional bind ip address(es) to serve HTTPS used for prometheus metrics, pprof, REST API, DoH... If you wish to specify a specific IP, you can do so such as 192.168.0.1:443. Example: 443, :443, 127.0.0.1:443,[::1]:443
-      https: 443
-
-    hostsFile:
-      sources:
-        - |
-          # inline hosts
-          192.168.222.100 blocky.myk8s.se
-
-    # Ad blocking options (most taken from https://firebog.net/)
-    blocking:
-      denylists:
-        ads:
-          - https://v.firebog.net/hosts/static/w3kbl.txt
-          - https://v.firebog.net/hosts/Easyprivacy.txt
-          - https://v.firebog.net/hosts/Easylist.txt
-          - https://v.firebog.net/hosts/Prigent-Ads.txt
-          - https://v.firebog.net/hosts/Prigent-Crypto.txt
-          - https://v.firebog.net/hosts/RPiList-Phishing.txt
-          - https://v.firebog.net/hosts/RPiList-Malware.txt
-          - https://big.oisd.nl/domainswild
-      clientGroupsBlock:
-        default:
-          - ads
-
-    # Caching options.
-    caching:
-      prefetching: true
-      prefetchExpires: 2h
-
-    # Prometheus metrics options.
-    prometheus:
-      enable: true
-      path: /metrics
-
-    # Redis cache options.
-    redis:
-      address: mymaster
-      sentinelAddresses:
-        - rfs-blocky-redis.blocky.svc.cozy.local:26379
-      required: true
-
-    bootstrapDns:
-      - https://1.1.1.1/dns-query
-      - https://9.9.9.9/dns-query
-      - https://8.8.8.8/dns-query
-
-    minTlsServeVersion: "1.3"
-    certFile: /tls/tls.crt
-    keyFile: /tls/tls.key
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: infisical
+  target:
+    name: blocky-config
+    creationPolicy: Owner
+    template:
+      type: Opaque
+      data:
+        config.yml: "{{ .config_yml }}"
+  data:
+    - secretKey: config_yml
+      remoteRef:
+        key: /BLOCKY/CONFIG
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/spotahome/redis-operator/master/config/crd/bases/databases.spotahome.com_redisfailovers.yaml
 # RedisFailover for Blocky, used for syncing the Blocky cache between multiple replicas.
@@ -177,7 +127,7 @@ spec:
     persistence:
       config:
         enabled: true
-        type: configMap
+        type: secret
         name: blocky-config
         items:
           - key: config.yml
@@ -218,7 +168,6 @@ spec:
     matchLabels:
       app.kubernetes.io/instance: blocky
       app.kubernetes.io/name: blocky
-      app.kubernetes.io/component: controller
   namespaceSelector:
     matchNames: ["blocky"]
   endpoints:
