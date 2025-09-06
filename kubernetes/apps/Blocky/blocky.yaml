@@ -190,3 +190,50 @@ spec:
     matchLabels:
       dashboards: "grafana"
   url: "https://grafana.com/api/dashboards/13768/revisions/6/download"
+
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: blocky-postgres
+  namespace: blocky
+spec:
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  # Pull sensitive fields from an existing Secret rather than committing them
+  valuesFrom:
+    - targetPath: "user"
+      valueFrom:
+        secretKeyRef:
+          name: blocky-db-creds
+          key: username
+    - targetPath: "secureJsonData.password"
+      valueFrom:
+        secretKeyRef:
+          name: blocky-db-creds
+          key: password
+  datasource:
+    name: Blocky Postgres
+    type: postgres
+    access: proxy
+    isDefault: false
+    url: blocky-db-rw.blocky.svc.cozy.local:5432
+    database: blocky
+    jsonData:
+      sslmode: require
+      postgresVersion: 1600
+      timeInterval: 5s
+
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: blocky-pg-dashboard
+  namespace: blocky
+spec:
+  folder: blocky
+  instanceSelector:
+    matchLabels:
+      dashboards: "grafana"
+  url: "https://grafana.com/api/dashboards/17996/revisions/13/download"
