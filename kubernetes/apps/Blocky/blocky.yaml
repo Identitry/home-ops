@@ -25,6 +25,12 @@ data:
       # strategy: parallel_best (default)
       # timeout: 2s (default)
 
+    hostsFile:
+      sources:
+        - |
+          # inline hosts
+          192.168.222.100 blocky.myk8s.se
+
     # Ad blocking options (most taken from https://firebog.net/)
     blocking:
       denylists:
@@ -132,6 +138,12 @@ spec:
             protocol: UDP
           dns-tcp:
             port: 53
+            protocol: TCP
+          doh:
+            port: 443
+            protocol: TCP
+          dot:
+            port: 853
             protocol: TCP
           ui:
             port: 4000
