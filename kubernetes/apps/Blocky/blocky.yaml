@@ -321,7 +321,7 @@ metadata:
 spec:
   endpointSelector:
     matchLabels:
-      k8s:app: grafana
+      app: grafana
   egress:
     - toServices:
         - k8sService:
