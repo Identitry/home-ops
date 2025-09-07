@@ -129,7 +129,6 @@ spec:
   datasource:
     name: Blocky Postgres
     type: postgres
-    uid: blocky-postgres
     isDefault: false
     url: blocky-db-r.blocky.svc:5432
     database: blocky
@@ -139,14 +138,15 @@ spec:
       postgresVersion: 1500
       sslmode: disable
       timescaledb: false
-    secureJsonData: {}
+    secureJsonData:
+      password: "${password}"
   valuesFrom:
     - targetPath: user
       valueFrom:
         secretKeyRef:
           name: blocky-db-creds
           key: username
-    - targetPath: secureJsonData.password
+    - targetPath: password
       valueFrom:
         secretKeyRef:
           name: blocky-db-creds
