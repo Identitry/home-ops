@@ -211,16 +211,16 @@ spec:
   instanceSelector:
     matchLabels:
       dashboards: "grafana"
-    datasource:
-      name: Blocky Postgres
-      type: postgres
-      access: proxy
-      url: blocky-db-rw.blocky.svc:5432
-      jsonData:
-        database: blocky
-        postgresVersion: 1600
-        sslmode: require
-        timescaledb: false
+  datasource:
+    name: Blocky Postgres
+    type: postgres
+    access: proxy
+    url: blocky-db-rw.blocky.svc:5432
+    jsonData:
+      database: blocky
+      postgresVersion: 1600
+      sslmode: require
+      timescaledb: false
   valuesFrom:
     - targetPath: "user"
       valueFrom:
