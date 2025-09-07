@@ -211,22 +211,16 @@ spec:
   instanceSelector:
     matchLabels:
       dashboards: "grafana"
-  datasource:
-    uid: blocky-postgres
-    name: Blocky Postgres
-    type: postgres
-    access: proxy
-    # Use the short cluster DNS to avoid cluster-domain mismatches
-    url: blocky-db-rw.blocky.svc:5432
-    # These two are populated by valuesFrom below
-    user: ""
-    secureJsonData:
-      password: ""
-    jsonData:
-      database: blocky
-      postgresVersion: 1600
-      sslmode: require
-      timescaledb: false
+    datasource:
+      name: Blocky Postgres
+      type: postgres
+      access: proxy
+      url: blocky-db-rw.blocky.svc:5432
+      jsonData:
+        database: blocky
+        postgresVersion: 1600
+        sslmode: require
+        timescaledb: false
   valuesFrom:
     - targetPath: "user"
       valueFrom:
