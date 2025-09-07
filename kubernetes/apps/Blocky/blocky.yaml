@@ -326,7 +326,7 @@ spec:
     - toServices:
         - k8sService:
             namespace: blocky
-            serviceName: blocky-db-ro
+            serviceName: blocky-db-rw
       toPorts:
         - ports:
             - port: "5432"
