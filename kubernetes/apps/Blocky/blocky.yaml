@@ -217,8 +217,8 @@ spec:
     access: proxy
     user: "blocky"
     url: blocky-db-rw.blocky.svc:5432
+    database: blocky
     jsonData:
-      database: blocky
       postgresVersion: "1600"
       sslmode: "disable"
       timescaledb: "false"
