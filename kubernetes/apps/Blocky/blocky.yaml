@@ -221,6 +221,7 @@ spec:
     database: blocky
     user: "blocky"
     access: proxy
+    postgresVersion: "1600"
     #jsonData:
     #  postgresVersion: "1600"
     #  sslmode: "disable"
