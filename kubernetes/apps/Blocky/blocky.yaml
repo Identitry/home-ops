@@ -219,7 +219,7 @@ spec:
     name: Blocky Postgres
     type: postgres
     isDefault: false
-    url: blocky-db-ro.blocky.svc:5432
+    url: blocky-db-rw.blocky.svc:5432
     database: blocky
     user: blocky
     access: proxy
