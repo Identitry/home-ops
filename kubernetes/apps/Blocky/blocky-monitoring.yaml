@@ -119,7 +119,7 @@ spec:
     - name: VAR_BLOCKY_URL
       value: "https://blocky.blocky.svc"
     - name: GF_PANELS_DISABLE_SANITIZE_HTML
-      value: true
+      value: "true"
 
 ---
 # Grafana datasource for Blocky Postgres database.
