@@ -216,9 +216,10 @@ spec:
     type: postgres
     access: proxy
     url: blocky-db-rw.blocky.svc:5432
+    user: "" # (this path exists; valuesFrom will set it)
     jsonData:
       database: blocky
-      postgresVersion: 1600
+      postgresVersion: "1600" # ← quote this
       sslmode: require
       timescaledb: false
   valuesFrom:
