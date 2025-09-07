@@ -132,7 +132,7 @@ spec:
     isDefault: false
     url: blocky-db-r.blocky.svc:5432
     database: blocky
-    user: ${username}
+    user: blocky
     access: proxy
     jsonData:
       postgresVersion: 1500
