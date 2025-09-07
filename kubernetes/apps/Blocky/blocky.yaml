@@ -3,6 +3,7 @@ kind: Namespace
 metadata:
   name: blocky
   labels:
+    ingress.svc.egress: allow
     app.kubernetes.io/name: blocky
     pod-security.kubernetes.io/enforce: privileged
 ---
