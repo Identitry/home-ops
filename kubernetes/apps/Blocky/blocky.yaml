@@ -216,14 +216,11 @@ spec:
     type: postgres
     access: proxy
     url: blocky-db-rw.blocky.svc:5432
-    user: ${username}
-    database: blocky
     jsonData:
+      database: blocky
       postgresVersion: 1600
       sslmode: disable
       timescaledb: false
-    secureJsonData:
-      password: ${password}
   valuesFrom:
     - targetPath: user
       valueFrom:
