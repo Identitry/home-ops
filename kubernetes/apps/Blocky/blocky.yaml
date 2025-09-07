@@ -264,7 +264,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      k8s:cnpg.io/cluster: blocky-db # label on your CNPG pods
+      cnpg.io/cluster: blocky-db # label on your CNPG pods
   policyTypes:
     - Ingress
   ingress:
