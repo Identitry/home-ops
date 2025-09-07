@@ -175,6 +175,9 @@ spec:
       path: /metrics
       interval: 30s
       honorLabels: true
+      scheme: https
+      tlsConfig:
+        insecureSkipVerify: true
 ---
 # Grafana dashboard for Cert-Manager.
 # yaml-language-server: $schema=https://raw.githubusercontent.com/grafana-operator/grafana-operator/main/config/crd/bases/grafana.integreatly.org_grafanadashboards.yaml
