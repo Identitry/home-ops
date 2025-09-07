@@ -1,6 +1,5 @@
 ---
 # App user credentials for the initial DB owner
-# yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/kubernetes-external-secrets/main/deploy/crds/external-secrets.io_externalsecret.yaml
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
