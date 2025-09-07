@@ -108,6 +108,9 @@ metadata:
 spec:
   allowCrossNamespaceImport: true
   folder: blocky
+  datasources:
+    - inputName: DS_PROMETHEUS
+      datasourceName: vm-longterm
   instanceSelector:
     matchLabels:
       dashboards: "grafana"
