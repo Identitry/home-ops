@@ -135,7 +135,7 @@ spec:
     isDefault: false
     url: blocky-db-r.blocky.svc:5432
     database: blocky
-    user: blocky
+    user: $username
     access: proxy
     jsonData:
       postgresVersion: 1500
@@ -145,6 +145,11 @@ spec:
       password: $password
   valuesFrom:
     - targetPath: secureJsonData.password
+      valueFrom:
+        secretKeyRef:
+          name: blocky-db-creds
+          key: password
+    - targetPath: user
       valueFrom:
         secretKeyRef:
           name: blocky-db-creds
