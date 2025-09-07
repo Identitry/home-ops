@@ -157,7 +157,7 @@ spec:
   allowCrossNamespaceImport: true
   folder: blocky
   datasources:
-    - inputName: DS_POSTGRES
+    - inputName: DS_BLOCKY_POSTGRES
       datasourceName: blocky-postgres
   instanceSelector:
     matchLabels:
