@@ -214,14 +214,15 @@ spec:
   datasource:
     name: Blocky Postgres
     type: postgres
-    access: proxy
-    user: "blocky"
+    isDefault: false
     url: blocky-db-rw.blocky.svc:5432
     database: blocky
-    jsonData:
-      postgresVersion: "1600"
-      sslmode: "disable"
-      timescaledb: "false"
+    user: "blocky"
+    #access: proxy
+    #jsonData:
+    #  postgresVersion: "1600"
+    #  sslmode: "disable"
+    #  timescaledb: "false"
     secureJsonData:
       password: "changeme"
   valuesFrom:
