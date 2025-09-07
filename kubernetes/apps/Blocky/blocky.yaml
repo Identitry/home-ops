@@ -264,7 +264,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      cnpg.io/cluster: blocky-db # label on your CNPG pods
+      k8s:cnpg.io/cluster: blocky-db # label on your CNPG pods
   policyTypes:
     - Ingress
   ingress:
@@ -341,11 +341,11 @@ metadata:
 spec:
   endpointSelector:
     matchLabels:
-      cnpg.io/cluster: blocky-db
+      k8s:cnpg.io/cluster: blocky-db
   ingress:
     - fromEndpoints:
         - matchLabels:
-            app: grafana
+            k8s:app: grafana
             k8s:io.kubernetes.pod.namespace: tenant-root
       toPorts:
         - ports:
@@ -365,7 +365,7 @@ spec:
   egress:
     - toEndpoints:
         - matchLabels:
-            cnpg.io/cluster: blocky-db
+            k8s:cnpg.io/cluster: blocky-db
             k8s:io.kubernetes.pod.namespace: blocky
       toPorts:
         - ports:
