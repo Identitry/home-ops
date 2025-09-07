@@ -224,15 +224,16 @@ spec:
           key: password
   datasource:
     uid: blocky-postgres
-    name: Blocky Postgres
+    # Name "PostgreSQL" helps many community dashboards auto-bind their __inputs
+    name: PostgreSQL
     type: postgres
     access: proxy
     url: blocky-db-rw.blocky.svc.cozy.local:5432
     database: blocky
+    # If you want to keep postgresVersion, set it as a small int (e.g., 16) or drop it entirely.
     jsonData:
       sslmode: require
-      postgresVersion: 1600
-      timeInterval: "5s"
+      # postgresVersion: 16
 ---
 # Grafana dashboard for Blocky Postgres database.
 apiVersion: grafana.integreatly.org/v1beta1
