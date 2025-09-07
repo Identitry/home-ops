@@ -115,6 +115,9 @@ spec:
     matchLabels:
       dashboards: "grafana"
   url: "https://grafana.com/api/dashboards/13768/revisions/6/download"
+  envs:
+    - name: VAR_BLOCKY_URL
+      value: "https://blocky.blocky.svc"
 
 ---
 # Grafana datasource for Blocky Postgres database.
