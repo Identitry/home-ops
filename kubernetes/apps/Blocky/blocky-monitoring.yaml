@@ -206,3 +206,17 @@ spec:
         - ports:
             - port: "5432"
               protocol: TCP
+---
+# Temp CiliumNetworkPolicy to allow all egress from Grafana for debugging purposes.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: grafana-egress-debug-allow-all
+  namespace: tenant-root
+spec:
+  endpointSelector:
+    matchLabels:
+      app: grafana
+  egress:
+    - toEntities:
+        - cluster
