@@ -202,6 +202,7 @@ spec:
 
 ---
 # Grafana datasource for Blocky Postgres database.
+# yaml-language-server: $schema=https://raw.githubusercontent.com/grafana-operator/grafana-operator/main/config/crd/bases/grafana.integreatly.org_grafanadatasources.yaml
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDatasource
 metadata:
@@ -212,25 +213,25 @@ spec:
     matchLabels:
       dashboards: "grafana"
   valuesFrom:
-    - targetPath: "datasources[0].user"
+    - targetPath: "datasource.user"
       valueFrom:
         secretKeyRef:
           name: blocky-db-creds
           key: username
-    - targetPath: "datasources[0].secureJsonData.password"
+    - targetPath: "datasource.secureJsonData.password"
       valueFrom:
         secretKeyRef:
           name: blocky-db-creds
           key: password
-  datasources:
-    - uid: blocky-postgres
-      name: PostgreSQL
-      type: postgres
-      access: proxy
-      url: blocky-db-rw.blocky.svc.cozy.local:5432
-      database: blocky
-      jsonData:
-        sslmode: require
+  datasource:
+    uid: blocky-postgres
+    name: Blocky Postgres
+    type: postgres
+    access: proxy
+    url: blocky-db-rw.blocky.svc.cozy.local:5432
+    database: blocky
+    jsonData:
+      sslmode: require
 ---
 # Grafana dashboard for Blocky Postgres database.
 apiVersion: grafana.integreatly.org/v1beta1
