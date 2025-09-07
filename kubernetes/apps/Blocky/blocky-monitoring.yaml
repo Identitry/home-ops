@@ -139,7 +139,7 @@ spec:
       sslmode: disable
       timescaledb: false
     secureJsonData:
-      password: "${password}"
+      password: "password"
   valuesFrom:
     - targetPath: secureJsonData.password
       valueFrom:
