@@ -130,7 +130,7 @@ spec:
     name: Blocky Postgres
     type: postgres
     isDefault: false
-    url: blocky-db-rw.blocky.svc:5432
+    url: blocky-db-r.blocky.svc:5432
     database: blocky
     user: blocky
     access: proxy
@@ -170,7 +170,7 @@ spec:
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
-  name: allow-grafana-to-blockydbro
+  name: allow-grafana-to-blockydb-r
   namespace: tenant-root
 spec:
   endpointSelector:
@@ -180,7 +180,27 @@ spec:
     - toServices:
         - k8sService:
             namespace: blocky
-            serviceName: blocky-db-rw
+            serviceName: blocky-db-r
+      toPorts:
+        - ports:
+            - port: "5432"
+              protocol: TCP
+
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-ingress-from-grafana-to-blockydb
+  namespace: blocky
+spec:
+  endpointSelector:
+    matchLabels:
+      cnpg.io/cluster: blocky-db
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            "k8s:io.kubernetes.pod.namespace": tenant-root
+            "k8s:app": grafana
       toPorts:
         - ports:
             - port: "5432"
