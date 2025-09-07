@@ -161,6 +161,9 @@ metadata:
 spec:
   allowCrossNamespaceImport: true
   folder: blocky
+  datasources:
+    - inputName: DS_POSTGRES
+      datasourceName: Blocky Postgres
   instanceSelector:
     matchLabels:
       dashboards: "grafana"
