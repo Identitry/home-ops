@@ -6,6 +6,7 @@ metadata:
     ingress.svc.egress: allow
     app.kubernetes.io/name: blocky
     pod-security.kubernetes.io/enforce: privileged
+    tenant.cozystack.io/tenant-root: ""
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/kubernetes-external-secrets/main/deploy/crds/external-secrets.io_externalsecret.yaml
 # ConfigMap that contains the Blocky configuration file.
