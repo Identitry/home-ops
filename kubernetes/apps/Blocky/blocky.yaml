@@ -228,12 +228,12 @@ spec:
       sslmode: require
       timescaledb: false
   valuesFrom:
-    - targetPath: "datasource.user"
+    - targetPath: "user"
       valueFrom:
         secretKeyRef:
           name: blocky-db-creds
           key: username
-    - targetPath: "datasource.secureJsonData.password"
+    - targetPath: "secureJsonData.password"
       valueFrom:
         secretKeyRef:
           name: blocky-db-creds
