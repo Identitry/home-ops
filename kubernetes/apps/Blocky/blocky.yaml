@@ -310,3 +310,43 @@ spec:
       ports:
         - protocol: UDP
           port: 53
+---
+# CiliumNetworkPolicy to allow Grafana (in tenant-root namespace) to access Blocky Postgres database.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-grafana-to-blocky-pg
+  namespace: tenant-root
+spec:
+  endpointSelector:
+    matchLabels:
+      app: grafana
+  egress:
+    - toEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: blocky
+            k8s:cnpg.io/cluster: blocky-db
+      toPorts:
+        - ports:
+            - port: "5432"
+              protocol: TCP
+---
+# CiliumNetworkPolicy to allow Grafana ingress traffic (in tenant-root namespace) to access Blocky Postgres database.
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-grafana-ingress-to-pg
+  namespace: blocky
+spec:
+  endpointSelector:
+    matchLabels:
+      cnpg.io/cluster: blocky-db
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: tenant-root
+            k8s:app: grafana
+      toPorts:
+        - ports:
+            - port: "5432"
+              protocol: TCP
