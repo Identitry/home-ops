@@ -192,8 +192,8 @@ spec:
   ingress:
     - fromEndpoints:
         - matchLabels:
-            k8s:io.kubernetes.pod.namespace: tenant-root
-            k8s:app: grafana
+            "k8s:io.kubernetes.pod.namespace": tenant-root
+            "k8s:app": grafana
       toPorts:
         - ports:
             - port: "5432"
