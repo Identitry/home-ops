@@ -215,15 +215,21 @@ spec:
               protocol: TCP
 ---
 # Temp CiliumNetworkPolicy to allow all egress from Grafana for debugging purposes.
+# tenant-root: allow Grafana pods to TCP/5432 in blocky namespace (debug, temporary)
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
-  name: grafana-egress-debug-allow-all
+  name: grafana-egress-postgres-debug
   namespace: tenant-root
 spec:
   endpointSelector:
     matchLabels:
       app: grafana
   egress:
-    - toEntities:
-        - cluster
+    - toEndpoints:
+        - matchLabels:
+            k8s.io.kubernetes.pod.namespace: blocky
+      toPorts:
+        - ports:
+            - port: "5432"
+              protocol: TCP
