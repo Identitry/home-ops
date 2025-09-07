@@ -130,7 +130,7 @@ spec:
     name: Blocky Postgres
     type: postgres
     isDefault: false
-    url: blocky-db-ro.blocky.svc:5432
+    url: blocky-db-rw.blocky.svc:5432
     database: blocky
     user: blocky
     access: proxy
@@ -180,55 +180,7 @@ spec:
     - toServices:
         - k8sService:
             namespace: blocky
-            serviceName: blocky-db-ro
-      toPorts:
-        - ports:
-            - port: "5432"
-              protocol: TCP
-    - toEndpoints:
-        - matchLabels:
-            "k8s:io.kubernetes.pod.namespace": blocky
-            "k8s:cnpg.io/cluster": blocky-db
-      toPorts:
-        - ports:
-            - port: "5432"
-              protocol: TCP
-
----
-apiVersion: cilium.io/v2
-kind: CiliumNetworkPolicy
-metadata:
-  name: allow-ingress-from-grafana-to-blockydb
-  namespace: blocky
-spec:
-  endpointSelector:
-    matchLabels:
-      cnpg.io/cluster: blocky-db
-  ingress:
-    - fromEndpoints:
-        - matchLabels:
-            "k8s:io.kubernetes.pod.namespace": tenant-root
-            "k8s:app": grafana
-      toPorts:
-        - ports:
-            - port: "5432"
-              protocol: TCP
----
-# Temp CiliumNetworkPolicy to allow all egress from Grafana for debugging purposes.
-# tenant-root: allow Grafana pods to TCP/5432 in blocky namespace (debug, temporary)
-apiVersion: cilium.io/v2
-kind: CiliumNetworkPolicy
-metadata:
-  name: grafana-egress-postgres-debug
-  namespace: tenant-root
-spec:
-  endpointSelector:
-    matchLabels:
-      app: grafana
-  egress:
-    - toEndpoints:
-        - matchLabels:
-            k8s.io.kubernetes.pod.namespace: blocky
+            serviceName: blocky-db-rw
       toPorts:
         - ports:
             - port: "5432"
