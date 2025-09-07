@@ -153,7 +153,7 @@ spec:
       valueFrom:
         secretKeyRef:
           name: blocky-db-creds
-          key: password
+          key: username
 ---
 # Grafana dashboard for Blocky Postgres database.
 apiVersion: grafana.integreatly.org/v1beta1
