@@ -141,11 +141,6 @@ spec:
     secureJsonData:
       password: ${password}
   valuesFrom:
-    - targetPath: user
-      valueFrom:
-        secretKeyRef:
-          name: blocky-db-creds
-          key: username
     - targetPath: secureJsonData.password
       valueFrom:
         secretKeyRef:
