@@ -220,8 +220,8 @@ spec:
     jsonData:
       database: blocky
       postgresVersion: "1600"
-      sslmode: disable
-      timescaledb: false
+      sslmode: "disable"
+      timescaledb: "false"
     secureJsonData:
       password: "changeme"
   valuesFrom:
