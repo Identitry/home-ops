@@ -1,0 +1,14 @@
+# This patch enables Grafana to access dashboards and datasources across all namespaces.
+# It modifies the Grafana custom resource to set empty selectors for both dashboards and datasources,
+apiVersion: grafana.integreatly.org/v1beta1
+kind: Grafana
+metadata:
+  name: grafana
+  namespace: tenant-root
+  # (optional) tag so you remember this is your override
+  labels:
+    cozystack.io/override: "true"
+spec:
+  # open Grafana up to read dashboards & datasources from all namespaces
+  dashboardNamespaceSelector: {}
+  datasourceNamespaceSelector: {}
