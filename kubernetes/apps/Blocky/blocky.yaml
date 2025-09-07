@@ -312,6 +312,7 @@ spec:
           port: 53
 ---
 # CiliumNetworkPolicy to allow Grafana (in tenant-root namespace) to access Blocky Postgres database.
+# yaml-language-server: $schema=https://raw.githubusercontent.com/cilium/cilium/main/examples/kubernetes/crds/ciliumnetworkpolicy.yaml
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
