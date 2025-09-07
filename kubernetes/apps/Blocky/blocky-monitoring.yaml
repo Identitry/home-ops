@@ -178,6 +178,14 @@ spec:
         - ports:
             - port: "5432"
               protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            "k8s:io.kubernetes.pod.namespace": blocky
+            "k8s:cnpg.io/cluster": blocky-db
+      toPorts:
+        - ports:
+            - port: "5432"
+              protocol: TCP
 
 ---
 apiVersion: cilium.io/v2
