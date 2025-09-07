@@ -160,7 +160,7 @@ spec:
   allowCrossNamespaceImport: true
   folder: blocky
   datasources:
-    - inputName: DS_BLOCKY_POSTGRESQL
+    - inputName: DS_BLOCKY-POSTGRESQL
       datasourceName: blocky-postgres
   instanceSelector:
     matchLabels:
