@@ -277,3 +277,27 @@ spec:
       ports:
         - protocol: TCP
           port: 5432
+---
+# NetworkPolicy to allow Grafana (in tenant-root namespace) to access Blocky Postgres database.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: grafana-egress-to-blocky-postgres
+  namespace: tenant-root
+spec:
+  podSelector:
+    matchLabels:
+      app: grafana # this matches your grafana pods (you used -l app=grafana earlier)
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: blocky
+          podSelector:
+            matchLabels:
+              cnpg.io/cluster: blocky-db # CNPG labels on the DB pods
+      ports:
+        - protocol: TCP
+          port: 5432
