@@ -193,6 +193,7 @@ metadata:
   name: blocky
   namespace: blocky
 spec:
+  allowCrossNamespaceImport: true
   folder: blocky
   instanceSelector:
     matchLabels:
