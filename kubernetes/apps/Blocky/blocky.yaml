@@ -216,7 +216,7 @@ spec:
     type: postgres
     access: proxy
     url: blocky-db-rw.blocky.svc:5432
-    user: "${username}"
+    user: "blocky"
     jsonData:
       database: blocky
       postgresVersion: "1600" # ← quote this
@@ -225,16 +225,16 @@ spec:
     secureJsonData:
       password: "${password}"
   valuesFrom:
-    - targetPath: "user"
-      valueFrom:
-        secretKeyRef:
-          name: blocky-db-creds
-          key: username
     - targetPath: "secureJsonData.password"
       valueFrom:
         secretKeyRef:
           name: blocky-db-creds
           key: password
+    #- targetPath: "user"
+    #  valueFrom:
+    #    secretKeyRef:
+    #      name: blocky-db-creds
+    #      key: username
 ---
 # Grafana dashboard for Blocky Postgres database.
 apiVersion: grafana.integreatly.org/v1beta1
