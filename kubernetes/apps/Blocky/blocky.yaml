@@ -202,32 +202,27 @@ spec:
 ---
 # Grafana datasource for Blocky Postgres database.
 # yaml-language-server: $schema=https://raw.githubusercontent.com/grafana-operator/grafana-operator/main/config/crd/bases/grafana.integreatly.org_grafanadatasources.yaml
-apiVersion: grafana.integreatly.org/v1beta1
-kind: GrafanaDatasource
-metadata:
-  name: blocky-postgres
-  namespace: blocky
 spec:
-  instanceSelector:
-    matchLabels:
-      dashboards: "grafana"
   datasource:
     name: Blocky Postgres
     type: postgres
     access: proxy
     url: blocky-db-rw.blocky.svc:5432
+    user: ${username} # ← add placeholder (string)
+    database: blocky # ← keep literal
     jsonData:
-      database: blocky
-      postgresVersion: "1600" # ← quote this
+      postgresVersion: 1600 # integer is fine
       sslmode: require
       timescaledb: false
+    secureJsonData:
+      password: ${password} # ← add placeholder (string)
   valuesFrom:
-    - targetPath: "user"
+    - targetPath: user
       valueFrom:
         secretKeyRef:
           name: blocky-db-creds
           key: username
-    - targetPath: "secureJsonData.password"
+    - targetPath: secureJsonData.password
       valueFrom:
         secretKeyRef:
           name: blocky-db-creds
