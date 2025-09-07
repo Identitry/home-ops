@@ -139,14 +139,14 @@ spec:
       sslmode: disable
       timescaledb: false
     secureJsonData:
-      password: "${password}"
+      password: ${password}
   valuesFrom:
     - targetPath: user
       valueFrom:
         secretKeyRef:
           name: blocky-db-creds
           key: username
-    - targetPath: password
+    - targetPath: secureJsonData.password
       valueFrom:
         secretKeyRef:
           name: blocky-db-creds
