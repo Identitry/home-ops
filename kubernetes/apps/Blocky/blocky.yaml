@@ -195,6 +195,8 @@ spec:
   url: "https://grafana.com/api/dashboards/13768/revisions/6/download"
 
 ---
+# Grafana datasource for Blocky Postgres database.
+# yaml-language-server: $schema=https://raw.githubusercontent.com/grafana-operator/grafana-operator/main/config/crd/bases/grafana.integreatly.org_grafanadatasources.yaml
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDatasource
 metadata:
@@ -204,30 +206,28 @@ spec:
   instanceSelector:
     matchLabels:
       dashboards: "grafana"
-  # Pull sensitive fields from an existing Secret rather than committing them
   valuesFrom:
-    - targetPath: "user"
+    - targetPath: "datasource.user"
       valueFrom:
         secretKeyRef:
           name: blocky-db-creds
           key: username
-    - targetPath: "secureJsonData.password"
+    - targetPath: "datasource.secureJsonData.password"
       valueFrom:
         secretKeyRef:
           name: blocky-db-creds
           key: password
   datasource:
+    uid: blocky-postgres
     name: Blocky Postgres
     type: postgres
     access: proxy
-    isDefault: false
     url: blocky-db-rw.blocky.svc.cozy.local:5432
     database: blocky
     jsonData:
       sslmode: require
       postgresVersion: 1600
-      timeInterval: 5s
-
+      timeInterval: "5s"
 ---
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
