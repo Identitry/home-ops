@@ -1,4 +1,11 @@
 ---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: blocky
+  labels:
+    tenant.cozystack.io/tenant-root: ""
+---
 # App user credentials for the initial DB owner
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
