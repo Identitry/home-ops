@@ -212,28 +212,25 @@ spec:
     matchLabels:
       dashboards: "grafana"
   valuesFrom:
-    - targetPath: "datasource.user"
+    - targetPath: "datasources[0].user"
       valueFrom:
         secretKeyRef:
           name: blocky-db-creds
           key: username
-    - targetPath: "datasource.secureJsonData.password"
+    - targetPath: "datasources[0].secureJsonData.password"
       valueFrom:
         secretKeyRef:
           name: blocky-db-creds
           key: password
-  datasource:
-    uid: blocky-postgres
-    # Name "PostgreSQL" helps many community dashboards auto-bind their __inputs
-    name: PostgreSQL
-    type: postgres
-    access: proxy
-    url: blocky-db-rw.blocky.svc.cozy.local:5432
-    database: blocky
-    # If you want to keep postgresVersion, set it as a small int (e.g., 16) or drop it entirely.
-    jsonData:
-      sslmode: require
-      # postgresVersion: 16
+  datasources:
+    - uid: blocky-postgres
+      name: PostgreSQL
+      type: postgres
+      access: proxy
+      url: blocky-db-rw.blocky.svc.cozy.local:5432
+      database: blocky
+      jsonData:
+        sslmode: require
 ---
 # Grafana dashboard for Blocky Postgres database.
 apiVersion: grafana.integreatly.org/v1beta1
