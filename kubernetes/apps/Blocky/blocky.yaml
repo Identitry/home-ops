@@ -102,7 +102,7 @@ spec:
               pullPolicy: IfNotPresent
             restartPolicy: Always
             securityContext:
-              readOnlyRootFilesystem: true
+              #readOnlyRootFilesystem: true
               allowPrivilegeEscalation: false
               capabilities:
                 add:
