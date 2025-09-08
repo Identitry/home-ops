@@ -75,9 +75,11 @@ metadata:
 spec:
   interval: 10m
   install:
+    disableWait: true
     remediation:
       retries: 3
   upgrade:
+    disableWait: true
     remediation:
       retries: 3
   timeout: 10m
