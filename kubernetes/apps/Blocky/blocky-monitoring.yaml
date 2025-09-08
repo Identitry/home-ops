@@ -5,6 +5,8 @@ metadata:
   name: blocky
   labels:
     tenant.cozystack.io/tenant-root: ""
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/enforce-version: latest
 ---
 # App user credentials for the initial DB owner
 apiVersion: external-secrets.io/v1

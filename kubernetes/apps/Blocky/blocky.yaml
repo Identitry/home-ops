@@ -107,7 +107,6 @@ spec:
               capabilities:
                 add:
                   - NET_ADMIN
-                  - NET_RAW
             envFrom:
               - secretRef:
                   name: blocky-gluetun-wg
@@ -139,19 +138,16 @@ spec:
             securityContext:
               readOnlyRootFilesystem: true
               allowPrivilegeEscalation: false
-              capabilities:
-                add:
-                  - NET_RAW
             command:
               - sh
               - -c
               - |
                 echo "Waiting for Gluetun tunnel connectivity..."
-                while ! ping -c 1 -W 2 8.8.8.8 >/dev/null 2>&1; do
-                  echo "Ping failed, retrying in 5 seconds..."
+                while ! (nc -z -w3 1.1.1.1 53 || nc -z -w3 8.8.8.8 53); do
+                  echo "Check failed, retrying in 5 seconds..."
                   sleep 5
                 done
-                echo "Ping successful, proceeding"
+                echo "Connectivity OK, proceeding"
 
         containers:
           app:
