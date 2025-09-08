@@ -37,31 +37,6 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
 
-        initContainers:
-          fix-perms:
-            image:
-              repository: alpine
-              tag: "3.20"
-            command:
-              - sh
-              - -c
-              - |
-                set -euo pipefail
-                # Prepare config volume only; /transcode and /tmp are handled by tmpfs mounts in the app container
-                mkdir -p \
-                  "/config/Library/Application Support/Plex Media Server/Cache" \
-                  "/config/Library/Application Support/Plex Media Server/Logs" \
-                  "/config/Library/Application Support/Plex Media Server/Preferences"
-                chown -R 1000:1000 /config
-                chmod -R u+rwX,go-rwx /config
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: false
-              runAsUser: 0
-              runAsGroup: 0
-              runAsNonRoot: false
-              capabilities: { drop: ["ALL"] }
-
         containers:
           app:
             image:
