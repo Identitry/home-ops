@@ -10,7 +10,7 @@ metadata:
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: se-blocky-db-creds
+  name: es-blocky-db-creds
   namespace: blocky
 spec:
   secretStoreRef:

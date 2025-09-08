@@ -1,11 +1,40 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/kubernetes-external-secrets/main/deploy/crds/external-secrets.io_externalsecret.yaml
-# ConfigMap that contains the Blocky configuration file.
+# Secret that contains the Gluetun WireGuard VPN settings.
 # Docs: https://0xerr0r.github.io/blocky/latest/configuration/
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: se-blocky-config
+  name: es-blocky-gluetun-wg
+  namespace: blocky
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: infisical
+  target:
+    name: blocky-gluetun-wg
+    creationPolicy: Owner
+  data:
+    - secretKey: WIREGUARD_PRIVATE_KEY
+      remoteRef:
+        key: /GLUETUN/WIREGUARD_PRIVATE_KEY
+    - secretKey: SERVER_COUNTRIES
+      remoteRef:
+        key: /GLUETUN/SERVER_COUNTRIES
+    - secretKey: VPN_SERVICE_PROVIDER
+      remoteRef:
+        key: /GLUETUN/VPN_SERVICE_PROVIDER
+    - secretKey: FIREWALL_OUTBOUND_SUBNETS
+      remoteRef:
+        key: /GLUETUN/FIREWALL_OUTBOUND_SUBNETS
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/kubernetes-external-secrets/main/deploy/crds/external-secrets.io_externalsecret.yaml
+# ExternalSecret that contains the Blocky configuration file.
+# Docs: https://0xerr0r.github.io/blocky/latest/configuration/
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: es-blocky-config
   namespace: blocky
 spec:
   secretStoreRef:
@@ -60,9 +89,66 @@ spec:
     controllers:
       blocky:
         annotations:
-          reloader.stakater.com/match: blocky-config, wildcard-le-tls-cert-myk8s-se
+          reloader.stakater.com/match: blocky-config, blocky-gluetun-wg, wildcard-le-tls-cert-myk8s-se
         type: daemonset
-        enabled: true
+
+        initContainers:
+          vpn:
+            image:
+              repository: qmcgaw/gluetun
+              tag: v3.40.0@sha256:2b42bfa046757145a5155acece417b65b4443c8033fb88661a8e9dcf7fda5a00
+              pullPolicy: IfNotPresent
+            restartPolicy: Always
+            securityContext:
+              readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+              capabilities:
+                add:
+                  - NET_ADMIN
+                  - NET_RAW
+          wait-vpn:
+            image:
+              repository: busybox
+              tag: v1.37.0@sha256:a2c55ed708c564a69a695e0a3bb16a4c47d2bb268d2ebd06f0d77336801b80de
+              pullPolicy: IfNotPresent
+            securityContext:
+              readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+              capabilities:
+                add:
+                  - NET_RAW
+            command:
+              - sh
+              - -c
+              - |
+                echo "Waiting for Gluetun tunnel connectivity..."
+                while ! ping -c 1 -W 2 8.8.8.8 >/dev/null 2>&1; do
+                  echo "Ping failed, retrying in 5 seconds..."
+                  sleep 5
+                done
+                echo "Ping successful, proceeding"
+            envFrom:
+              - secretRef:
+                  name: blocky-gluetun-wg
+            env:
+              HEALTH_VPN_DURATION_INITIAL: 120s
+              HEALTH_SUCCESS_WAIT_DURATION: 120s
+              DOT: "off"
+              TZ: ${TZ}
+              VERSION_INFORMATION: "off"
+            probes:
+              liveness: &probe
+                enabled: true
+                custom: true
+                spec:
+                  exec: &exec
+                    command: [/gluetun-entrypoint, healthcheck]
+                  periodSeconds: 60
+              startup:
+                <<: *probe
+                spec:
+                  exec: *exec
+                  periodSeconds: 5
 
         containers:
           app:
