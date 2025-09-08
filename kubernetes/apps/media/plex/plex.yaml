@@ -56,9 +56,8 @@ spec:
               tag: 1.42.1.10060@sha256:04563be281364ba2462285aacb2ca13d7ef7e1d0b19e1203f4c19b4a56840c5c
             env:
               TZ: ${TZ}
-              PLEX_ADVERTISE_URL: http://192.168.222.111:32400
-              PLEX_NO_AUTH_NETWORKS: 192.168.0.0/16
-              PLEX_CLAIM: claim-P6FNtAezYYwy8Vyg2ZhC # Get a claim token from https://plex.tv/claim
+              ADVERTISE_IP: http://192.168.222.111:32400
+              PLEX_NO_AUTH_NETWORKS: 192.168.222.0/24,10.244.0.0/16,10.96.0.0/12
             probes: # Cant get probes to work...
               liveness: &probes
                 enabled: false
@@ -107,10 +106,6 @@ spec:
         existingClaim: "plex-config"
         globalMounts:
           - path: /config
-      config-cache:
-        existingClaim: "plex-cache"
-        globalMounts:
-          - path: /config/Library/Application Support/Plex Media Server
       media:
         type: persistentVolumeClaim
         existingClaim: media-rox
