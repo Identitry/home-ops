@@ -46,7 +46,7 @@ spec:
               TZ: ${TZ}
               ADVERTISE_IP: http://192.168.222.111:32400
               PLEX_NO_AUTH_NETWORKS: 192.168.222.0/24,10.244.0.0/16,10.96.0.0/12
-              PLEX_CLAIM: claim-ssAB6QxVsBLamBd9TFRM # Only used on first boot, then removed.
+              PLEX_CLAIM: claim-K3NZzsY1NdDEKeofDHyP # Only used on first boot, then removed.
             probes: # Cant get probes to work...
               liveness: &probes
                 enabled: false
