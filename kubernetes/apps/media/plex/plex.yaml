@@ -58,7 +58,7 @@ spec:
               TZ: ${TZ}
               PLEX_ADVERTISE_URL: http://192.168.222.111:32400
               PLEX_NO_AUTH_NETWORKS: 192.168.0.0/16
-              PLEX_CLAIM: claim-FAH_fKarQ-5xyUzPFKWC # Get a claim token from https://plex.tv/claim
+              PLEX_CLAIM: claim-P6FNtAezYYwy8Vyg2ZhC # Get a claim token from https://plex.tv/claim
             probes: # Cant get probes to work...
               liveness: &probes
                 enabled: false
