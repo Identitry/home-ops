@@ -38,15 +38,8 @@ metadata:
   namespace: blocky
 spec:
   instances: 2
-  affinity:
-    podAntiAffinity:
-      preferredDuringSchedulingIgnoredDuringExecution:
-        - weight: 100
-          podAffinityTerm:
-            labelSelector:
-              matchLabels:
-                cnpg.io/cluster: blocky-db
-            topologyKey: kubernetes.io/hostname
+  enablePodAntiAffinity: true
+  podAntiAffinityType: required
 
   # Use the operator's supported default image, or pin a version explicitly:
   # imageName: ghcr.io/cloudnative-pg/postgresql:16.4

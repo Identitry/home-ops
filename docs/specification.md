@@ -187,7 +187,7 @@ Most of these apps are running on TrueNAS stor and needs to be moved to the clus
 
 #### Maybe in the future
 
-- InfluxDB (Currently included in HAOS VM)
+- InfluxDB (Currently included in HAOS VM, Will Clickhous do?)
 
 #### Startpage
 
@@ -215,10 +215,11 @@ Most of these apps are running on TrueNAS stor and needs to be moved to the clus
 
 - Home Assistant OS (kubevirt) - currently on truenas-stor.
 
-#### DNS/Ad Blocking
+#### DNS/Ad Blocking ✅
 
-- Blocky + Redis (Sync) - on Postgres and Redis (Configured with DOP, maybe behind NordVPN)
-- Grafana "Blocky Dashboard for Postgres"
+- Blocky + Redis (Sync) + Postgres (logging), DNS request over DoH over NordVPN (GlueTun). ✅
+- Blocky Grafana Postgres Datasource ✅
+- Blocky Grafana Dashboards ✅
 
 #### Home Automation
 
