@@ -47,18 +47,19 @@ spec:
               - -c
               - |
                 set -euo pipefail
-                # Ensure key directories exist and are owned by the Plex user
+                # Prepare config volume only; /transcode and /tmp are handled by tmpfs mounts in the app container
                 mkdir -p \
                   "/config/Library/Application Support/Plex Media Server/Cache" \
                   "/config/Library/Application Support/Plex Media Server/Logs" \
-                  "/config/Library/Application Support/Plex Media Server/Preferences" \
-                  "/transcode" \
-                  "/tmp"
-                chown -R 1000:1000 /config "/config/Library/Application Support" /transcode /tmp || true
-                chmod -R u+rwX,go-rwx /config "/config/Library/Application Support" || true
+                  "/config/Library/Application Support/Plex Media Server/Preferences"
+                chown -R 1000:1000 /config
+                chmod -R u+rwX,go-rwx /config
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: false
+              runAsUser: 0
+              runAsGroup: 0
+              runAsNonRoot: false
               capabilities: { drop: ["ALL"] }
 
         containers:
@@ -70,7 +71,7 @@ spec:
               TZ: ${TZ}
               ADVERTISE_IP: http://192.168.222.111:32400
               PLEX_NO_AUTH_NETWORKS: 192.168.222.0/24,10.244.0.0/16,10.96.0.0/12
-              PLEX_CLAIM: claim-MHsusdGRcsPyx-kTuapy # Only used on first boot, then removed.
+              PLEX_CLAIM: claim-y_Mh-h_DTKLVmmDaRYY1 # Only used on first boot, then removed.
             probes: # Cant get probes to work...
               liveness: &probes
                 enabled: false
