@@ -142,7 +142,7 @@ spec:
     name: blocky-postgres
     type: postgres
     isDefault: false
-    url: blocky-db-r.blocky.svc:5432
+    url: blocky-db-ro.blocky.svc:5432
     database: blocky
     user: $username
     access: proxy
@@ -185,7 +185,7 @@ spec:
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
-  name: allow-grafana-to-blockydb-r
+  name: allow-grafana-to-blockydb-ro
   namespace: tenant-root
 spec:
   endpointSelector:
@@ -195,7 +195,7 @@ spec:
     - toServices:
         - k8sService:
             namespace: blocky
-            serviceName: blocky-db-r
+            serviceName: blocky-db-ro
       toPorts:
         - ports:
             - port: "5432"
