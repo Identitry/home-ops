@@ -43,6 +43,9 @@ spec:
             env:
               BAZARR__PORT: &port 80
               TZ: ${TZ}
+            ports:
+              - name: http
+                containerPort: *port
             probes:
               liveness: &probes
                 enabled: true
