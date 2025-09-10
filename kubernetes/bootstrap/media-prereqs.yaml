@@ -179,3 +179,21 @@ spec:
           port: 7878 # Radarr
         - protocol: TCP
           port: 8989 # Sonarr
+---
+# NetworkPolicy to allow ingress on media app ports from other pods in the same namespace.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-intra-namespace-media-app-ports
+  namespace: media
+spec:
+  podSelector: {} # apply to all pods in media
+  policyTypes: ["Ingress"]
+  ingress:
+    - from:
+        - podSelector: {} # from any pod in the same namespace
+      ports:
+        - { protocol: TCP, port: 80 }
+        - { protocol: TCP, port: 443 }
+        - { protocol: TCP, port: 7878 } # Radarr
+        - { protocol: TCP, port: 8989 } # Sonarr
