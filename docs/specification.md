@@ -164,11 +164,12 @@ Most of these apps are running on TrueNAS stor and needs to be moved to the clus
 
 - Jellyfin (new, replaces Plex) ✅
 - Plex ✅
-- Bazarr (currently on truenas-stor)
+- Bazarr (currently on truenas-stor) ✅
 - Sonarr (currently on truenas-stor) ✅
 - Radarr (currently on truenas-stor) ✅
 - Readarr (currently on truenas-stor) - Not sure if I should have this?
 - Prowlarr (currently on truenas-stor) ✅
+- Recyclarr - Trash Guides best practices sync with Radarr/Sonarr
 - FlareSolverr - Proxy server to bypass Cloudflare and DDoS-GUARD protection
 - QBitTorrent (currently on truenas-stor) with GlueTun for NordVPN
 - Sabnzbd (new)
@@ -244,6 +245,7 @@ Most of these apps are running on TrueNAS stor and needs to be moved to the clus
 #### Maybe in the future
 
 - Gaseous Server (Old games (ROMS) in the browser)
+- Gatus - Uptime monitoring
 - Authentik (Authentication)
 - Invidious (YouTube UI - no adds)
 - Brave (https://github.com/linuxserver/docker-brave) - Browser with ad blocking and privacy in mind
