@@ -164,6 +164,7 @@ Most of these apps are running on TrueNAS stor and needs to be moved to the clus
 
 - Jellyfin (new, replaces Plex) ✅
 - Plex ✅
+- Bazarr (currently on truenas-stor)
 - Sonarr (currently on truenas-stor) ✅
 - Radarr (currently on truenas-stor) ✅
 - Readarr (currently on truenas-stor) - Not sure if I should have this?
@@ -245,14 +246,12 @@ Most of these apps are running on TrueNAS stor and needs to be moved to the clus
 - Gaseous Server (Old games (ROMS) in the browser)
 - Authentik (Authentication)
 - Invidious (YouTube UI - no adds)
-- Brave (Browser with ad blocking and privacy in mind)
+- Brave (https://github.com/linuxserver/docker-brave) - Browser with ad blocking and privacy in mind
 - Vaultwarden
 - Guacamole
 - CompreFace/DeepStack (Face Recognition is included in Frigate now, skip this?)
-- Plex Debrid
 - Streamio Server (https://github.com/tsaridas/stremio-docker) + MediaFusion (Debrid support) + GlueTun
-- Immich
-- Sabnzbd
+- Immich (requires postgres and redis)
 - TDArr
 - Autobrr
 - Unpackerr
