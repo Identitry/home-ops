@@ -179,6 +179,8 @@ spec:
           port: 7878 # Radarr
         - protocol: TCP
           port: 8989 # Sonarr
+        - protocol: TCP
+          port: 8191 # FlareSolverr
 ---
 # NetworkPolicy to allow ingress on media app ports from other pods in the same namespace.
 apiVersion: networking.k8s.io/v1
@@ -197,3 +199,4 @@ spec:
         - { protocol: TCP, port: 443 }
         - { protocol: TCP, port: 7878 } # Radarr
         - { protocol: TCP, port: 8989 } # Sonarr
+        - { protocol: TCP, port: 8191 } # FlareSolverr
