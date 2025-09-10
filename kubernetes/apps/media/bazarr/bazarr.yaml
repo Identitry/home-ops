@@ -73,10 +73,12 @@ spec:
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
     service:
-      app:
+      bazarr:
+        controller: bazarr
         ports:
           http:
             port: *port
+            targetPort: http
     ingress:
       bazarr:
         enabled: true
