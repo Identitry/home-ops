@@ -163,13 +163,13 @@ Public Github site that describes the cluster. ✅
 Most of these apps are running on TrueNAS stor and needs to be moved to the cluster before the NAS can be upgraded.
 
 - Jellyfin (new, replaces Plex) ✅
-- Plex ✅
+- Plex
 - Bazarr (currently on truenas-stor) ✅
 - Sonarr (currently on truenas-stor) ✅
 - Radarr (currently on truenas-stor) ✅
 - Readarr (currently on truenas-stor) - Not sure if I should have this?
 - Prowlarr (currently on truenas-stor) ✅
-- Recyclarr - Trash Guides best practices sync with Radarr/Sonarr
+- Recyclarr - Trash Guides best practices sync with Radarr/Sonarr ✅
 - FlareSolverr - Proxy server to bypass Cloudflare and DDoS-GUARD protection
 - QBitTorrent (currently on truenas-stor) with GlueTun for NordVPN
 - Sabnzbd (new)
