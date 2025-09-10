@@ -20,7 +20,8 @@ data:
   recyclarr.yml: |
     sonarr:
       sonarr:
-        base_url: http://sonarr.media.svc.cozy.local
+        # Use the in-cluster Service name and the correct port to avoid DNS suffix issues
+        base_url: http://sonarr.media.svc:8989
         api_key: !env_var SONARR__AUTH__APIKEY
 
         delete_old_custom_formats: true
@@ -44,9 +45,10 @@ data:
             assign_scores_to:
               - name: WEB-1080p
 
-    radarr:
-      radarr:
-        base_url: http://radarr.media.svc.cozy.local
+radarr:
+  radarr:
+    # Use the in-cluster Service name and the correct port to avoid DNS suffix issues
+    base_url: http://radarr.media.svc:7878
         api_key: !env_var RADARR__AUTH__APIKEY
 
         delete_old_custom_formats: true
