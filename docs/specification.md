@@ -167,10 +167,9 @@ Most of these apps are running on TrueNAS stor and needs to be moved to the clus
 - Bazarr (currently on truenas-stor) ✅
 - Sonarr (currently on truenas-stor) ✅
 - Radarr (currently on truenas-stor) ✅
-- Readarr (currently on truenas-stor) - Not sure if I should have this?
 - Prowlarr (currently on truenas-stor) ✅
 - Recyclarr - Trash Guides best practices sync with Radarr/Sonarr ✅
-- FlareSolverr - Proxy server to bypass Cloudflare and DDoS-GUARD protection
+- FlareSolverr - Proxy server to bypass Cloudflare and DDoS-GUARD protection ✅
 - QBitTorrent (currently on truenas-stor) with GlueTun for NordVPN
 - Sabnzbd (new)
 
