@@ -102,6 +102,8 @@ spec:
                 spec:
                   exec: *exec
                   periodSeconds: 5
+                  failureThreshold: 120
+                  timeoutSeconds: 5
 
           wait-vpn:
             image:
@@ -147,6 +149,16 @@ spec:
               readOnlyRootFilesystem: true
               allowPrivilegeEscalation: false
               capabilities: { drop: [ALL] }
+            ports:
+              - name: http
+                containerPort: 8080
+                protocol: TCP
+              - name: bittorrent
+                containerPort: 6881
+                protocol: TCP
+              - name: bittorrent-udp
+                containerPort: 6881
+                protocol: UDP
         pod:
           securityContext:
             fsGroupChangePolicy: OnRootMismatch
