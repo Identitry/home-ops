@@ -85,6 +85,8 @@ spec:
               VPN_TYPE: "wireguard"
               HEALTH_VPN_DURATION_INITIAL: 120s
               HEALTH_SUCCESS_WAIT_DURATION: 120s
+              FIREWALL_INPUT_PORTS: "8080"
+              FIREWALL_OUTBOUND_SUBNETS: "10.96.0.0/12,10.244.0.0/16,192.168.222.0/24"
               TZ: ${TZ}
               VERSION_INFORMATION: "off"
             probes:
@@ -114,9 +116,9 @@ spec:
               - -c
               - |
                 echo "Waiting for Gluetun tunnel connectivity..."
-                while ! (nc -z -w3 1.1.1.1 53 || nc -z -w3 8.8.8.8 53); do
-                  echo "Check failed, retrying in 5 seconds..."
-                  sleep 5
+                until wget -q --spider http://127.0.0.1:8000/health; do
+                  echo "Glutetun not healthy yet, retrying in 2s..."
+                  sleep 2
                 done
                 echo "Connectivity OK, proceeding"
 
@@ -157,6 +159,13 @@ spec:
               pullPolicy: IfNotPresent
             securityContext:
               readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop: ["ALL"]
+            ports:
+              - name: http
+                containerPort: 80
+                protocol: TCP
             probes:
               startup:
                 enabled: true
@@ -168,6 +177,7 @@ spec:
         pod:
           securityContext:
             runAsNonRoot: true
+            #allowPrivilegeEscalation: false
             runAsUser: 101
             runAsGroup: 101
             seccompProfile: { type: RuntimeDefault }
