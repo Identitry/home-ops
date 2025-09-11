@@ -134,11 +134,14 @@ spec:
             probes:
               liveness: &probe
                 enabled: true
+                type: HTTP
+                path: /
+                port: http
               readiness: *probe
               startup:
                 <<: *probe
                 spec:
-                  failureThreshold: 30
+                  failureThreshold: 60
                   periodSeconds: 5
             securityContext:
               readOnlyRootFilesystem: true
@@ -213,6 +216,7 @@ spec:
         ports:
           http:
             port: 8080
+            targetPort: http
       vuetorrent:
         controller: vuetorrent
         ports:
