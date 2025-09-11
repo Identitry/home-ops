@@ -7,6 +7,7 @@ metadata:
   labels:
     app.kubernetes.io/name: media
     app.kubernetes.io/instance: media
+    pod-security.kubernetes.io/enforce: privileged
     ingress.svc.egress: allow # <--- opt-in label for ingress-controller traffic
 ---
 # Media ReadWriteMany Persistent Volume.
