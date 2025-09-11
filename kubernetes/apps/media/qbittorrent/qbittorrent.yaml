@@ -36,9 +36,9 @@ spec:
     - secretKey: VPN_SERVICE_PROVIDER
       remoteRef:
         key: /GLUETUN/VPN_SERVICE_PROVIDER
-    - secretKey: DOT_PROVIDERS
+    - secretKey: DNS_PLAINTEXT_ADDRESS
       remoteRef:
-        key: /GLUETUN/DOT_PROVIDERS
+        key: /GLUETUN/DNS_PLAINTEXT_ADDRESS
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 # QBitTorrent/Gluetun Helm release.
