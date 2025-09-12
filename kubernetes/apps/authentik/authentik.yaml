@@ -195,8 +195,8 @@ spec:
         user: authentik
 
       redis:
-        host: rfs-authentik-redis.authentik.svc.cozy.local:26379
-        sentinel_master: mymaster
+        host: rfr-authentik-redis.authentik.svc
+        port: 6379
 
       log_level: info
 
@@ -228,6 +228,11 @@ spec:
 
       containerSecurityContext:
         readOnlyRootFilesystem: true
+
+      startupProbe:
+        initialDelaySeconds: 60
+        periodSeconds: 10
+        failureThreshold: 30
 
       metrics:
         enabled: true
