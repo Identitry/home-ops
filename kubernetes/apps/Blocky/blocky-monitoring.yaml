@@ -220,3 +220,33 @@ spec:
         - ports:
             - port: "5432"
               protocol: TCP
+---
+# TEMP: Broad K8s NetworkPolicy to rule out KNP default-deny in the namespace
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-all-temp
+  namespace: authentik
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - {}
+  egress:
+    - {}
+---
+# TEMP: Broad Cilium policy to rule out Cilium default-deny; additive allow that coexists
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: authentik-breakglass-egress
+  namespace: authentik
+spec:
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: authentik
+  egress:
+    - toEntities:
+        - all
