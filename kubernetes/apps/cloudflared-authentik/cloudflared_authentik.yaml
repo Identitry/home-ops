@@ -4,7 +4,7 @@
 apiVersion: fluxcd.controlplane.io/v1
 kind: ResourceSet
 metadata:
-  name: cloudflared
+  name: cloudflared-authentik
   namespace: cozy-fluxcd
   annotations:
     fluxcd.controlplane.io/reconcile: "enabled"
@@ -13,23 +13,23 @@ metadata:
 spec:
   commonMetadata:
     labels:
-      app.kubernetes.io/name: cloudflared
+      app.kubernetes.io/name: cloudflared-authentik
 
   resources:
     # Cloudflared namespace.
     - apiVersion: v1
       kind: Namespace
       metadata:
-        name: cloudflared
+        name: cloudflared-authentik
         labels:
-          app.kubernetes.io/name: cloudflared
+          app.kubernetes.io/name: cloudflared-authentik
 
     # Cloudflared ExternalSecret.
     - apiVersion: external-secrets.io/v1
       kind: ExternalSecret
       metadata:
         name: es-cloudflared-cloudflare-tunnel-remote
-        namespace: cloudflared
+        namespace: cloudflared-authentik
       spec:
         refreshInterval: 1h
         secretStoreRef:
@@ -41,14 +41,14 @@ spec:
         data:
           - secretKey: tunnelToken
             remoteRef:
-              key: /CLOUDFLARE/TUNNEL_TOKEN
+              key: /CLOUDFLARE/TUNNEL_TOKEN_AUTHENTIK
 
     # Cloudflared helm release.
     - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
       metadata:
-        name: cloudflared
-        namespace: cloudflared
+        name: cloudflared-authentik
+        namespace: cloudflared-authentik
       spec:
         interval: 10m
         chart:
