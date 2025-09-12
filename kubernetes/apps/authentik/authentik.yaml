@@ -206,14 +206,9 @@ spec:
       volumes:
         - name: media
           emptyDir: {}
-        - name: custom-templates
-          persistentVolumeClaim:
-            claimName: authentik-custom-templates
       volumeMounts:
         - name: media
           mountPath: /media
-        - name: custom-templates
-          mountPath: /templates
 
       containerSecurityContext:
         readOnlyRootFilesystem: true
