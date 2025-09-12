@@ -36,7 +36,9 @@ spec:
           kind: ClusterSecretStore
           name: infisical
         target:
-          name: cloudflared-cloudflare-tunnel-remote # This secret name is automatically fetched by the Cloudflared helm chart.
+          # This secret name is automatically fetched by the Cloudflared helm chart.
+          # Template: [namespace]-cloudflare-tunnel-remote
+          name: cloudflared-cloudflare-tunnel-remote
           creationPolicy: Owner
         data:
           - secretKey: tunnelToken
