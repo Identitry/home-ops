@@ -195,7 +195,7 @@ spec:
         user: authentik
 
       redis:
-        host: rfr-authentik-redis.authentik.svc
+        host: rfrm-authentik-redis.authentik.svc
         port: 6379
 
       log_level: info
