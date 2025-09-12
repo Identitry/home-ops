@@ -16,7 +16,7 @@ spec:
       app.kubernetes.io/name: cloudflared-authentik
 
   resources:
-    # Cloudflared namespace.
+    # Cloudflared-authentik namespace.
     - apiVersion: v1
       kind: Namespace
       metadata:
@@ -28,7 +28,7 @@ spec:
     - apiVersion: external-secrets.io/v1
       kind: ExternalSecret
       metadata:
-        name: es-cloudflared-cloudflare-tunnel-remote
+        name: es-cloudflared-authentik-cloudflare-tunnel-remote
         namespace: cloudflared-authentik
       spec:
         refreshInterval: 1h
@@ -36,7 +36,7 @@ spec:
           kind: ClusterSecretStore
           name: infisical
         target:
-          name: cloudflared-cloudflare-tunnel-remote # This secret name is automatically fetched by the Cloudflared helm chart.
+          name: cloudflared-authentik-cloudflare-tunnel-remote # This secret name is automatically fetched by the Cloudflared helm chart.
           creationPolicy: Owner
         data:
           - secretKey: tunnelToken
