@@ -15,10 +15,6 @@ spec:
   sourceRef:
     kind: GitRepository
     name: cozy-fluxcd
-  postBuild:
-    substituteFrom:
-      - kind: Secret
-        name: flux-secret
   healthChecks:
     # Health check for External Secrets Operator.
     - apiVersion: apps/v1

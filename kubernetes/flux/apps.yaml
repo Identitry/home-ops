@@ -20,9 +20,14 @@ spec:
   postBuild:
     substituteFrom:
       - kind: Secret
-        name: flux-secret
+        name: flux-substitution
   wait: true
   healthChecks:
+    # Ensure the flux-substitution secret is present.
+    - apiVersion: v1
+      kind: Secret
+      name: flux-substitution
+      namespace: cozy-fluxcd
     # Healthchecks for Cloudflared app.
     - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease

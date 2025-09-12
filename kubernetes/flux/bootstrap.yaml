@@ -18,12 +18,12 @@ spec:
   postBuild:
     substituteFrom:
       - kind: Secret
-        name: flux-secret
+        name: flux-substitution
   healthChecks:
-    # Ensure the Flux secret is present.
+    # Ensure the flux-substitution is present.
     - apiVersion: v1
       kind: Secret
-      name: flux-secret
+      name: flux-substitution
       namespace: cozy-fluxcd
   healthCheckExprs:
     # Health checks for External Secrets ClusterSecretStore.
