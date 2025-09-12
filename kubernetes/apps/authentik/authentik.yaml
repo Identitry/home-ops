@@ -366,6 +366,14 @@ spec:
       toPorts:
         - ports:
             - port: "26379"
+    # Redis master service (data port)
+    - toServices:
+        - k8sService:
+            namespace: authentik
+            serviceName: rfr-authentik-redis
+      toPorts:
+        - ports:
+            - port: "6379"
     # DNS to CoreDNS service
     - toServices:
         - k8sService:
