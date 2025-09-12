@@ -145,6 +145,6 @@ spec:
                 subPath: tmp
       tls-cert:
         type: secret
-        name: wildcard-le-tls-cert-myk8s-se
+        name: wildcard-le-tls-cert
         globalMounts:
           - path: /tls

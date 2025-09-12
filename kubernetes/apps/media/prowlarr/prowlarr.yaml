@@ -130,7 +130,7 @@ spec:
         tls:
           - hosts:
               - p-arr.${DOMAIN}
-            secretName: wildcard-le-tls-cert-myk8s-se
+            secretName: wildcard-le-tls-cert
     persistence:
       config:
         existingClaim: prowlarr-config

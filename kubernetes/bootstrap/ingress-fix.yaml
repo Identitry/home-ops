@@ -29,4 +29,4 @@ spec:
     ingress-nginx:
       controller:
         extraArgs:
-          default-ssl-certificate: tenant-root/wildcard-le-tls-cert-myk8s-se
+          default-ssl-certificate: tenant-root/wildcard-le-tls-cert

@@ -91,7 +91,7 @@ spec:
     controllers:
       blocky:
         annotations:
-          reloader.stakater.com/match: blocky-config, blocky-gluetun-wg, wildcard-le-tls-cert-myk8s-se
+          reloader.stakater.com/match: blocky-config, blocky-gluetun-wg, wildcard-le-tls-cert
         type: daemonset
 
         initContainers:
@@ -221,7 +221,7 @@ spec:
         tls:
           - hosts:
               - blocky.${DOMAIN}
-            secretName: wildcard-le-tls-cert-myk8s-se
+            secretName: wildcard-le-tls-cert
 
     persistence:
       config:
@@ -236,6 +236,6 @@ spec:
             subPath: config.yml
       tls-cert:
         type: secret
-        name: wildcard-le-tls-cert-myk8s-se
+        name: wildcard-le-tls-cert
         globalMounts:
           - path: /tls

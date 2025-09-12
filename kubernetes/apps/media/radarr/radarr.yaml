@@ -141,7 +141,7 @@ spec:
         tls:
           - hosts:
               - r-arr.${DOMAIN}
-            secretName: wildcard-le-tls-cert-myk8s-se
+            secretName: wildcard-le-tls-cert
     persistence:
       config:
         existingClaim: radarr-config
