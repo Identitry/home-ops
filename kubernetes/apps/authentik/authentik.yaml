@@ -259,6 +259,11 @@ spec:
         - name: dshm
           mountPath: /dev/shm
 
+      startupProbe:
+        initialDelaySeconds: 45
+        periodSeconds: 10
+        failureThreshold: 30
+
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
