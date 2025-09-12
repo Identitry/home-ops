@@ -156,7 +156,7 @@ Public Github site that describes the cluster. ✅
 
 - External-DNS - Operator, Manage DNS names against CloudFlare ✅
 - Cloudflared - Protected Cloudflare tunnel, authentication at beginning of tunnel (EntraID or Google) ✅
-- Cloudflared + Authentik - Unprotected Cloudflare Tunnel, authentication in cluster at end of tunnel (Authentik)
+- Cloudflared + Authentik - Unprotected Cloudflare Tunnel, authentication in cluster at end of tunnel (Authentik) ✅
 - Cloudflare DDNS - Updates Cloudflare DNS with public IP Address ✅
 
 #### Media
