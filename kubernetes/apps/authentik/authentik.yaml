@@ -204,25 +204,16 @@ spec:
       podLabels:
         policy.myk8s.se/ingress-authentik: "true"
       replicas: 2
-      persistence:
-        enabled: true
-        existingClaim: authentik
-
-      ingress:
-        enabled: true
-        ingressClassName: nginx
-        hosts:
-          - authentik.${DOMAIN}
-        tls:
-          - secretName: wildcard-le-tls-cert
-            hosts:
-              - authentik.${DOMAIN}
 
       volumes:
+        - name: media
+          emptyDir: {}
         - name: custom-templates
           persistentVolumeClaim:
             claimName: authentik-custom-templates
       volumeMounts:
+        - name: media
+          mountPath: /media
         - name: custom-templates
           mountPath: /templates
 
@@ -265,9 +256,13 @@ spec:
         - name: dshm
           emptyDir:
             medium: Memory
+        - name: media
+          emptyDir: {}
       volumeMounts:
         - name: dshm
           mountPath: /dev/shm
+        - name: media
+          mountPath: /media
 
       startupProbe:
         initialDelaySeconds: 45
