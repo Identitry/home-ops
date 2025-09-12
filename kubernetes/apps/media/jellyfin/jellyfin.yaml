@@ -46,7 +46,7 @@ spec:
     controllers:
       jellyfin:
         annotations:
-          reloader.stakater.com/auto: "true"
+          reloader.stakater.com/match: wildcard-le-tls-cert
         containers:
           app:
             image:

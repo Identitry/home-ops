@@ -65,7 +65,7 @@ spec:
     controllers:
       sonarr:
         annotations:
-          reloader.stakater.com/auto: "true"
+          reloader.stakater.com/match: wildcard-le-tls-cert,sonarr-api-key
         containers:
           app:
             image:

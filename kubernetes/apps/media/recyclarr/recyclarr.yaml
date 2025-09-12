@@ -101,6 +101,8 @@ spec:
   values:
     controllers:
       recyclarr:
+        annotations:
+          reloader.stakater.com/match: recyclarr-config
         type: cronjob
         cronjob:
           schedule: 0 0 * * *

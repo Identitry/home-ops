@@ -52,7 +52,7 @@ spec:
     controllers:
       prowlarr:
         annotations:
-          reloader.stakater.com/auto: "true"
+          reloader.stakater.com/match: wildcard-le-tls-cert,prowlarr-api-key
         containers:
           app:
             image:

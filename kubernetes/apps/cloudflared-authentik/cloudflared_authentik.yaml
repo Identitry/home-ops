@@ -64,7 +64,7 @@ spec:
             interval: 10m
         values:
           podAnnotations:
-            reloader.stakater.com/match: cloudflared-cloudflare-tunnel-remote
+            reloader.stakater.com/match: cloudflared-authentik-cloudflare-tunnel-remote
           replicaCount: 2
           image:
             tag: "2025.8.1"

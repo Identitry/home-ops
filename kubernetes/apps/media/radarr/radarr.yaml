@@ -65,7 +65,7 @@ spec:
     controllers:
       radarr:
         annotations:
-          reloader.stakater.com/auto: "true"
+          reloader.stakater.com/match: wildcard-le-tls-cert,radarr-api-key
         containers:
           app:
             image:
