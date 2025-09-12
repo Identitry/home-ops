@@ -234,6 +234,11 @@ spec:
         periodSeconds: 10
         failureThreshold: 30
 
+      readinessProbe:
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        failureThreshold: 30
+
       metrics:
         enabled: true
         serviceMonitor:
@@ -333,6 +338,8 @@ spec:
     matchLabels:
       policy.myk8s.se/ingress-authentik: "true" # set on authentik server pods via podLabels
   ingress:
+    - fromEntities:
+        - host
     - fromEndpoints:
         - matchLabels:
             policy.myk8s.se/egress-authentik: "true"
