@@ -251,6 +251,20 @@ spec:
       replicas: 2
       containerSecurityContext:
         readOnlyRootFilesystem: true
+      volumes:
+        - name: dshm
+          emptyDir:
+            medium: Memory
+      volumeMounts:
+        - name: dshm
+          mountPath: /dev/shm
+      startupProbe:
+        httpGet:
+          path: /-/health/ready
+          port: http
+        initialDelaySeconds: 20
+        periodSeconds: 10
+        failureThreshold: 18
 
       affinity:
         podAntiAffinity:
