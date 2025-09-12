@@ -201,8 +201,6 @@ spec:
       log_level: info
 
     server:
-      podLabels:
-        policy.myk8s.se/ingress-authentik: "true"
       replicas: 2
 
       volumes:
@@ -331,7 +329,7 @@ metadata:
 spec:
   endpointSelector:
     matchLabels:
-      policy.myk8s.se/egress-authentik: "true" # add this label to NGINX ingress controller pods
+      app.kubernetes.io/name: ingress-nginx
   egress:
     - toEndpoints:
         - matchLabels:
@@ -348,13 +346,15 @@ metadata:
 spec:
   endpointSelector:
     matchLabels:
-      policy.myk8s.se/ingress-authentik: "true" # set on authentik server pods via podLabels
+      app.kubernetes.io/name: authentik
+      app.kubernetes.io/instance: authentik
+      app.kubernetes.io/component: server
   ingress:
     - fromEntities:
         - host
     - fromEndpoints:
         - matchLabels:
-            policy.myk8s.se/egress-authentik: "true"
+            app.kubernetes.io/name: ingress-nginx
 ---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
