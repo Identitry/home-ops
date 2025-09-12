@@ -351,9 +351,11 @@ spec:
       toPorts:
         - ports:
             - port: "26379"
-    # DNS to kube-dns
-    - toEntities:
-        - kube-dns
+    # DNS to CoreDNS service
+    - toServices:
+        - k8sService:
+            namespace: kube-system
+            serviceName: kube-dns
       toPorts:
         - ports:
             - port: "53"
