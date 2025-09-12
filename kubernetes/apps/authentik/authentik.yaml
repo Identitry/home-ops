@@ -165,11 +165,13 @@ spec:
               name: authentik-db-creds
               key: password
         - name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__HOST
-          value: authentik-db-ro.authentik.svc:5432
+          value: authentik-db-ro.authentik.svc
         - name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__NAME
           value: authentik
         - name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__USER
           value: authentik
+        - name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__PORT
+          value: "5432"
         - name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__PASSWORD
           valueFrom:
             secretKeyRef:
@@ -187,7 +189,8 @@ spec:
       disable_startup_analytics: true
 
       postgresql:
-        host: authentik-db-rw.authentik.svc:5432
+        host: authentik-db-rw.authentik.svc
+        port: 5432
         name: authentik
         user: authentik
 
