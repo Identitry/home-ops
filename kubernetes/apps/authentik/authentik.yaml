@@ -152,15 +152,6 @@ spec:
         - name: AUTHENTIK_COOKIE_DOMAIN
           value: .${DOMAIN}
 
-      media:
-        volumes:
-          - name: media
-            persistentVolumeClaim:
-              claimName: authentik-media
-        volumeMounts:
-          - name: media
-            mountPath: /media
-
     authentik:
       # This sends anonymous usage-data, stack traces on errors and
       # performance data to sentry.beryju.org, and is fully opt-in
@@ -214,6 +205,13 @@ spec:
             hosts:
               - auth.${DOMAIN}
 
+      volumes:
+        - name: media
+          emptyDir: {}
+      volumeMounts:
+        - name: media
+          mountPath: /media
+
       metrics:
         enabled: true
         serviceMonitor:
@@ -241,6 +239,18 @@ spec:
         initialDelaySeconds: 45
         periodSeconds: 10
         failureThreshold: 30
+
+      volumes:
+        - name: media
+          emptyDir: {}
+        - name: dshm
+          emptyDir:
+            medium: Memory
+      volumeMounts:
+        - name: media
+          mountPath: /media
+        - name: dshm
+          mountPath: /dev/shm
 
       affinity:
         podAntiAffinity:
@@ -352,7 +362,7 @@ spec:
     - toServices:
         - k8sService:
             namespace: authentik
-            serviceName: rfr-authentik-redis
+            serviceName: rfrm-authentik-redis
       toPorts:
         - ports:
             - port: "6379"
