@@ -170,7 +170,7 @@ spec:
         host: rfrm-authentik-redis.authentik.svc
         port: 6379
 
-      log_level: info
+      log_level: warning
 
     server:
       replicas: 1
