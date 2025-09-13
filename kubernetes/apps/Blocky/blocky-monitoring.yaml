@@ -24,10 +24,10 @@ spec:
   data:
     - secretKey: username
       remoteRef:
-        key: /BLOCKY/CNPG-USERNAME
+        key: /BLOCKY/CNPG_USERNAME
     - secretKey: password
       remoteRef:
-        key: /BLOCKY/CNPG-PASSWORD
+        key: /BLOCKY/CNPG_PASSWORD
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/main/config/crd/bases/postgresql.cnpg.io_clusters.yaml
 # CloudNativePG Cluster — creates a "blocky" database owned by user "blocky"

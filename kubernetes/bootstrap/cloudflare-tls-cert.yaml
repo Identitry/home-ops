@@ -17,7 +17,7 @@ spec:
   data:
     - secretKey: password
       remoteRef:
-        key: /CERT-MANAGER/WILDCARD-CERT-PKCS12-PASS
+        key: /CERT_MANAGER/WILDCARD_CERT_PKCS12_PASS
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/jetstack/cert-manager/main/deploy/crds/cert-manager.io_certificates.yaml
 # Wildcard TLS certificate for *.myk8s.se and myk8s.se, issued by Let's Encrypt.
