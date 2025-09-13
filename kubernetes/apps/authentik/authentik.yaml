@@ -193,8 +193,8 @@ spec:
     server:
       replicas: 1
 
-      containerSecurityContext:
-        readOnlyRootFilesystem: true
+      #containerSecurityContext:
+      #  readOnlyRootFilesystem: true
 
       startupProbe:
         initialDelaySeconds: 60
@@ -250,8 +250,9 @@ spec:
 
     worker:
       replicas: 1
-      containerSecurityContext:
-        readOnlyRootFilesystem: true
+
+      #containerSecurityContext:
+      #  readOnlyRootFilesystem: true
 
       startupProbe:
         initialDelaySeconds: 45
