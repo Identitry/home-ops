@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/name: authentik
     app.kubernetes.io/instance: authentik
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd/flux2/main/docs/spec/v1beta1/helmrepository.yaml
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd/helm-controller/main/config/crd/bases/helm.toolkit.fluxcd.io_helmrepositories.yaml
 # Helm Repository for Authentik
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
@@ -32,6 +32,7 @@ spec:
   redis:
     replicas: 3
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/external-secrets/main/config/crd/bases/external-secrets.io_externalsecrets.yaml
 # App user credentials for the initial DB owner
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
@@ -106,6 +107,7 @@ spec:
   monitoring:
     enablePodMonitor: true
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd/helm-controller/main/config/crd/bases/helm.toolkit.fluxcd.io_helmreleases.yaml
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -193,8 +195,8 @@ spec:
     server:
       replicas: 1
 
-      #containerSecurityContext:
-      #  readOnlyRootFilesystem: true
+      containerSecurityContext:
+        readOnlyRootFilesystem: true
 
       startupProbe:
         initialDelaySeconds: 60
@@ -251,8 +253,8 @@ spec:
     worker:
       replicas: 1
 
-      #containerSecurityContext:
-      #  readOnlyRootFilesystem: true
+      containerSecurityContext:
+        readOnlyRootFilesystem: true
 
       startupProbe:
         initialDelaySeconds: 45
@@ -309,6 +311,7 @@ spec:
       app.kubernetes.io/instance: authentik
       app.kubernetes.io/component: worker
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/cilium/cilium/main/install/kubernetes/quick-install.yaml
 apiVersion: cilium.io/v2
 kind: CiliumClusterwideNetworkPolicy
 metadata:
@@ -326,6 +329,7 @@ spec:
         - ports:
             - port: "9000" # authentik server port
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/cilium/cilium/main/install/kubernetes/quick-install.yaml
 apiVersion: cilium.io/v2
 kind: CiliumClusterwideNetworkPolicy
 metadata:
@@ -343,6 +347,7 @@ spec:
         - matchLabels:
             app.kubernetes.io/name: ingress-nginx
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/cilium/cilium/main/install/kubernetes/quick-install.yaml
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
