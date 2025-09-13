@@ -152,6 +152,15 @@ spec:
         - name: AUTHENTIK_COOKIE_DOMAIN
           value: .${DOMAIN}
 
+      media:
+        volumes:
+          - name: media
+            persistentVolumeClaim:
+              claimName: authentik-media
+        volumeMounts:
+          - name: media
+            mountPath: /media
+
     authentik:
       # This sends anonymous usage-data, stack traces on errors and
       # performance data to sentry.beryju.org, and is fully opt-in
@@ -173,7 +182,7 @@ spec:
       log_level: info
 
     server:
-      replicas: 2
+      replicas: 1
 
       #containerSecurityContext:
       #  readOnlyRootFilesystem: true
@@ -224,7 +233,7 @@ spec:
                     app.kubernetes.io/component: server
 
     worker:
-      replicas: 2
+      replicas: 1
       #containerSecurityContext:
       #readOnlyRootFilesystem: true
 
