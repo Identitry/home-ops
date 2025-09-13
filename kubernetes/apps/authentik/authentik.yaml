@@ -199,6 +199,8 @@ spec:
       log_level: warning
 
     server:
+      replicas: 1
+
       containerSecurityContext:
         readOnlyRootFilesystem: true
 
@@ -243,6 +245,8 @@ spec:
           interval: 1m
 
     worker:
+      replicas: 1
+
       containerSecurityContext:
         readOnlyRootFilesystem: true
 
