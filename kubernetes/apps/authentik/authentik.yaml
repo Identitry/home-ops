@@ -19,34 +19,6 @@ spec:
   interval: 1h
   url: https://charts.goauthentik.io
 ---
-# Persistent Volume Claims for Authentik
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: authentik
-  namespace: authentik
-spec:
-  storageClassName: local
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 256Mi
----
-# Persistent Volume Claims for Authentik Custom Templates
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: authentik-custom-templates
-  namespace: authentik
-spec:
-  storageClassName: local
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 128Mi
----
 # yaml-language-server: $schema=https://raw.githubusercontent.com/spotahome/redis-operator/master/config/crd/bases/databases.spotahome.com_redisfailovers.yaml
 # RedisFailover for Authentik, used by Authentik for caching and task queues.
 apiVersion: databases.spotahome.com/v1
