@@ -112,11 +112,6 @@ metadata:
   name: authentik
   namespace: authentik
 spec:
-  valuesFrom:
-    - kind: Secret
-      name: authentik-config
-      valuesKey: secret_key
-      targetPath: authentik.secret_key
   chart:
     spec:
       chart: authentik
@@ -137,11 +132,6 @@ spec:
         secret.reloader.stakater.com/reload: authentik-db-creds,authentik-config,wildcard-le-tls-cert
 
       env:
-        - name: AUTHENTIK_POSTGRESQL__PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: authentik-db-creds
-              key: password
         - name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__HOST
           value: authentik-db-ro.authentik.svc
         - name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__NAME
@@ -157,16 +147,16 @@ spec:
               key: password
         - name: AUTHENTIK_COOKIE_DOMAIN
           value: .${DOMAIN}
-        - name: AUTHENTIK_BOOTSTRAP_EMAIL
-          valueFrom:
-            secretKeyRef:
-              name: authentik-config
-              key: username
-        - name: AUTHENTIK_BOOTSTRAP_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: authentik-config
-              key: password
+        #- name: AUTHENTIK_BOOTSTRAP_EMAIL
+        #  valueFrom:
+        #    secretKeyRef:
+        #     name: authentik-config
+        #      key: username
+        #- name: AUTHENTIK_BOOTSTRAP_PASSWORD
+        #  valueFrom:
+        #    secretKeyRef:
+        #     name: authentik-config
+        #     key: password
 
     authentik:
       # This sends anonymous usage-data, stack traces on errors and
@@ -174,13 +164,20 @@ spec:
       error_reporting:
         enabled: false
       disable_update_check: true
-      disable_startup_analytics: true
+      disable_startup_analytics: false
+
+      secret_key:
+        fromSecret: authentik-config
+        key: secret_key
 
       postgresql:
         host: authentik-db-rw.authentik.svc
         port: 5432
         name: authentik
         user: authentik
+        password:
+          fromSecret: authentik-db-creds
+          key: password
 
       redis:
         host: rfrm-authentik-redis.authentik.svc
