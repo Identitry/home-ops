@@ -145,6 +145,11 @@ spec:
             secretKeyRef:
               name: authentik-db-creds
               key: password
+        - name: AUTHENTIK_POSTGRESQL__PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: authentik-db-creds
+              key: password
         #- name: AUTHENTIK_COOKIE_DOMAIN
         #  value: .${DOMAIN}
         #- name: AUTHENTIK_BOOTSTRAP_EMAIL
