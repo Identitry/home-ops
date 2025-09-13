@@ -203,13 +203,6 @@ spec:
     server:
       replicas: 2
 
-      volumes:
-        - name: media
-          emptyDir: {}
-      volumeMounts:
-        - name: media
-          mountPath: /media
-
       containerSecurityContext:
         readOnlyRootFilesystem: true
 
@@ -262,17 +255,6 @@ spec:
       replicas: 2
       containerSecurityContext:
         readOnlyRootFilesystem: true
-      volumes:
-        - name: dshm
-          emptyDir:
-            medium: Memory
-        - name: media
-          emptyDir: {}
-      volumeMounts:
-        - name: dshm
-          mountPath: /dev/shm
-        - name: media
-          mountPath: /media
 
       startupProbe:
         initialDelaySeconds: 45
