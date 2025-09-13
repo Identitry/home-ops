@@ -45,32 +45,31 @@ spec:
   target:
     name: authentik-db-creds
     creationPolicy: Owner
-  data:
-    - secretKey: username
-      remoteRef:
-        key: /AUTHENTIK/CNPG-USERNAME
-    - secretKey: password
-      remoteRef:
-        key: /AUTHENTIK/CNPG-PASSWORD
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/external-secrets/main/config/crd/bases/external-secrets.io_externalsecrets.yaml
 # Secret key for Authentik
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: es-authentik-secret-key
+  name: es-authentik-config
   namespace: authentik
 spec:
   secretStoreRef:
     kind: ClusterSecretStore
     name: infisical
   target:
-    name: authentik-secret-key
+    name: authentik-config
     creationPolicy: Owner
   data:
     - secretKey: secret_key
       remoteRef:
         key: /AUTHENTIK/SECRET-KEY
+    - secretKey: username
+      remoteRef:
+        key: /AUTHENTIK/ADMIN_USERNAME
+    - secretKey: password
+      remoteRef:
+        key: /AUTHENTIK/ADMIN_PASSWORD
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/main/config/crd/bases/postgresql.cnpg.io_clusters.yaml
 # CloudNativePG Cluster — creates an "authentik" database owned by user "authentik"
@@ -108,7 +107,7 @@ metadata:
 spec:
   valuesFrom:
     - kind: Secret
-      name: authentik-secret-key
+      name: authentik-config
       valuesKey: secret_key
       targetPath: authentik.secret_key
   chart:
@@ -128,7 +127,7 @@ spec:
       priorityClassName: system-cluster-critical
 
       deploymentAnnotations:
-        secret.reloader.stakater.com/reload: authentik-db-creds,authentik-secret-key,wildcard-le-tls-cert
+        secret.reloader.stakater.com/reload: authentik-db-creds,authentik-config,wildcard-le-tls-cert
 
       env:
         - name: AUTHENTIK_POSTGRESQL__PASSWORD
@@ -151,6 +150,16 @@ spec:
               key: password
         - name: AUTHENTIK_COOKIE_DOMAIN
           value: .${DOMAIN}
+        - name: AUTHENTIK_BOOTSTRAP_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: authentik-config
+              key: username
+        - name: AUTHENTIK_BOOTSTRAP_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: authentik-config
+              key: password
 
     authentik:
       # This sends anonymous usage-data, stack traces on errors and
