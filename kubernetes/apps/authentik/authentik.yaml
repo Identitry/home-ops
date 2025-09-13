@@ -175,8 +175,8 @@ spec:
     server:
       replicas: 2
 
-      containerSecurityContext:
-        readOnlyRootFilesystem: true
+      #containerSecurityContext:
+      #  readOnlyRootFilesystem: true
 
       startupProbe:
         initialDelaySeconds: 60
