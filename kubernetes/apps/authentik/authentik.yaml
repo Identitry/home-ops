@@ -45,6 +45,13 @@ spec:
   target:
     name: authentik-db-creds
     creationPolicy: Owner
+  data:
+    - secretKey: username
+      remoteRef:
+        key: /AUTHENTIK/DB-USERNAME
+    - secretKey: password
+      remoteRef:
+        key: /AUTHENTIK/DB-PASSWORD
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/external-secrets/main/config/crd/bases/external-secrets.io_externalsecrets.yaml
 # Secret key for Authentik
