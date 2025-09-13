@@ -19,7 +19,7 @@ spec:
   interval: 1h
   url: https://charts.goauthentik.io
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/spotahome/redis-operator/master/config/crd/bases/databases.spotahome.com_redisfailovers.yaml
+# yaml-language-server: $schema=https://raw.githubusercontent.com/spotahome/redis-operator/refs/heads/master/manifests/databases.spotahome.com_redisfailovers.yaml
 # RedisFailover for Authentik, used by Authentik for caching and task queues.
 apiVersion: databases.spotahome.com/v1
 kind: RedisFailover
@@ -32,7 +32,7 @@ spec:
   redis:
     replicas: 3
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/external-secrets/main/config/crd/bases/external-secrets.io_externalsecrets.yaml
+# yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/external-secrets/refs/heads/main/config/crds/bases/external-secrets.io_externalsecrets.yaml
 # App user credentials for the initial DB owner
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
@@ -54,7 +54,7 @@ spec:
       remoteRef:
         key: /AUTHENTIK/CNPG_PASSWORD
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/external-secrets/main/config/crd/bases/external-secrets.io_externalsecrets.yaml
+# yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/external-secrets/refs/heads/main/config/crds/bases/external-secrets.io_externalsecrets.yaml
 # Secret key for Authentik
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
