@@ -188,13 +188,9 @@ spec:
         host: authentik-db-rw.authentik.svc
         name: authentik
         user: authentik
-        #password:
-        #  fromSecret: authentik-db-creds
-        #  key: password
 
       redis:
         host: rfrm-authentik-redis.authentik.svc
-        #port: 6379
 
       log_level: warning
 
@@ -258,40 +254,9 @@ spec:
       volumes:
         - name: media
           emptyDir: {}
-        - name: dshm
-          emptyDir:
-            medium: Memory
       volumeMounts:
         - name: media
           mountPath: /media
-        - name: dshm
-          mountPath: /dev/shm
----
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: authentik-server-pdb
-  namespace: authentik
-spec:
-  minAvailable: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: authentik
-      app.kubernetes.io/instance: authentik
-      app.kubernetes.io/component: server
----
-apiVersion: policy/v1
-kind: PodDisruptionBudget
-metadata:
-  name: authentik-worker-pdb
-  namespace: authentik
-spec:
-  minAvailable: 1
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: authentik
-      app.kubernetes.io/instance: authentik
-      app.kubernetes.io/component: worker
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/cilium/cilium/main/install/kubernetes/quick-install.yaml
 apiVersion: cilium.io/v2
