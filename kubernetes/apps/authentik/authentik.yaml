@@ -48,10 +48,10 @@ spec:
   data:
     - secretKey: username
       remoteRef:
-        key: /AUTHENTIK/DB-USERNAME
+        key: /AUTHENTIK/CNPG-USERNAME
     - secretKey: password
       remoteRef:
-        key: /AUTHENTIK/DB-PASSWORD
+        key: /AUTHENTIK/CNPG-PASSWORD
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/external-secrets/main/config/crd/bases/external-secrets.io_externalsecrets.yaml
 # Secret key for Authentik
