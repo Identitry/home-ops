@@ -169,7 +169,7 @@ spec:
       error_reporting:
         enabled: false
       disable_update_check: true
-      disable_startup_analytics: false
+      disable_startup_analytics: true
 
       secret_key:
         fromSecret: authentik-config
