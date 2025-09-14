@@ -108,7 +108,7 @@ spec:
           external-dns.alpha.kubernetes.io/hostname: jellyfin.${DOMAIN}
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
           external-dns.alpha.kubernetes.io/target: "212.107.149.106" # updated by cloudflare-ddns.
-          metallb.universe.tf/address-pool: cozystack
+          metallb.io/address-pool: cozystack
         externalTrafficPolicy: Local
         ports:
           http:
