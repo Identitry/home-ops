@@ -115,3 +115,8 @@ spec:
                 subPath: transcode
               - path: /tmp
                 subPath: tmp
+      tls-cert:
+        type: secret
+        name: wildcard-le-tls-cert
+        globalMounts:
+          - path: /tls
