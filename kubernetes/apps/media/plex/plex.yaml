@@ -85,8 +85,9 @@ spec:
       app:
         type: LoadBalancer
         annotations:
-          metallb.io/address-pool: cozystack
+          metallb.universe.tf/address-pool: cozystack
         loadBalancerIP: 192.168.222.111
+        externalTrafficPolicy: Local
         ports:
           http:
             port: 32400
