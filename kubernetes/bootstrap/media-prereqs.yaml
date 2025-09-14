@@ -204,3 +204,24 @@ spec:
         - { protocol: TCP, port: 8989 } # Sonarr
         - { protocol: TCP, port: 9696 } # Prowlarr
         - { protocol: TCP, port: 8191 } # FlareSolverr
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-jellyfin-external-ingress
+  namespace: media
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: jellyfin
+  policyTypes: ["Ingress"]
+  ingress:
+    - from:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 8096
+        - protocol: TCP
+          port: 8920
