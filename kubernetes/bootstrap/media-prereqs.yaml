@@ -225,3 +225,38 @@ spec:
           port: 8096
         - protocol: TCP
           port: 8920
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-plex-external-ingress
+  namespace: media
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: plex
+  policyTypes: ["Ingress"]
+  ingress:
+    - from:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        # Core Plex web/API
+        - protocol: TCP
+          port: 32400
+        # Optional: remote control / DLNA / discovery
+        - protocol: TCP
+          port: 8324 # Plex Companion
+        - protocol: TCP
+          port: 32469 # DLNA (TCP)
+        - protocol: UDP
+          port: 1900 # DLNA (SSDP)
+        - protocol: UDP
+          port: 32410 # GDM
+        - protocol: UDP
+          port: 32412 # GDM
+        - protocol: UDP
+          port: 32413 # GDM
+        - protocol: UDP
+          port: 32414 # GDM
