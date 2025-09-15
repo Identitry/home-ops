@@ -184,6 +184,12 @@ spec:
           port: 9696 # Prowlarr
         - protocol: TCP
           port: 8191 # FlareSolverr
+        - protocol: TCP
+          port: 32400 # Plex
+        - protocol: TCP
+          port: 8096 # Jellyfin HTTP
+        - protocol: TCP
+          port: 8920 # Jellyfin HTTPS
 ---
 # NetworkPolicy to allow ingress on media app ports from other pods in the same namespace.
 apiVersion: networking.k8s.io/v1
