@@ -88,11 +88,10 @@ spec:
             securityContext:
               runAsNonRoot: false
               runAsUser: 0
-              allowPrivilegeEscalation: true
+              allowPrivilegeEscalation: false
               capabilities:
                 add:
                   - NET_ADMIN
-                  - NET_RAW
             envFrom:
               - secretRef:
                   name: media-gluetun-wg
