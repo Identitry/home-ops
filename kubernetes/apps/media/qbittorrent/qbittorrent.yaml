@@ -89,7 +89,7 @@ spec:
               FIREWALL_OUTBOUND_SUBNETS: "10.96.0.0/12,10.244.0.0/16,192.168.222.0/24"
               TZ: ${TZ}
               VERSION_INFORMATION: "off"
-              DNS_PLAINTEXT_ADDRESS: "192.168.222.100"
+              DNS_PLAINTEXT_ADDRESS: "10.96.188.241"
               BLOCK_MALICIOUS: "off"
               BLOCK_SURVEILLANCE: "off"
               BLOCK_ADS: "off"
