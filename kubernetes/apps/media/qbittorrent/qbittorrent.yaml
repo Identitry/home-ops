@@ -1,4 +1,6 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/kubernetes/website/main/content/en/examples/persistent-volume/persistent-volume-claim.yaml
+# PersistentVolumeClaim for qBittorrent configuration.
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -180,39 +182,6 @@ spec:
             fsGroupChangePolicy: OnRootMismatch
             seccompProfile: { type: RuntimeDefault }
 
-      vuetorrent:
-        strategy: RollingUpdate
-        containers:
-          app:
-            image:
-              repository: ghcr.io/gabe565/vuetorrent
-              tag: 2.23.1-nonroot@sha256:e8ffc548bbe956483996ec8ccf61b7fe34a6b90ae25bf15664104da6863d635f
-              pullPolicy: IfNotPresent
-            securityContext:
-              readOnlyRootFilesystem: true
-              allowPrivilegeEscalation: false
-              capabilities:
-                drop: ["ALL"]
-            ports:
-              - name: http
-                containerPort: 80
-                protocol: TCP
-            probes:
-              startup:
-                enabled: true
-                type: HTTP
-                path: /
-                spec:
-                  failureThreshold: 30
-                  periodSeconds: 5
-        pod:
-          securityContext:
-            runAsNonRoot: true
-            #allowPrivilegeEscalation: false
-            runAsUser: 101
-            runAsGroup: 101
-            seccompProfile: { type: RuntimeDefault }
-
     persistence:
       config:
         existingClaim: qbittorrent-config
@@ -245,11 +214,6 @@ spec:
           http:
             port: 8080
             targetPort: http
-      vuetorrent:
-        controller: vuetorrent
-        ports:
-          http:
-            port: 80
 
     ingress:
       qbittorrent:
