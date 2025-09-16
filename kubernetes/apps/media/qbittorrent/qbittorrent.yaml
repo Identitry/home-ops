@@ -310,7 +310,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-gluetun-wireguard
+  name: qbittorrent-egress
   namespace: media
 spec:
   podSelector:
@@ -318,22 +318,20 @@ spec:
       app.kubernetes.io/instance: qbittorrent
   policyTypes: [Egress]
   egress:
-    # Allow the WireGuard tunnel itself (the ONLY real Internet traffic)
+    # 1) WireGuard to the VPN servers
     - to:
-        - ipBlock:
-            cidr: 0.0.0.0/0
+        - ipBlock: { cidr: 0.0.0.0/0 }
       ports:
-        - protocol: UDP
-          port: 51820
-    # Allow plain DNS to your Blocky LB from the Gluetun container
+        - { protocol: UDP, port: 51820 }
+
+    # 2) DNS to Blocky (via Service ClusterIP -> pod endpoints)
     - to:
-        - ipBlock:
-            cidr: 192.168.222.100/32
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: blocky
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: blocky
       ports:
         - { protocol: UDP, port: 53 }
         - { protocol: TCP, port: 53 }
-    # (Optional) allow cluster/LB networks directly (you already route-bypass these in Gluetun)
-    - to:
-        - ipBlock: { cidr: 10.96.0.0/12 }
-        - ipBlock: { cidr: 10.244.0.0/16 }
-        - ipBlock: { cidr: 192.168.222.0/24 }
