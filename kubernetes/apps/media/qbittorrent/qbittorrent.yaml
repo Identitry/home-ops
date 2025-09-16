@@ -94,7 +94,7 @@ spec:
               BLOCK_SURVEILLANCE: "off"
               BLOCK_ADS: "off"
               DNS_UPDATE_PERIOD: "0"
-              WIREGUARD_MTU: "1390"
+              WIREGUARD_MTU: "1280"
               PUBLICIP_API: cloudflare
             probes:
               liveness: &probe
