@@ -47,6 +47,10 @@ spec:
     - secretKey: PUBLICIP_API
       remoteRef:
         key: /GLUETUN/PUBLICIP_API
+    - secretKey: VPN_INTERFACE
+      remoteRef:
+        key: /GLUETUN/VPN_INTERFACE
+
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 # QBitTorrent/Gluetun Helm release.
