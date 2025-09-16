@@ -31,7 +31,8 @@ Nodes will get their IP from DHCP, flagged as static in router.
 ### Kubernetes Nodes (Talos/CozyStack)
 
 Three schedulable control plane nodes.
-Operating System: Talos 1.10.6 opionated with CozyStack 0.35.2 (2025-08-31)
+Operating System: Talos 1.10.6 opionated with CozyStack 0.35.5 (2025-09-13)
+All nodes have Nut-Client installed and configured against TrueNAS-Stor.
 
 1. k8s01
 
@@ -48,7 +49,7 @@ Operating System: Talos 1.10.6 opionated with CozyStack 0.35.2 (2025-08-31)
 
 - Hostname: k8s02
 - IP: 102.168.222.22
-- Model: Dell Optiplex 5090M
+- Model:
 - CPU: Intel i5-10500T 2,3GHz (10:th gen, 6 cores/12 threads Q2 2020)
 - GPU: Intel UHD 630 iGPU
 - RAM: 64GB (2x 32GB Kingston Fury DDR4 3200MHz)
@@ -81,6 +82,8 @@ Operating System: Talos 1.10.6 opionated with CozyStack 0.35.2 (2025-08-31)
   - 4x12TB 7200rpm HGST/WD DC HC520 in 2 x MIRROR | 2 wide ZFS configuration
   - 1 256GB NVME (Gen3) SLOG drive
 
+Also runs as NUT-Server.
+
 2. backup (backup.myk8s.se) - Remote location backup
 
 - Operating System: TrueNAS Scale Fangtooth-24.04.0
@@ -93,6 +96,16 @@ Operating System: Talos 1.10.6 opionated with CozyStack 0.35.2 (2025-08-31)
 - Storage: 4x4GB 5400rpm WD40EFRX (1 x RAIDZ1 | 3 wide and 1 spare VDEV ZFS configuration)
 
 ## Kubernetes
+
+### Talos System Extensions required
+
+- drbd
+- intel-ucode
+- i915
+- intel-ice-firmware
+- nut-client (needs config)
+- zfs
+- lldpd (likely to be added to Cozystack soon, needs config)
 
 ### CozyStack ✅
 
@@ -147,6 +160,7 @@ Public Github site that describes the cluster. ✅
 
 - Renovate - Cluster dependency management (on GitHub) ✅
 - Reloader - Rolling upgrades on ConfigMap/Secret changes (in cluster) ✅
+- Reflector - Copies secrets between namespaces (mainly wildcard Lets Encrypt Cert). ✅
 
 #### Storage/Networking
 
@@ -164,7 +178,7 @@ Public Github site that describes the cluster. ✅
 Most of these apps are running on TrueNAS stor and needs to be moved to the cluster before the NAS can be upgraded.
 
 - Jellyfin (new, replaces Plex) ✅
-- Plex
+- Plex ✅
 - Bazarr (currently on truenas-stor) ✅
 - Sonarr (currently on truenas-stor) ✅
 - Radarr (currently on truenas-stor) ✅
@@ -246,7 +260,6 @@ Most of these apps are running on TrueNAS stor and needs to be moved to the clus
 
 - Gaseous Server (Old games (ROMS) in the browser)
 - Gatus - Uptime monitoring
-- Authentik (Authentication)
 - Invidious (YouTube UI - no adds)
 - Brave (https://github.com/linuxserver/docker-brave) - Browser with ad blocking and privacy in mind
 - Vaultwarden
@@ -259,5 +272,4 @@ Most of these apps are running on TrueNAS stor and needs to be moved to the clus
 - Unpackerr
 - exportarr - exports metrics for Sonarr, Radarr, Lidarr, Prowlarr, Readarr, Bazarr and Sabnzbd
 - Atuin (shell history server)
-- Gatus - uptime monitoring of services.
 - ...more to come
