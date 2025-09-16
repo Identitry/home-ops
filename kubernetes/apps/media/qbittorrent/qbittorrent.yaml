@@ -115,24 +115,24 @@ spec:
                   failureThreshold: 120
                   timeoutSeconds: 5
 
-          #wait-vpn:
-          #  image:
-          #    repository: busybox
-          #    tag: v1.37.0@sha256:a2c55ed708c564a69a695e0a3bb16a4c47d2bb268d2ebd06f0d77336801b80de
-          #    pullPolicy: IfNotPresent
-          #  securityContext:
-          #    readOnlyRootFilesystem: true
-          #    allowPrivilegeEscalation: false
-          #  command:
-          #    - sh
-          #    - -c
-          #    - |
-          #      echo "Waiting for Gluetun tunnel connectivity..."
-          #      until wget -q --spider http://127.0.0.1:8000/health; do
-          #        echo "Glutetun not healthy yet, retrying in 2s..."
-          #        sleep 2
-          #      done
-          #      echo "Connectivity OK, proceeding"
+          wait-vpn:
+            image:
+              repository: busybox
+              tag: v1.37.0@sha256:a2c55ed708c564a69a695e0a3bb16a4c47d2bb268d2ebd06f0d77336801b80de
+              pullPolicy: IfNotPresent
+            securityContext:
+              readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+            command:
+              - sh
+              - -c
+              - |
+                echo "Waiting for Gluetun tunnel connectivity..."
+                until wget -q --spider http://127.0.0.1:8000/health; do
+                  echo "Glutetun not healthy yet, retrying in 2s..."
+                  sleep 2
+                done
+                echo "Connectivity OK, proceeding"
 
         containers:
           app:
