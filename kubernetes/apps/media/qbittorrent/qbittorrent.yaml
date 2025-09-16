@@ -36,9 +36,15 @@ spec:
     - secretKey: VPN_SERVICE_PROVIDER
       remoteRef:
         key: /GLUETUN/VPN_SERVICE_PROVIDER
-    - secretKey: DNS_PLAINTEXT_ADDRESS
+    - secretKey: DNS_ADDRESS
       remoteRef:
-        key: /GLUETUN/DNS_PLAINTEXT_ADDRESS
+        key: /GLUETUN/DNS_ADDRESS
+    - secretKey: FIREWALL_OUTBOUND_SUBNETS
+      remoteRef:
+        key: /GLUETUN/FIREWALL_OUTBOUND_SUBNETS
+    - secretKey: PUBLICIP_API
+      remoteRef:
+        key: /GLUETUN/PUBLICIP_API
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 # QBitTorrent/Gluetun Helm release.
@@ -89,16 +95,13 @@ spec:
               HEALTH_VPN_DURATION_INITIAL: 120s
               HEALTH_SUCCESS_WAIT_DURATION: 120s
               FIREWALL_INPUT_PORTS: "8080"
-              FIREWALL_OUTBOUND_SUBNETS: "10.96.0.0/12,10.244.0.0/16,192.168.222.0/24"
               TZ: ${TZ}
               VERSION_INFORMATION: "off"
-              DNS_ADDRESS: "10.96.188.241"
               BLOCK_MALICIOUS: "off"
               BLOCK_SURVEILLANCE: "off"
               BLOCK_ADS: "off"
               DNS_UPDATE_PERIOD: "0"
               WIREGUARD_MTU: "1280"
-              PUBLICIP_API: cloudflare
             probes:
               liveness: &probe
                 enabled: true
@@ -127,10 +130,9 @@ spec:
               - sh
               - -c
               - |
-                echo "Waiting for Gluetun tunnel connectivity..."
-                until wget -q --spider http://127.0.0.1:8000/health; do
-                  echo "Glutetun not healthy yet, retrying in 2s..."
-                  sleep 2
+                echo "Waiting for Gluetun health on :9999..."
+                until wget -q --spider --timeout=2 --tries=1 http://127.0.0.1:9999; do
+                  echo "Gluetun not healthy yet, retrying in 2s..."
                 done
                 echo "Connectivity OK, proceeding"
 
