@@ -15,7 +15,7 @@ spec:
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/kubernetes-external-secrets/main/deploy/crds/external-secrets.io_externalsecret.yaml
 # Secret that contains the Gluetun WireGuard VPN settings.
-# Docs: https://0xerr0r.github.io/blocky/latest/configuration/
+# Docs: # Docs: https://github.com/qdm12/gluetun-wiki
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
@@ -138,6 +138,7 @@ spec:
                 echo "Waiting for Gluetun health on :9999..."
                 until wget -q --spider --timeout=2 --tries=1 http://127.0.0.1:9999; do
                   echo "Gluetun not healthy yet, retrying in 2s..."
+                  sleep 2
                 done
                 echo "Connectivity OK, proceeding"
 
@@ -231,34 +232,3 @@ spec:
           - hosts:
               - qbt.${DOMAIN}
             secretName: wildcard-le-tls-cert
----
-# yaml-language-server: $schema=https://raw.githubusercontent.com/kubernetes/website/main/content/en/examples/network/network-policy.yaml
-# NetworkPolicy to allow the Gluetun WireGuard VPN egress traffic only.
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: qbittorrent-egress
-  namespace: media
-spec:
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/instance: qbittorrent
-  policyTypes: [Egress]
-  egress:
-    # 1) WireGuard to the VPN servers
-    - to:
-        - ipBlock: { cidr: 0.0.0.0/0 }
-      ports:
-        - { protocol: UDP, port: 51820 }
-
-    # 2) DNS to Blocky (via Service ClusterIP -> pod endpoints)
-    - to:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: blocky
-          podSelector:
-            matchLabels:
-              app.kubernetes.io/name: blocky
-      ports:
-        - { protocol: UDP, port: 53 }
-        - { protocol: TCP, port: 53 }

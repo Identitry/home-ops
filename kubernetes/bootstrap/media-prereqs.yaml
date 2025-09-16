@@ -98,29 +98,26 @@ spec:
       media-nfs: rox
 
 ---
-# NetworkPolicy to allow ingress from and egress to tenant-root (e.g., for backbone namespaces).
+# NetworkPolicy: allow ingress from the tenant-root namespace (Ingress controller lives there).
+# Purpose: Let ingress controller reach any app Service/Pod in the media namespace on any port.
+# Notes: Ingress traffic originates from pods in the `tenant-root` namespace.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: media-allow-tenant-root-bidirectional
+  name: allow-ingress-from-tenant-root
   namespace: media
 spec:
-  podSelector: {} # Apply to all pods in the namespace
-  policyTypes:
-    - Ingress
-    - Egress
+  podSelector: {}
+  policyTypes: ["Ingress"]
   ingress:
     - from:
         - namespaceSelector:
             matchLabels:
               kubernetes.io/metadata.name: tenant-root
-  egress:
-    - to:
-        - namespaceSelector:
-            matchLabels:
-              kubernetes.io/metadata.name: tenant-root
 ---
-# NetworkPolicy to allow DNS egress to kube-system (CoreDNS).
+# NetworkPolicy: allow DNS egress to CoreDNS (kube-system/kube-dns).
+# Purpose: Service discovery and resolving cluster.local names (at least media namespace).
+# Ports: TCP/UDP 53 only; adjust if you change CoreDNS service/labels.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -143,7 +140,10 @@ spec:
         - protocol: TCP
           port: 53
 ---
-# NetworkPolicy to allow HTTPS (TCP/443) egress for all pods in the namespace.
+# NetworkPolicy: allow HTTPS egress to the Internet for all media pods.
+# Purpose: Let apps fetch metadata/indexers/providers over TLS (TCP/443).
+# Note: HTTP (TCP/80) is intentionally blocked; add a separate rule if needed.
+# Security: Consider scoping with FQDN egress controllers if you want tighter control.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -160,58 +160,28 @@ spec:
         - protocol: TCP
           port: 443
 ---
+# NetworkPolicy: allow all intra-namespace traffic for media (Ingress+Egress).
+# Purpose: Apps in the media namespace can freely communicate with each other on any port.
+# Rationale: Many media apps integrate bi-directionally (Plex/Jellyfin/Radarr/Sonarr/etc.).
+# Scope: Only within the same namespace.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-egress-media-to-media
+  name: allow-intra-namespace-all
   namespace: media
 spec:
-  podSelector: {} # applies to all pods in media
-  policyTypes: ["Egress"]
+  podSelector: {}
+  policyTypes: ["Ingress", "Egress"]
+  ingress:
+    - from:
+        - podSelector: {} # any pod in the same namespace
   egress:
     - to:
         - podSelector: {} # any pod in the same namespace
-      ports:
-        - protocol: TCP
-          port: 80
-        - protocol: TCP
-          port: 443
-        - protocol: TCP
-          port: 7878 # Radarr
-        - protocol: TCP
-          port: 8989 # Sonarr
-        - protocol: TCP
-          port: 9696 # Prowlarr
-        - protocol: TCP
-          port: 8191 # FlareSolverr
-        - protocol: TCP
-          port: 32400 # Plex
-        - protocol: TCP
-          port: 8096 # Jellyfin HTTP
-        - protocol: TCP
-          port: 8920 # Jellyfin HTTPS
 ---
-# NetworkPolicy to allow ingress on media app ports from other pods in the same namespace.
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: allow-intra-namespace-media-app-ports
-  namespace: media
-spec:
-  podSelector: {} # apply to all pods in media
-  policyTypes: ["Ingress"]
-  ingress:
-    - from:
-        - podSelector: {} # from any pod in the same namespace
-      ports:
-        - { protocol: TCP, port: 80 }
-        - { protocol: TCP, port: 443 }
-        - { protocol: TCP, port: 7878 } # Radarr
-        - { protocol: TCP, port: 8989 } # Sonarr
-        - { protocol: TCP, port: 9696 } # Prowlarr
-        - { protocol: TCP, port: 8191 } # FlareSolverr
-
----
+# NetworkPolicy: allow external ingress to Jellyfin LoadBalancer (MetalLB-managed addresses).
+# Purpose: Expose Jellyfin directly (bypasses ingress controller) on TCP 8096/8920.
+# Source: 0.0.0.0/0 (public); rely on firewall/MetalLB IP assignment.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -233,6 +203,10 @@ spec:
           port: 8920
 
 ---
+# NetworkPolicy: allow external ingress to Plex LoadBalancer (MetalLB-managed addresses).
+# Purpose: Expose Plex directly (bypasses ingress controller) on TCP 32400 and discovery ports.
+# Source: 0.0.0.0/0 (public); rely on firewall/MetalLB IP assignment.
+# Note: Optional discovery ports included (GDM, DLNA). Remove lines you do not use.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -266,3 +240,39 @@ spec:
           port: 32413 # GDM
         - protocol: UDP
           port: 32414 # GDM
+---
+# NetworkPolicy: qBittorrent (with Gluetun) egress allowlist.
+# Purpose:
+#   1) Allow WireGuard UDP/51820 to VPN providers on the Internet.
+#   2) Allow DNS to Blocky pods (namespace `blocky`) on TCP/UDP 53 when Gluetun needs it.
+# Notes:
+#   - Intra-namespace communications are permitted by `allow-intra-namespace-all`.
+#   - Ingress from `tenant-root` is permitted by `allow-ingress-from-tenant-root`.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: qbittorrent-egress
+  namespace: media
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: qbittorrent
+  policyTypes: [Egress]
+  egress:
+    # 1) WireGuard to the VPN servers
+    - to:
+        - ipBlock: { cidr: 0.0.0.0/0 }
+      ports:
+        - { protocol: UDP, port: 51820 }
+
+    # 2) DNS to Blocky (via Service ClusterIP -> pod endpoints)
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: blocky
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: blocky
+      ports:
+        - { protocol: UDP, port: 53 }
+        - { protocol: TCP, port: 53 }
