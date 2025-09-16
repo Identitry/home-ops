@@ -199,13 +199,6 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /tmp
-        advancedMounts:
-          vuetorrent:
-            app:
-              - path: /var/cache/nginx
-                subPath: nginx/cache
-              - path: /var/run
-                subPath: nginx/run
 
     service:
       qbittorrent:
