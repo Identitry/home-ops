@@ -16,7 +16,7 @@ This is a spcification of everything that should be included in the cluster impl
 ## Network
 
 - Network: 192.168.222.0/24 "Server"
-- DHCP range: 192.168.222.21-100
+- DHCP range: 192.168.222.21-99
 - Control plane shared IP: 192.168.222.20
 - MetalLB load balancer IP-range: 192.168.222.100-192.168.222.130
 - Network manufacturer: Ubiquiti Unifi
@@ -31,7 +31,7 @@ Nodes will get their IP from DHCP, flagged as static in router.
 ### Kubernetes Nodes (Talos/CozyStack)
 
 Three schedulable control plane nodes.
-Operating System: Talos 1.10.6 opionated with CozyStack 0.35.5 (2025-09-13)
+Operating System: Talos 1.10.6 opionated with CozyStack 0.36.0 (2025-09-17)
 All nodes have Nut-Client installed and configured against TrueNAS-Stor.
 
 1. k8s01
@@ -69,10 +69,10 @@ All nodes have Nut-Client installed and configured against TrueNAS-Stor.
 
 ### External storage, TrueNAS Scale:
 
-1. truenas-stor (truenas-stor.softconstruction.se)
+1. nas (nas.myk8s.se)
 
-- Operating System: TrueNAS Scale Dragonfish-24.04.2 (Will be updated when apps are moved to cluster)
-- Hostname: truenas-stor
+- Operating System: TrueNAS Scale Fangtooth-25.04.2.4
+- Hostname: nas
 - IP Address: 192.168.222.13
 - Model: homebuild (AsRock Z370M-ITX/ac motherboard)
 - CPU: i7-8700 3,2Ghz (8:th gen, 6cores, 12 threads, Q4 2017)
@@ -80,14 +80,14 @@ All nodes have Nut-Client installed and configured against TrueNAS-Stor.
 - Boot drive: 120GB SATA-SSD (OCZ-VERTEX2)
 - Storage:
   - 4x12TB 7200rpm HGST/WD DC HC520 in 2 x MIRROR | 2 wide ZFS configuration
-  - 1 256GB NVME (Gen3) SLOG drive
+  - 1 256GB NVME (Gen3) SLOG drive - not working!
 
-Also runs as NUT-Server.
+Also runs as NUT and Minio (S3) server.
 
 2. backup (backup.myk8s.se) - Remote location backup
 
-- Operating System: TrueNAS Scale Fangtooth-24.04.0
-- Hostname: truenas-backup
+- Operating System: TrueNAS Scale Fangtooth-25.04.2.1
+- Hostname: backup
 - IP: 192.168.1.126 (DHCP) (at remote location, connected using Tailscale)
 - Model: homebuild (ASRock Z87E-ITX motherboard)
 - CPU: i5-4570S 2.9Ghz (4:th gen, 4 cores, 4 threads, Q1 2014)
@@ -164,7 +164,7 @@ Public Github site that describes the cluster. ✅
 
 #### Storage/Networking
 
-- Minio (on truenas-stor when it has been updated) For backups.
+- Minio (on nas) For backups. ✅
 
 #### Web Publishing ✅
 
@@ -175,18 +175,16 @@ Public Github site that describes the cluster. ✅
 
 #### Media
 
-Most of these apps are running on TrueNAS stor and needs to be moved to the cluster before the NAS can be upgraded.
-
-- Jellyfin (new, replaces Plex) ✅
+- Jellyfin ✅
 - Plex ✅
-- Bazarr (currently on truenas-stor) ✅
-- Sonarr (currently on truenas-stor) ✅
-- Radarr (currently on truenas-stor) ✅
-- Prowlarr (currently on truenas-stor) ✅
+- Bazarr ✅
+- Sonarr ✅
+- Radarr ✅
+- Prowlarr ✅
 - Recyclarr - Trash Guides best practices sync with Radarr/Sonarr ✅
 - FlareSolverr - Proxy server to bypass Cloudflare and DDoS-GUARD protection ✅
-- QBitTorrent (currently on truenas-stor) with GlueTun for NordVPN
-- Sabnzbd (new)
+- QBitTorrent with GlueTun for NordVPN ✅
+- Sabnzbd with GlueTun for NordVPN (new)
 
 #### Virtual Machines
 
@@ -203,7 +201,7 @@ Most of these apps are running on TrueNAS stor and needs to be moved to the clus
 
 #### Maybe in the future
 
-- InfluxDB (Currently included in HAOS VM, Will Clickhous do?)
+- InfluxDB (Currently included in HAOS VM, Will Clickhouse do?)
 
 #### Startpage
 
@@ -240,15 +238,18 @@ Most of these apps are running on TrueNAS stor and needs to be moved to the clus
 #### Home Automation
 
 - Generic Device Plugin (for connecting node USB device to pod)
+  https://github.com/gabe565/home-ops/tree/main/kubernetes/gabernetes/apps/generic-device-plugin
 - Zigbee2MQTT (USB passtrough) (currently on HAOS VM)
 - ESP Home
-- Frigate [Helm Chart](https://github.com/blakeblackshear/blakeshome-charts/tree/master/charts/frigate)
+- Frigate
+  [Helm Chart](https://github.com/blakeblackshear/blakeshome-charts/tree/master/charts/frigate)
 - NodeRed (currently on HAOS VM)
 
 #### 3D Printing
 
 - Mainsail
 - Obico
+  https://github.com/gabe565/home-ops/tree/main/kubernetes/gabernetes/apps/obico
 
 #### Management/Security
 
@@ -258,18 +259,21 @@ Most of these apps are running on TrueNAS stor and needs to be moved to the clus
 
 #### Maybe in the future
 
-- Gaseous Server (Old games (ROMS) in the browser)
+- Atuin (shell history server)
+- Immich (requires postgres and redis)
+  https://github.com/gabe565/home-ops/tree/main/kubernetes/gabernetes/apps/immich
+- Streamio Server (https://github.com/tsaridas/stremio-docker) + MediaFusion (Debrid support) + GlueTun
 - Gatus - Uptime monitoring
-- Invidious (YouTube UI - no adds)
+- Paperless-ngx - Dokumenthantering
+  https://github.com/gabe565/home-ops/tree/main/kubernetes/gabernetes/apps/paperless-ngx
+- Gaseous Server - Old games (ROMS) in the browser
+- Invidious - YouTube UI - no adds
 - Brave (https://github.com/linuxserver/docker-brave) - Browser with ad blocking and privacy in mind
 - Vaultwarden
 - Guacamole
-- CompreFace/DeepStack (Face Recognition is included in Frigate now, skip this?)
-- Streamio Server (https://github.com/tsaridas/stremio-docker) + MediaFusion (Debrid support) + GlueTun
-- Immich (requires postgres and redis)
-- TDArr
-- Autobrr
+- TDArr (transcoding)
+- Autobrr (Allows for more seeding quota)
+  https://github.com/onedr0p/home-ops/tree/main/kubernetes/apps/default/autobrr
 - Unpackerr
 - exportarr - exports metrics for Sonarr, Radarr, Lidarr, Prowlarr, Readarr, Bazarr and Sabnzbd
-- Atuin (shell history server)
 - ...more to come

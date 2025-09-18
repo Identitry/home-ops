@@ -218,10 +218,10 @@ spec:
             paths:
               - path: /
                 pathType: Prefix
-        tls:
-          - hosts:
-              - blocky.${DOMAIN}
-            secretName: wildcard-le-tls-cert
+        #tls:
+        #  - hosts:
+        #      - blocky.${DOMAIN}
+        #    secretName: wildcard-le-tls-cert
 
     persistence:
       config:
