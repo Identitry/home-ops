@@ -218,6 +218,10 @@ spec:
             paths:
               - path: /
                 pathType: Prefix
+          - host: doh.${DOMAIN}
+            paths:
+              - path: /dns-query
+                pathType: Prefix
         tls:
           - hosts:
               - blocky.${DOMAIN}
