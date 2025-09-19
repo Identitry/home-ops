@@ -136,7 +136,6 @@ spec:
             image:
               repository: docker.io/library/busybox
               tag: "1.37.0"
-              digest: sha256:182014572d8981d8323fe9944876f63b39694e16ce08ae6296e97686c52b150c
               pullPolicy: IfNotPresent
             securityContext:
               readOnlyRootFilesystem: true
