@@ -134,7 +134,7 @@ spec:
 
           wait-vpn:
             image:
-              repository: busybox
+              repository: docker.io/library/busybox
               tag: v1.37.0@sha256:182014572d8981d8323fe9944876f63b39694e16ce08ae6296e97686c52b150c
               pullPolicy: IfNotPresent
             securityContext:
