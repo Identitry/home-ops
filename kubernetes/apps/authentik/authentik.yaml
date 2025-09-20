@@ -147,7 +147,7 @@ spec:
         key: secret_key
 
       postgresql:
-        host: authentik-db.authentik.svc
+        host: authentik-db-rw.authentik.svc
         password:
           fromSecret: authentik-db-creds
           key: password
@@ -159,6 +159,8 @@ spec:
 
     server:
       replicas: 1
+      autoScaling:
+        enabled: false
 
       ingress:
         enabled: true
@@ -185,6 +187,10 @@ spec:
           mountPath: /media
 
     worker:
+      replicas: 1
+      autoScaling:
+        enabled: false
+
       volumes:
         - name: media
           emptyDir: {}
