@@ -90,7 +90,7 @@ metadata:
   name: authentik-db
   namespace: authentik
 spec:
-  instances: 2
+  instances: 1
   affinity:
     enablePodAntiAffinity: true
     topologyKey: kubernetes.io/hostname
