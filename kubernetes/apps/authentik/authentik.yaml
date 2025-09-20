@@ -137,24 +137,24 @@ spec:
         secret.reloader.stakater.com/reload: authentik-db-creds,authentik-config,wildcard-le-tls-cert
 
       env:
-        - name: AUTHENTIK_POSTGRESQL__PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: authentik-db-creds
-              key: password
-        - name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__HOST
-          value: authentik-db-ro.authentik.svc
-        - name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__PORT
-          value: "5432"
-        - name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__NAME
-          value: authentik
-        - name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__USER
-          value: authentik
-        - name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: authentik-db-creds
-              key: password
+        #- name: AUTHENTIK_POSTGRESQL__PASSWORD
+        #  valueFrom:
+        #    secretKeyRef:
+        #      name: authentik-db-creds
+        #      key: password
+        #- name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__HOST
+        #  value: authentik-db-ro.authentik.svc
+        #- name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__PORT
+        #  value: "5432"
+        #- name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__NAME
+        # value: authentik
+        #- name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__USER
+        #  value: authentik
+        #- name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__PASSWORD
+        #  valueFrom:
+        #    secretKeyRef:
+        #      name: authentik-db-creds
+        #      key: password
 
         - name: AUTHENTIK_BOOTSTRAP_EMAIL
           valueFrom:
@@ -188,6 +188,10 @@ spec:
         host: authentik-db-rw.authentik.svc
         name: authentik
         user: authentik
+        port: 5432
+        password:
+          fromSecret: authentik-db-creds
+          key: password
 
       redis:
         host: rfrm-authentik-redis.authentik.svc
