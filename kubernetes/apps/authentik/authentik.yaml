@@ -138,7 +138,7 @@ spec:
 
     authentik:
       error_reporting:
-        enabled: false
+        enabled: true
       disable_update_check: true
       disable_startup_analytics: true
 
@@ -147,10 +147,7 @@ spec:
         key: secret_key
 
       postgresql:
-        host: authentik-db-rw.authentik.svc
-        name: authentik
-        user: authentik
-        port: 5432
+        host: authentik-db.authentik.svc
         password:
           fromSecret: authentik-db-creds
           key: password
@@ -158,28 +155,10 @@ spec:
       redis:
         host: rfrm-authentik-redis.authentik.svc
 
-      log_level: warning
+      log_level: info
 
     server:
       replicas: 1
-
-      autoscaling:
-        enabled: true
-        minReplicas: 1
-        maxReplicas: 1
-
-      containerSecurityContext:
-        readOnlyRootFilesystem: true
-
-      startupProbe:
-        initialDelaySeconds: 60
-        periodSeconds: 10
-        failureThreshold: 30
-
-      readinessProbe:
-        initialDelaySeconds: 30
-        periodSeconds: 10
-        failureThreshold: 30
 
       ingress:
         enabled: true
@@ -205,28 +184,7 @@ spec:
         - name: media
           mountPath: /media
 
-      metrics:
-        enabled: true
-        serviceMonitor:
-          enabled: true
-          interval: 1m
-
     worker:
-      replicas: 1
-
-      autoscaling:
-        enabled: true
-        minReplicas: 1
-        maxReplicas: 1
-
-      containerSecurityContext:
-        readOnlyRootFilesystem: true
-
-      startupProbe:
-        initialDelaySeconds: 45
-        periodSeconds: 10
-        failureThreshold: 30
-
       volumes:
         - name: media
           emptyDir: {}
