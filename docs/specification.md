@@ -260,8 +260,9 @@ Public Github site that describes the cluster. ✅
 #### Maybe in the future
 
 - Atuin (shell history server)
-- Immich (requires postgres and redis)
+- Immich - Photo management (requires postgres and redis)
   https://github.com/gabe565/home-ops/tree/main/kubernetes/gabernetes/apps/immich
+- Immich Drop - Allows dropping photos easily into Immich.
 - Streamio Server (https://github.com/tsaridas/stremio-docker) + MediaFusion (Debrid support) + GlueTun
 - Gatus - Uptime monitoring
 - Paperless-ngx - Dokumenthantering
