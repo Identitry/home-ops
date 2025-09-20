@@ -139,8 +139,6 @@ spec:
     authentik:
       error_reporting:
         enabled: true
-      disable_update_check: true
-      disable_startup_analytics: true
 
       secret_key:
         fromSecret: authentik-config
@@ -148,9 +146,8 @@ spec:
 
       postgresql:
         host: authentik-db-rw.authentik.svc
-        password:
-          fromSecret: authentik-db-creds
-          key: password
+        user: file:///postgres-creds/username
+        password: file:///postgres-creds/password
 
       redis:
         host: rfrm-authentik-redis.authentik.svc
@@ -182,9 +179,15 @@ spec:
       volumes:
         - name: media
           emptyDir: {}
+        - name: postgres-creds
+          secret:
+            secretName: authentik-db-creds
       volumeMounts:
         - name: media
           mountPath: /media
+        - name: postgres-creds
+          mountPath: /postgres-creds
+          readOnly: true
 
     worker:
       replicas: 1
@@ -194,9 +197,15 @@ spec:
       volumes:
         - name: media
           emptyDir: {}
+        - name: postgres-creds
+          secret:
+            secretName: authentik-db-creds
       volumeMounts:
         - name: media
           mountPath: /media
+        - name: postgres-creds
+          mountPath: /postgres-creds
+          readOnly: true
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/cilium/cilium/main/install/kubernetes/quick-install.yaml
 apiVersion: cilium.io/v2
