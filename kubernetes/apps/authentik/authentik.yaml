@@ -184,9 +184,9 @@ spec:
       disable_update_check: true
       disable_startup_analytics: true
 
-      #secret_key: - Fed using envFrom.
-      #  fromSecret: authentik-config
-      #  key: secret_key
+      secret_key:
+        fromSecret: authentik-config
+        key: secret_key
 
       postgresql:
         host: authentik-db-rw.authentik.svc
