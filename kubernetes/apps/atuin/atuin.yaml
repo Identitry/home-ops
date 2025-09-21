@@ -99,10 +99,6 @@ spec:
       atuin:
         enabled: true
         className: tenant-root
-        annotations:
-          external-dns.alpha.kubernetes.io/target: ${CLOUDFLARE_TUNNEL_AUTHENTIK}
-          external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
-          external-dns.alpha.kubernetes.io/hostname: "atuin.${DOMAIN}"
         hosts:
           - host: atuin.${DOMAIN}
             paths:
