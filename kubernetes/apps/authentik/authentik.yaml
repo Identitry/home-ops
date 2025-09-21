@@ -145,8 +145,10 @@ spec:
 
       postgresql:
         host: authentik-db-rw.authentik.svc
-        user: file:///postgres-creds/username
-        password: file:///postgres-creds/password
+        user: authentik
+        password:
+          existingSecret: authentik-db-creds
+          key: password
 
       redis:
         host: rfrm-authentik-redis.authentik.svc
