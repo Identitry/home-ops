@@ -122,24 +122,3 @@ spec:
     persistence:
       config:
         existingClaim: atuin-config
----
-# Network policy to allow ingress-nginx to access atuin service
-#yaml-language-server: $schema=https://raw.githubusercontent.com/cilium/cilium/main/examples/kubernetes/crds/cilium.io_ciliumnetworkpolicies.yaml
-apiVersion: cilium.io/v2
-kind: CiliumNetworkPolicy
-metadata:
-  name: allow-ingress-nginx-to-atuin
-  namespace: atuin
-spec:
-  endpointSelector:
-    matchLabels:
-      app.kubernetes.io/name: atuin
-  ingress:
-    - fromEndpoints:
-        - matchLabels:
-            k8s:io.kubernetes.pod.namespace: tenant-root
-            k8s:app.kubernetes.io/name: ingress-nginx
-      toPorts:
-        - ports:
-            - port: "8080"
-              protocol: TCP
