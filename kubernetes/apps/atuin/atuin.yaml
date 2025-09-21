@@ -57,6 +57,10 @@ spec:
               - atuin
               - server
               - start
+            ports:
+              - name: http
+                containerPort: 80
+                protocol: TCP
             probes:
               liveness: &probes
                 enabled: true
