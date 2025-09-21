@@ -276,6 +276,26 @@ spec:
       toPorts:
         - ports:
             - port: "6379"
+
+    # Redis replica service (some operator versions expose replicas via rfrs-<name>)
+    - toServices:
+        - k8sService:
+            namespace: authentik
+            serviceName: rfrs-authentik-redis
+      toPorts:
+        - ports:
+            - port: "6379"
+
+    # Fallback: allow to Redis pods by label (master/replicas)
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: authentik
+            app.kubernetes.io/name: authentik-redis
+      toPorts:
+        - ports:
+            - port: "6379"
+              protocol: TCP
+
     # DNS to CoreDNS service
     - toServices:
         - k8sService:
