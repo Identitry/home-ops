@@ -117,4 +117,4 @@ spec:
 
     persistence:
       config:
-        existingClaim: "{{ .Release.Name }}"
+        existingClaim: atuin-config
