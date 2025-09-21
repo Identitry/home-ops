@@ -7,6 +7,7 @@ metadata:
   labels:
     app.kubernetes.io/name: atuin
     app.kubernetes.io/instance: atuin
+    ingress.svc.egress: allow # <--- opt-in label for ingress-controller traffic
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
