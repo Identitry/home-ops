@@ -1,4 +1,13 @@
 ---
+# Namespace for atuin
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: atuin
+  labels:
+    app.kubernetes.io/name: atuin
+    app.kubernetes.io/instance: atuin
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
