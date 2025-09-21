@@ -93,6 +93,7 @@ spec:
         ports:
           http:
             port: *port
+            targetPort: http
 
     ingress:
       atuin:
