@@ -89,7 +89,7 @@ spec:
 
     service:
       atuin:
-        controller: bazarr
+        controller: atuin
         ports:
           http:
             port: *port
