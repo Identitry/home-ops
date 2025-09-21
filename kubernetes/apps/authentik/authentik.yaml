@@ -287,7 +287,7 @@ spec:
               protocol: UDP
             - port: "53"
               protocol: TCP
-    # Allow authentik server to call itself (e.g. outpost checks)
+    # Allow authentik server to call itself and the database.
     - toServices:
         - k8sService:
             namespace: authentik
@@ -296,3 +296,11 @@ spec:
         - ports:
             - port: "9000"
             - port: "9443"
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: authentik
+            cnpg.io/cluster: authentik-db
+      toPorts:
+        - ports:
+            - port: "5432"
+              protocol: TCP
