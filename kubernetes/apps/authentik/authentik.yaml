@@ -403,7 +403,7 @@ spec:
                   set -x
                   PY="$(command -v /ak-root/.venv/bin/python3 || command -v python3)"
                   # wait for Postgres & Redis to be reachable
-                  ${PY} - <<'PY'
+                  cat <<'PYCODE' | "$PY" -
                   import os, socket, time, sys
                   def wait(host, port, name):
                       for _ in range(60):
@@ -415,7 +415,7 @@ spec:
                       print(f"failed waiting for {name}", file=sys.stderr); sys.exit(1)
                   wait(os.getenv("AUTHENTIK_POSTGRESQL__HOST","authentik-db-rw.authentik.svc"), 5432, "postgres")
                   wait(os.getenv("AUTHENTIK_REDIS__HOST","rfrm-authentik-redis.authentik.svc"), 6379, "redis")
-                  PY
+                  PYCODE
                   # Apply our blueprints (idempotent)
                   echo "[ak-blueprints] applying /blueprints/user/00-core-prompts.yaml"
                   $PY /manage.py apply_blueprint /blueprints/user/00-core-prompts.yaml
