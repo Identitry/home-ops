@@ -1,0 +1,363 @@
+---
+# Namespace for Authentik
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: authentik
+  labels:
+    app.kubernetes.io/name: authentik
+    app.kubernetes.io/instance: authentik
+    ingress.svc.egress: allow # <--- opt-in label for ingress-controller traffic
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd/helm-controller/main/config/crd/bases/helm.toolkit.fluxcd.io_helmrepositories.yaml
+# Helm Repository for Authentik
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: authentik
+  namespace: authentik
+spec:
+  interval: 1h
+  url: https://charts.goauthentik.io
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/spotahome/redis-operator/refs/heads/master/manifests/databases.spotahome.com_redisfailovers.yaml
+# RedisFailover for Authentik, used by Authentik for caching and task queues.
+apiVersion: databases.spotahome.com/v1
+kind: RedisFailover
+metadata:
+  name: authentik-redis
+  namespace: authentik
+spec:
+  sentinel:
+    replicas: 3
+  redis:
+    replicas: 3
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/external-secrets/refs/heads/main/config/crds/bases/external-secrets.io_externalsecrets.yaml
+# App user credentials for the initial DB owner
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: es-authentik-db-creds
+  namespace: authentik
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: infisical
+  target:
+    name: authentik-db-creds
+    creationPolicy: Owner
+  data:
+    - secretKey: username
+      remoteRef:
+        key: /AUTHENTIK/CNPG_USERNAME
+    - secretKey: password
+      remoteRef:
+        key: /AUTHENTIK/CNPG_PASSWORD
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/external-secrets/refs/heads/main/config/crds/bases/external-secrets.io_externalsecrets.yaml
+# Secret key for Authentik
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: es-authentik-config
+  namespace: authentik
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: infisical
+  target:
+    name: authentik-config
+    creationPolicy: Owner
+  data:
+    - secretKey: secret_key
+      remoteRef:
+        key: /AUTHENTIK/SECRET_KEY
+    - secretKey: email
+      remoteRef:
+        key: /AUTHENTIK/ADMIN_EMAIL
+    - secretKey: password
+      remoteRef:
+        key: /AUTHENTIK/ADMIN_PASSWORD
+    - secretKey: token
+      remoteRef:
+        key: /AUTHENTIK/ADMIN_TOKEN
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/main/config/crd/bases/postgresql.cnpg.io_clusters.yaml
+# CloudNativePG Cluster — creates an "authentik" database owned by user "authentik"
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: authentik-db
+  namespace: authentik
+spec:
+  instances: 2
+  affinity:
+    enablePodAntiAffinity: true
+    topologyKey: kubernetes.io/hostname
+    podAntiAffinityType: preferred
+
+  storage:
+    # Set your storageClass if needed (commented out to use cluster default)
+    size: 5Gi
+
+  bootstrap:
+    initdb:
+      database: authentik # database to create
+      owner: authentik # owner of that database
+      secret:
+        name: authentik-db-creds # takes username/password from this Secret
+
+  monitoring:
+    enablePodMonitor: true
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd/helm-controller/main/config/crd/bases/helm.toolkit.fluxcd.io_helmreleases.yaml
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: authentik
+  namespace: authentik
+spec:
+  chart:
+    spec:
+      chart: authentik
+      version: 2025.8.3
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: authentik
+        name: authentik
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    global:
+      priorityClassName: system-cluster-critical
+
+      deploymentAnnotations:
+        secret.reloader.stakater.com/reload: authentik-db-creds,authentik-config,wildcard-le-tls-cert
+
+      env:
+        - name: AUTHENTIK_SECRET_KEY
+          value: "flkjhaereiuogvsfiuyhvaoakgaeLKHFGSJKH67Ht5FDGe784KHJVFB6343rhvsbsflhvfslhvsflhvsflhvsf2"
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: authentik-config
+        #      key: secret_key
+        #- name: AUTHENTIK_COOKIE_DOMAIN
+        #  value: .${DOMAIN}
+        - name: AUTHENTIK_BOOTSTRAP_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: authentik-config
+              key: password
+        - name: AUTHENTIK_BOOTSTRAP_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: authentik-config
+              key: email
+        - name: AUTHENTIK_BOOTSTRAP_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: authentik-config
+              key: token
+        - name: AUTHENTIK_POSTGRESQL__HOST
+          value: authentik-db-rw.authentik.svc
+        - name: AUTHENTIK_POSTGRESQL__PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: authentik-db-creds
+              key: password
+        - name: AUTHENTIK_POSTGRESQL__USER
+          value: authentik
+        - name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__HOST
+          value: authentik-db-ro.authentik.svc
+        - name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__NAME
+          value: authentik
+        - name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__USER
+          value: authentik
+        - name: AUTHENTIK_POSTGRESQL__READ_REPLICAS__0__PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: authentik-db-creds
+              key: password
+        - name: AUTHENTIK_REDIS__HOST
+          value: rfrm-authentik-redis.authentik.svc
+        - name: AUTHENTIK_DISABLE_UPDATE_CHECK
+          value: "true"
+        - name: AUTHENTIK_LOG_LEVEL
+          value: warning
+
+    server:
+      replicas: 1
+      autoScaling:
+        enabled: false
+
+      ingress:
+        enabled: true
+        ingressClassName: tenant-root
+        annotations:
+          nginx.ingress.kubernetes.io/proxy-body-size: "16m"
+          nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+          nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+          external-dns.alpha.kubernetes.io/target: ${CLOUDFLARE_TUNNEL_TARGET}
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+          external-dns.alpha.kubernetes.io/hostname: "auth.${DOMAIN}"
+        hosts:
+          - auth.${DOMAIN}
+        tls:
+          - secretName: wildcard-le-tls-cert
+            hosts:
+              - auth.${DOMAIN}
+
+      volumes:
+        - name: media
+          emptyDir: {}
+        - name: postgres-creds
+          secret:
+            secretName: authentik-db-creds
+      volumeMounts:
+        - name: media
+          mountPath: /media
+        - name: postgres-creds
+          mountPath: /postgres-creds
+          readOnly: true
+
+    worker:
+      replicas: 1
+      autoScaling:
+        enabled: false
+
+      volumes:
+        - name: media
+          emptyDir: {}
+        - name: postgres-creds
+          secret:
+            secretName: authentik-db-creds
+      volumeMounts:
+        - name: media
+          mountPath: /media
+        - name: postgres-creds
+          mountPath: /postgres-creds
+          readOnly: true
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/cilium/cilium/main/install/kubernetes/quick-install.yaml
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
+  name: egress-authentik
+spec:
+  # Allow ingress-nginx pods (tenant-root) to reach Authentik server over service ports
+  # Notes:
+  # - Authentik Service exposes 80 (-> 9000) and 443 (-> 9443)
+  # - We allow both 80/443 here; the target Pod listens on 9000/9443 behind the Service
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: ingress-nginx
+  egress:
+    - toServices:
+        - k8sService:
+            namespace: authentik
+            serviceName: authentik-server
+      toPorts:
+        - ports:
+            - port: "80"
+            - port: "443"
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/cilium/cilium/main/install/kubernetes/quick-install.yaml
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: authentik-egress
+  namespace: authentik
+spec:
+  # Egress policy for Authentik server/worker pods
+  # - Allow PostgreSQL (rw/ro) via Service IPs
+  # - Allow Redis (master/replica) on 6379; remove Sentinel (not used)
+  # - Allow DNS to CoreDNS; optional self-calls via Service on 80/443
+  endpointSelector:
+    # NOTE: This selector targets Authentik components only (server/worker); it does not apply to CNPG/Redis pods.
+    matchLabels:
+      app.kubernetes.io/name: authentik
+  egress:
+    # PostgreSQL RW Service
+    - toServices:
+        - k8sService:
+            namespace: authentik
+            serviceName: authentik-db-rw
+      toPorts:
+        - ports:
+            - port: "5432"
+    # PostgreSQL RO Service (used by read replicas)
+    - toServices:
+        - k8sService:
+            namespace: authentik
+            serviceName: authentik-db-ro
+      toPorts:
+        - ports:
+            - port: "5432"
+    - toServices:
+        - k8sService:
+            namespace: authentik
+            serviceName: authentik-db-r
+      toPorts:
+        - ports:
+            - port: "5432"
+    # Redis master service (data port)
+    - toServices:
+        - k8sService:
+            namespace: authentik
+            serviceName: rfrm-authentik-redis
+      toPorts:
+        - ports:
+            - port: "6379"
+
+    # Redis replica service (some operator versions expose replicas via rfrs-<name>)
+    - toServices:
+        - k8sService:
+            namespace: authentik
+            serviceName: rfrs-authentik-redis
+      toPorts:
+        - ports:
+            - port: "6379"
+
+    # Fallback: allow to Redis pods by label (master/replicas)
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: authentik
+            app.kubernetes.io/name: authentik-redis
+      toPorts:
+        - ports:
+            - port: "6379"
+              protocol: TCP
+
+    # DNS to CoreDNS service
+    - toServices:
+        - k8sService:
+            namespace: kube-system
+            serviceName: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: UDP
+            - port: "53"
+              protocol: TCP
+    # Optional: allow Authentik to call its own Service (useful for callbacks/webhooks)
+    - toServices:
+        - k8sService:
+            namespace: authentik
+            serviceName: authentik-server
+      toPorts:
+        - ports:
+            - port: "80"
+            - port: "443"
+
+    # Fallback: allow egress directly to CNPG Pods (when connecting by Pod IP)
+    - toEndpoints:
+        - matchLabels:
+            io.kubernetes.pod.namespace: authentik
+            cnpg.io/cluster: authentik-db
+      toPorts:
+        - ports:
+            - port: "5432"
+              protocol: TCP
