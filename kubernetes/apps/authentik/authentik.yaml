@@ -372,6 +372,14 @@ spec:
             - port: "443"
               protocol: TCP
 
+    # Allow nodeIP:6443 for Kubernetes API (covers kube-proxy DNAT path in some clusters like OVN)
+    - toCIDR:
+        - 192.168.222.0/24 # <-- adjust to your node CIDR if different
+      toPorts:
+        - ports:
+            - port: "6443"
+              protocol: TCP
+
     # Optional: allow Authentik to call its own Service (useful for callbacks/webhooks)
     - toServices:
         - k8sService:
