@@ -21,7 +21,7 @@ spec:
     substituteFrom:
       - kind: Secret
         name: flux-substitution
-  wait: true
+  wait: false
   healthChecks:
     # Ensure the flux-substitution secret is present.
     - apiVersion: v1

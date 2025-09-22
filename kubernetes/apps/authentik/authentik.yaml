@@ -144,8 +144,6 @@ spec:
         #     secretKeyRef:
         #       name: authentik-config
         #      key: secret_key
-        #- name: AUTHENTIK_COOKIE_DOMAIN
-        #  value: .${DOMAIN}
         - name: AUTHENTIK_BOOTSTRAP_PASSWORD
           valueFrom:
             secretKeyRef:
