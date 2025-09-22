@@ -139,7 +139,7 @@ spec:
 
       env:
         - name: AUTHENTIK_SECRET_KEY
-          value: "flkjhaereiuogvsfiuyhvaoakgaeLKHFGSJKH67Ht5FDGe784KHJVFB6343rhvsbsflhvfslhvsflhvsflhvsf2"
+          value: L7goS5OPtpwzwIRess852323abfQevICcwlQkwPFEv0ULPpcZO2XoAKw0DbipmrD
         #   valueFrom:
         #     secretKeyRef:
         #       name: authentik-config
@@ -187,6 +187,10 @@ spec:
           value: "true"
         - name: AUTHENTIK_LOG_LEVEL
           value: warning
+        - name: AUTHENTIK_HOST
+          value: https://auth.${DOMAIN}
+        - name: AUTHENTIK_COOKIE_DOMAIN
+          value: .${DOMAIN}
 
     server:
       replicas: 1
@@ -203,6 +207,8 @@ spec:
           external-dns.alpha.kubernetes.io/target: ${CLOUDFLARE_TUNNEL_TARGET}
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
           external-dns.alpha.kubernetes.io/hostname: "auth.${DOMAIN}"
+          nginx.ingress.kubernetes.io/proxy-buffering: "off"
+          nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
         hosts:
           - auth.${DOMAIN}
         tls:
