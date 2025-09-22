@@ -139,7 +139,10 @@ spec:
 
       env:
         - name: AUTHENTIK_SECRET_KEY
-          value: L7goS5OPtpwzwIRess852323abfQevICcwlQkwPFEv0ULPpcZO2XoAKw0DbipmrD
+          valueFrom:
+            secretKeyRef:
+              name: authentik-config
+              key: secret_key
         #   valueFrom:
         #     secretKeyRef:
         #       name: authentik-config
@@ -372,9 +375,9 @@ spec:
             - port: "443"
               protocol: TCP
 
-    # Allow nodeIP:6443 for Kubernetes API (covers kube-proxy DNAT path in some clusters like OVN)
-    - toCIDR:
-        - 192.168.222.0/24 # <-- adjust to your node CIDR if different
+    # Allow node (host) IPs on 6443 for Kubernetes API (covers kube-proxy/OVN DNAT)
+    - toEntities:
+        - host
       toPorts:
         - ports:
             - port: "6443"
