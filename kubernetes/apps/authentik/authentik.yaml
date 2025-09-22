@@ -113,6 +113,30 @@ data:
           domain: auth.myk8s.se
           default: false
           branding_title: "Authentik"
+  apply-upstream-defaults.yaml: |
+    # yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+    version: 1
+    metadata:
+      name: Bootstrap upstream defaults in order
+      labels:
+        blueprints.goauthentik.io/description: "Apply Authentik packaged defaults in a deterministic order"
+        blueprints.goauthentik.io/instantiate: "true"  # run once automatically
+    entries:
+      # Ensure built-in admin group/user etc. exist
+      - model: authentik_blueprints.metaapplyblueprint
+        id: apply-system-bootstrap
+        attrs:
+          required: false
+          identifiers:
+            name: System - Bootstrap
+
+      # Default Authentication flow (provides /if/flow/default-authentication/)
+      - model: authentik_blueprints.metaapplyblueprint
+        id: apply-default-auth-flow
+        attrs:
+          required: false
+          identifiers:
+            name: Default - Authentication flow
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/main/config/crd/bases/postgresql.cnpg.io_clusters.yaml
 # CloudNativePG Cluster — creates an "authentik" database owned by user "authentik"
