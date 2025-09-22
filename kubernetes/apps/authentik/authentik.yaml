@@ -198,10 +198,6 @@ spec:
             secretKeyRef:
               name: authentik-config
               key: secret_key
-        #   valueFrom:
-        #     secretKeyRef:
-        #       name: authentik-config
-        #      key: secret_key
         - name: AUTHENTIK_BOOTSTRAP_PASSWORD
           valueFrom:
             secretKeyRef:
@@ -260,9 +256,6 @@ spec:
           nginx.ingress.kubernetes.io/proxy-body-size: "16m"
           nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
           nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
-          #external-dns.alpha.kubernetes.io/target: ${CLOUDFLARE_TUNNEL_TARGET}
-          #external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
-          #external-dns.alpha.kubernetes.io/hostname: "auth.${DOMAIN}"
           nginx.ingress.kubernetes.io/proxy-buffering: "off"
           nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
         hosts:
