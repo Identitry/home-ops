@@ -398,7 +398,9 @@ spec:
                 - sh
                 - -lc
                 - |
-                  set -euxo pipefail
+                  # BusyBox/Dash sh doesn't support 'pipefail'
+                  set -eu
+                  set -x
                   PY="$(command -v /ak-root/.venv/bin/python3 || command -v python3)"
                   # wait for Postgres & Redis to be reachable
                   ${PY} - <<'PY'
