@@ -351,10 +351,20 @@ spec:
             app.kubernetes.io/instance: authentik
         spec:
           restartPolicy: OnFailure
+          securityContext:
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
           containers:
             - name: apply
               image: ghcr.io/goauthentik/server:2025.8.3
               imagePullPolicy: IfNotPresent
+              securityContext:
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+              terminationMessagePolicy: FallbackToLogsOnError
               env:
                 - name: AUTHENTIK_SECRET_KEY
                   valueFrom:
@@ -388,7 +398,7 @@ spec:
                 - sh
                 - -lc
                 - |
-                  set -euo pipefail
+                  set -euxo pipefail
                   PY="$(command -v /ak-root/.venv/bin/python3 || command -v python3)"
                   # wait for Postgres & Redis to be reachable
                   ${PY} - <<'PY'
@@ -405,9 +415,12 @@ spec:
                   wait(os.getenv("AUTHENTIK_REDIS__HOST","rfrm-authentik-redis.authentik.svc"), 6379, "redis")
                   PY
                   # Apply our blueprints (idempotent)
+                  echo "[ak-blueprints] applying /blueprints/user/00-core-prompts.yaml"
                   $PY /manage.py apply_blueprint /blueprints/user/00-core-prompts.yaml
+                  echo "[ak-blueprints] applying /blueprints/user/ensure-defaults.yaml"
                   $PY /manage.py apply_blueprint /blueprints/user/ensure-defaults.yaml
                   # Apply packaged default login flow from the container
+                  echo "[ak-blueprints] applying /blueprints/default/flow-default-authentication-flow.yaml"
                   $PY /manage.py apply_blueprint /blueprints/default/flow-default-authentication-flow.yaml
           volumes:
             - name: user-blueprints
