@@ -83,6 +83,53 @@ spec:
       remoteRef:
         key: /AUTHENTIK/ADMIN_TOKEN
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ak-blueprints
+  namespace: authentik
+data:
+  ensure-defaults.yaml: |
+    # yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+    version: 1
+    metadata:
+      name: Ensure defaults and brand
+      labels:
+        blueprints.goauthentik.io/description: "Apply default auth flow and set brand for auth.myk8s.se"
+    # optional context you can reference in your own entries
+    context:
+      domain_url: https://auth.myk8s.se
+
+    entries:
+      # Apply the packaged "Default - Authentication flow" blueprint instance
+      - model: authentik_blueprints.metaapplyblueprint
+        attrs:
+          identifiers:
+            name: Default - Authentication flow
+          required: true
+
+      # Optional: apply outpost defaults if you use embedded outposts
+      - model: authentik_blueprints.metaapplyblueprint
+        attrs:
+          identifiers:
+            name: Default - Outpost
+          required: false
+
+      # Ensure a Brand exists for your domain and uses the default auth flow
+      - model: authentik_brands.brand
+        state: present
+        identifiers:
+          domain: auth.myk8s.se
+        attrs:
+          domain: auth.myk8s.se
+          default: false
+          branding_title: "Authentik"
+          # point the brand to the default authentication flow slug
+          flow_authentication: !Find [authentik_flows.flow, [slug, default-authentication-flow]]
+          # these two are optional; set them if you want
+          flow_user_settings: !Find [authentik_flows.flow, [slug, default-user-settings-flow]]
+          flow_invalidation: !Find [authentik_flows.flow, [slug, default-logout-flow]]
+---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/main/config/crd/bases/postgresql.cnpg.io_clusters.yaml
 # CloudNativePG Cluster — creates an "authentik" database owned by user "authentik"
 apiVersion: postgresql.cnpg.io/v1
@@ -223,11 +270,17 @@ spec:
         - name: postgres-creds
           secret:
             secretName: authentik-db-creds
+        - name: user-blueprints
+          configMap:
+            name: ak-blueprints
       volumeMounts:
         - name: media
           mountPath: /media
         - name: postgres-creds
           mountPath: /postgres-creds
+          readOnly: true
+        - name: user-blueprints
+          mountPath: /blueprints/user
           readOnly: true
 
     worker:
@@ -241,11 +294,17 @@ spec:
         - name: postgres-creds
           secret:
             secretName: authentik-db-creds
+        - name: user-blueprints
+          configMap:
+            name: ak-blueprints
       volumeMounts:
         - name: media
           mountPath: /media
         - name: postgres-creds
           mountPath: /postgres-creds
+          readOnly: true
+        - name: user-blueprints
+          mountPath: /blueprints/user
           readOnly: true
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/cilium/cilium/main/install/kubernetes/quick-install.yaml
