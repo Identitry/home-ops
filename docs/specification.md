@@ -166,11 +166,11 @@ Public Github site that describes the cluster. ✅
 
 - Minio (on nas) For backups. ✅
 
-#### Web Publishing ✅
+#### Web Publishing
 
 - External-DNS - Operator, Manage DNS names against CloudFlare ✅
-- Cloudflared - Protected Cloudflare tunnel, authentication at beginning of tunnel (EntraID or Google) ✅
-- Cloudflared + Authentik - Unprotected Cloudflare Tunnel, authentication in cluster at end of tunnel (Authentik) ✅
+- Cloudflared - Cloudflare Tunnel ✅
+- Authentik - Authentication of basically all apps (may be some exceptions.) ☑️
 - Cloudflare DDNS - Updates Cloudflare DNS with public IP Address ✅
 
 #### Media
@@ -225,10 +225,6 @@ Public Github site that describes the cluster. ✅
   - VSCode HomeAssistant extension
   - More???
 
-#### Virtual Machines
-
-- Home Assistant OS (kubevirt) - currently on truenas-stor.
-
 #### DNS/Ad Blocking ✅
 
 - Blocky + Redis (Sync) + Postgres (logging), DNS request over DoH over NordVPN (GlueTun). ✅
@@ -237,6 +233,7 @@ Public Github site that describes the cluster. ✅
 
 #### Home Automation
 
+- Home Assistant OS (kubevirt) - Virtual Machine - currently on truenas-stor.
 - Generic Device Plugin (for connecting node USB device to pod)
   https://github.com/gabe565/home-ops/tree/main/kubernetes/gabernetes/apps/generic-device-plugin
 - Zigbee2MQTT (USB passtrough) (currently on HAOS VM)
@@ -259,7 +256,7 @@ Public Github site that describes the cluster. ✅
 
 #### Maybe in the future
 
-- Atuin (shell history server)
+- Atuin (shell history server) ☑️
 - Immich - Photo management (requires postgres and redis)
   https://github.com/gabe565/home-ops/tree/main/kubernetes/gabernetes/apps/immich
 - Immich Drop - Allows dropping photos easily into Immich.
