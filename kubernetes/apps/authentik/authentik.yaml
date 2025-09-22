@@ -122,21 +122,23 @@ data:
         blueprints.goauthentik.io/description: "Apply Authentik packaged defaults in a deterministic order"
         blueprints.goauthentik.io/instantiate: "false"  # do not auto-run; we will apply manually
     entries:
-      # Ensure built-in admin group/user etc. exist
+      # Ensure built-in admin group, core stages (including the password prompt), etc.
       - model: authentik_blueprints.metaapplyblueprint
         id: apply-system-bootstrap
         attrs:
           required: false
-          identifiers:
-            name: System - Bootstrap
+          blueprint:
+            identifiers:
+              name: System - Bootstrap
 
       # Default Authentication flow (provides /if/flow/default-authentication/)
       - model: authentik_blueprints.metaapplyblueprint
         id: apply-default-auth-flow
         attrs:
           required: false
-          identifiers:
-            name: Default - Authentication flow
+          blueprint:
+            identifiers:
+              name: Default - Authentication flow
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/main/config/crd/bases/postgresql.cnpg.io_clusters.yaml
 # CloudNativePG Cluster — creates an "authentik" database owned by user "authentik"
