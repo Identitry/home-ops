@@ -356,6 +356,22 @@ spec:
         - ports:
             - port: "443"
 
+    # Extra safety: allow direct access to kube-apiserver entity (covers VIP changes/alt paths)
+    - toEntities:
+        - kube-apiserver
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+
+    # Fallback for clusters where Service-based matching misses: allow the Service IP directly
+    - toCIDR:
+        - 10.96.0.1/32
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+
     # Optional: allow Authentik to call its own Service (useful for callbacks/webhooks)
     - toServices:
         - k8sService:
