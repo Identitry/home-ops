@@ -120,7 +120,7 @@ data:
       name: Bootstrap upstream defaults in order
       labels:
         blueprints.goauthentik.io/description: "Apply Authentik packaged defaults in a deterministic order"
-        blueprints.goauthentik.io/instantiate: "true"  # run once automatically
+        blueprints.goauthentik.io/instantiate: "false"  # do not auto-run; we will apply manually
     entries:
       # Ensure built-in admin group/user etc. exist
       - model: authentik_blueprints.metaapplyblueprint
@@ -262,7 +262,9 @@ spec:
           external-dns.alpha.kubernetes.io/target: "212.107.149.106"
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
           nginx.ingress.kubernetes.io/configuration-snippet: |
-            proxy_set_header X-Forwarded-Port 6443
+            proxy_set_header X-Forwarded-Proto https;
+            proxy_set_header X-Forwarded-Port 6443;
+          nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
 
         hosts:
           - auth.${DOMAIN}
