@@ -145,21 +145,21 @@ spec:
               key: secret_key
         #- name: AUTHENTIK_COOKIE_DOMAIN
         #  value: .${DOMAIN}
-        #- name: AUTHENTIK_BOOTSTRAP_PASSWORD
-        #  valueFrom:
-        #    secretKeyRef:
-        #     name: authentik-config
-        #      key: password
-        #- name: AUTHENTIK_BOOTSTRAP_EMAIL
-        #  valueFrom:
-        #    secretKeyRef:
-        #     name: authentik-config
-        #      key: email
-        #- name: AUTHENTIK_BOOTSTRAP_TOKEN
-        #  valueFrom:
-        #   secretKeyRef:
-        #      name: authentik-config
-        #     key: token
+        - name: AUTHENTIK_BOOTSTRAP_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: authentik-config
+              key: password
+        - name: AUTHENTIK_BOOTSTRAP_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: authentik-config
+              key: email
+        - name: AUTHENTIK_BOOTSTRAP_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: authentik-config
+              key: token
         - name: AUTHENTIK_POSTGRESQL__HOST
           value: authentik-db-rw.authentik.svc
         - name: AUTHENTIK_POSTGRESQL__PASSWORD
@@ -254,10 +254,10 @@ spec:
     matchLabels:
       app.kubernetes.io/name: ingress-nginx
   egress:
-    - toEndpoints:
-        - matchLabels:
-            io.kubernetes.pod.namespace: authentik
-            app.kubernetes.io/name: authentik
+    - toServices:
+        - k8sService:
+            namespace: authentik
+            serviceName: authentik-server
       toPorts:
         - ports:
             - port: "80"
