@@ -95,25 +95,29 @@ data:
     metadata:
       name: Ensure defaults and brand
       labels:
-        blueprints.goauthentik.io/description: "Apply default auth flow and set brand for auth.myk8s.se"
-    # optional context you can reference in your own entries
+        blueprints.goauthentik.io/description: "Apply default flows and set brand for auth.myk8s.se"
     context:
       domain_url: https://auth.myk8s.se
 
     entries:
-      # Apply the packaged "Default - Authentication flow" blueprint instance
+      # Apply packaged default flows in a safe order
       - model: authentik_blueprints.metaapplyblueprint
         attrs:
           identifiers:
             name: Default - Authentication flow
           required: true
 
-      # Optional: apply outpost defaults if you use embedded outposts
       - model: authentik_blueprints.metaapplyblueprint
         attrs:
           identifiers:
-            name: Default - Outpost
-          required: false
+            name: Default - Invalidation flow
+          required: true
+
+      - model: authentik_blueprints.metaapplyblueprint
+        attrs:
+          identifiers:
+            name: Default - User settings flow
+          required: true
 
       # Ensure a Brand exists for your domain and uses the default auth flow
       - model: authentik_brands.brand
@@ -124,9 +128,7 @@ data:
           domain: auth.myk8s.se
           default: false
           branding_title: "Authentik"
-          # point the brand to the default authentication flow slug
           flow_authentication: !Find [authentik_flows.flow, [slug, default-authentication-flow]]
-          # these two are optional; set them if you want
           flow_user_settings: !Find [authentik_flows.flow, [slug, default-user-settings-flow]]
           flow_invalidation: !Find [authentik_flows.flow, [slug, default-logout-flow]]
 ---
