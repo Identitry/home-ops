@@ -348,6 +348,16 @@ spec:
               protocol: UDP
             - port: "53"
               protocol: TCP
+
+    # Allow access to Kubernetes API (some components call /version). Needed for health/metadata checks.
+    - toServices:
+        - k8sService:
+            namespace: default
+            serviceName: kubernetes
+      toPorts:
+        - ports:
+            - port: "443"
+
     # Optional: allow Authentik to call its own Service (useful for callbacks/webhooks)
     - toServices:
         - k8sService:
