@@ -261,7 +261,8 @@ spec:
           external-dns.alpha.kubernetes.io/hostname: "auth.${DOMAIN}"
           external-dns.alpha.kubernetes.io/target: "212.107.149.106"
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
-          nginx.ingress.kubernetes.io/configuration-snippet: proxy_set_header X-Forwarded-Port 6443
+          nginx.ingress.kubernetes.io/configuration-snippet: |
+            proxy_set_header X-Forwarded-Port 6443
 
         hosts:
           - auth.${DOMAIN}
