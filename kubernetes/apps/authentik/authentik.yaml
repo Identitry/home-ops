@@ -122,18 +122,22 @@ data:
         blueprints.goauthentik.io/description: "Apply Authentik packaged defaults in a deterministic order"
         blueprints.goauthentik.io/instantiate: "false"  # do not auto-run; we will apply manually
     entries:
-      # Ensure built-in admin group, core stages (including the password prompt), etc.
+      # 1) Ensure core objects (admin group, prompts like password field, etc.)
       - model: authentik_blueprints.metaapplyblueprint
         id: apply-system-bootstrap
+        identifiers:
+          name: apply-system-bootstrap
         attrs:
           required: false
           blueprint:
             identifiers:
               name: System - Bootstrap
 
-      # Default Authentication flow (provides /if/flow/default-authentication/)
+      # 2) Create the default authentication flow (slug: default-authentication-flow)
       - model: authentik_blueprints.metaapplyblueprint
         id: apply-default-auth-flow
+        identifiers:
+          name: apply-default-auth-flow
         attrs:
           required: false
           blueprint:
