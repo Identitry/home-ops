@@ -240,7 +240,7 @@ spec:
         - name: AUTHENTIK_LOG_LEVEL
           value: warning
         - name: AUTHENTIK_HOST
-          value: https://auth.${DOMAIN}
+          value: https://auth.${DOMAIN}:6443
         - name: AUTHENTIK_COOKIE_DOMAIN
           value: .${DOMAIN}
 
@@ -261,6 +261,8 @@ spec:
           external-dns.alpha.kubernetes.io/hostname: "auth.${DOMAIN}"
           external-dns.alpha.kubernetes.io/target: "212.107.149.106"
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
+          nginx.ingress.kubernetes.io/configuration-snippet: proxy_set_header X-Forwarded-Port 6443
+
         hosts:
           - auth.${DOMAIN}
         tls:
