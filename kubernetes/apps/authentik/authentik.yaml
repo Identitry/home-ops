@@ -143,8 +143,8 @@ spec:
             secretKeyRef:
               name: authentik-config
               key: secret_key
-        - name: AUTHENTIK_COOKIE_DOMAIN
-          value: .${DOMAIN}
+        #- name: AUTHENTIK_COOKIE_DOMAIN
+        #  value: .${DOMAIN}
         #- name: AUTHENTIK_BOOTSTRAP_PASSWORD
         #  valueFrom:
         #    secretKeyRef:
@@ -246,6 +246,10 @@ kind: CiliumClusterwideNetworkPolicy
 metadata:
   name: egress-authentik
 spec:
+  # Allow ingress-nginx pods (tenant-root) to reach Authentik server over service ports
+  # Notes:
+  # - Authentik Service exposes 80 (-> 9000) and 443 (-> 9443)
+  # - We allow both 80/443 here; the target Pod listens on 9000/9443 behind the Service
   endpointSelector:
     matchLabels:
       app.kubernetes.io/name: ingress-nginx
@@ -256,7 +260,8 @@ spec:
             app.kubernetes.io/name: authentik
       toPorts:
         - ports:
-            - port: "9000" # authentik server port
+            - port: "80"
+            - port: "443"
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/cilium/cilium/main/install/kubernetes/quick-install.yaml
 apiVersion: cilium.io/v2
@@ -265,7 +270,12 @@ metadata:
   name: authentik-egress
   namespace: authentik
 spec:
+  # Egress policy for Authentik server/worker pods
+  # - Allow PostgreSQL (rw/ro) via Service IPs
+  # - Allow Redis (master/replica) on 6379; remove Sentinel (not used)
+  # - Allow DNS to CoreDNS; optional self-calls via Service on 80/443
   endpointSelector:
+    # NOTE: This selector targets Authentik components only (server/worker); it does not apply to CNPG/Redis pods.
     matchLabels:
       app.kubernetes.io/name: authentik
   egress:
@@ -285,14 +295,13 @@ spec:
       toPorts:
         - ports:
             - port: "5432"
-    # Redis Sentinel service (Spotahome RFS service)
     - toServices:
         - k8sService:
             namespace: authentik
-            serviceName: rfs-authentik-redis
+            serviceName: authentik-db-r
       toPorts:
         - ports:
-            - port: "26379"
+            - port: "5432"
     # Redis master service (data port)
     - toServices:
         - k8sService:
@@ -332,15 +341,17 @@ spec:
               protocol: UDP
             - port: "53"
               protocol: TCP
-    # Allow authentik server to call itself and the database.
+    # Optional: allow Authentik to call its own Service (useful for callbacks/webhooks)
     - toServices:
         - k8sService:
             namespace: authentik
             serviceName: authentik-server
       toPorts:
         - ports:
-            - port: "9000"
-            - port: "9443"
+            - port: "80"
+            - port: "443"
+
+    # Fallback: allow egress directly to CNPG Pods (when connecting by Pod IP)
     - toEndpoints:
         - matchLabels:
             io.kubernetes.pod.namespace: authentik
