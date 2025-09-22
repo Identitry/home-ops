@@ -91,6 +91,13 @@ metadata:
 data:
   ensure-defaults.yaml: |
     # yaml-language-server: $schema=https://goauthentik.io/blueprints/schema.json
+    # NOTE:
+    # We intentionally do NOT meta-apply the packaged default blueprints here.
+    # Authentik auto-discovers and applies its own defaults at startup, and discovery
+    # order is not guaranteed. Combining metaapply with file discovery can cause
+    # race conditions where !KeyOf references (e.g. admin-group, source-login)
+    # are not yet present, leading to validation errors in the worker.
+    # This blueprint only ensures the Brand exists and points at the default flows.
     version: 1
     metadata:
       name: Ensure defaults and brand
@@ -100,25 +107,6 @@ data:
       domain_url: https://auth.myk8s.se
 
     entries:
-      # Apply packaged default flows in a safe order
-      - model: authentik_blueprints.metaapplyblueprint
-        attrs:
-          identifiers:
-            name: Default - Authentication flow
-          required: true
-
-      - model: authentik_blueprints.metaapplyblueprint
-        attrs:
-          identifiers:
-            name: Default - Invalidation flow
-          required: true
-
-      - model: authentik_blueprints.metaapplyblueprint
-        attrs:
-          identifiers:
-            name: Default - User settings flow
-          required: true
-
       # Ensure a Brand exists for your domain and uses the default auth flow
       - model: authentik_brands.brand
         state: present
