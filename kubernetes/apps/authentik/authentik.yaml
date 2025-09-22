@@ -125,8 +125,8 @@ data:
       # Password
       - model: authentik_stages_prompt.prompt
         state: present
+        id: prompt-field-password
         identifiers:
-          id: prompt-field-password
           field_key: password
         attrs:
           label: "Password"
@@ -139,8 +139,8 @@ data:
       # Password (repeat)
       - model: authentik_stages_prompt.prompt
         state: present
+        id: prompt-field-password-repeat
         identifiers:
-          id: prompt-field-password-repeat
           field_key: password_repeat
         attrs:
           label: "Password (repeat)"
@@ -416,14 +416,17 @@ spec:
                   wait(os.getenv("AUTHENTIK_POSTGRESQL__HOST","authentik-db-rw.authentik.svc"), 5432, "postgres")
                   wait(os.getenv("AUTHENTIK_REDIS__HOST","rfrm-authentik-redis.authentik.svc"), 6379, "redis")
                   PYCODE
-                  # Apply our blueprints (idempotent)
-                  echo "[ak-blueprints] applying /blueprints/user/00-core-prompts.yaml"
-                  $PY /manage.py apply_blueprint /blueprints/user/00-core-prompts.yaml
-                  echo "[ak-blueprints] applying /blueprints/user/ensure-defaults.yaml"
-                  $PY /manage.py apply_blueprint /blueprints/user/ensure-defaults.yaml
-                  # Apply packaged default login flow from the container
-                  echo "[ak-blueprints] applying /blueprints/default/flow-default-authentication-flow.yaml"
-                  $PY /manage.py apply_blueprint /blueprints/default/flow-default-authentication-flow.yaml
+                  # Apply ALL packaged defaults first (sorted to keep stable order)
+                  for f in $(ls -1 /blueprints/default/*.yaml | sort); do
+                    echo "[ak-blueprints] applying $f"
+                    "$PY" /manage.py apply_blueprint "$f"
+                  done
+                  # Then apply user blueprints (idempotent)
+                  for f in /blueprints/user/*.yaml; do
+                    [ -f "$f" ] || continue
+                    echo "[ak-blueprints] applying $f"
+                    "$PY" /manage.py apply_blueprint "$f"
+                  done
           volumes:
             - name: user-blueprints
               configMap:
