@@ -389,19 +389,7 @@ spec:
                   set -x
                   PY="$(command -v /ak-root/.venv/bin/python3 || command -v python3)"
                   # wait for Postgres & Redis to be reachable
-                  cat <<'PYCODE' | "$PY" -
-                  import os, socket, time, sys
-                  def wait(host, port, name):
-                      for _ in range(60):
-                          s=socket.socket(); s.settimeout(2)
-                          try:
-                              s.connect((host, port)); s.close(); return
-                          except Exception:
-                              time.sleep(2)
-                      print(f"failed waiting for {name}", file=sys.stderr); sys.exit(1)
-                  wait(os.getenv("AUTHENTIK_POSTGRESQL__HOST","authentik-db-rw.authentik.svc"), 5432, "postgres")
-                  wait(os.getenv("AUTHENTIK_REDIS__HOST","rfrm-authentik-redis.authentik.svc"), 6379, "redis")
-                  PYCODE
+                  "$PY" -c 'import os, socket, time, sys;\n\nimport socket as s;\n\ndef wait(h,p,n):\n    for _ in range(60):\n        sock=s.socket(); sock.settimeout(2)\n        try:\n            sock.connect((h,p)); sock.close(); return\n        except Exception:\n            time.sleep(2)\n    print(f"failed waiting for {n}", file=sys.stderr); sys.exit(1)\n\nwait(os.getenv("AUTHENTIK_POSTGRESQL__HOST","authentik-db-rw.authentik.svc"), 5432, "postgres");\nwait(os.getenv("AUTHENTIK_REDIS__HOST","rfrm-authentik-redis.authentik.svc"), 6379, "redis")'
                   # Apply ALL packaged defaults first (safe even if directory is empty)
                   for f in /blueprints/default/*.yaml; do
                     [ -f "$f" ] || continue
@@ -412,13 +400,7 @@ spec:
                   for f in /blueprints/user/*.yaml; do
                     [ -f "$f" ] || continue
                     tmp="$(mktemp)"
-                    F="$f" "$PY" - <<'PYEXP' > "$tmp"
-import os,sys
-p=os.environ['F']
-with open(p,'r',encoding='utf-8') as fh:
-    data=fh.read()
-sys.stdout.write(os.path.expandvars(data))
-PYEXP
+                    F="$f" "$PY" -c 'import os,sys; p=os.environ["F"]; sys.stdout.write(os.path.expandvars(open(p, "r", encoding="utf-8").read()))' > "$tmp"
                     echo "[ak-blueprints] applying $f"
                     "$PY" /manage.py apply_blueprint "$tmp"
                   done
@@ -553,8 +535,6 @@ spec:
         - ports:
             - port: "443"
               protocol: TCP
-
-
 
     # Allow node (host) IPs on 6443 for Kubernetes API (covers kube-proxy/OVN DNAT)
     - toEntities:
