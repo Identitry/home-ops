@@ -399,9 +399,10 @@ spec:
                   # Then apply user blueprints (idempotent) with runtime variable expansion
                   for f in /blueprints/user/*.yaml; do
                     [ -f "$f" ] || continue
-                    tmp="$(mktemp)"
+                    tmpd="$(mktemp -d)"
+                    tmp="$tmpd/expanded.yaml"  # ensure .yaml suffix so authentik accepts the path
                     F="$f" "$PY" -c 'import os,sys; p=os.environ["F"]; sys.stdout.write(os.path.expandvars(open(p, "r", encoding="utf-8").read()))' > "$tmp"
-                    echo "[ak-blueprints] applying $f"
+                    echo "[ak-blueprints] applying $tmp (source: $f)"
                     "$PY" /manage.py apply_blueprint "$tmp"
                   done
                   echo "[ak-blueprints] all done"
