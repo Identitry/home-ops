@@ -380,6 +380,8 @@ spec:
                 - name: user-blueprints
                   mountPath: /blueprints/user
                   readOnly: true
+                - name: blueprints-tmp
+                  mountPath: /blueprints/tmp
               command:
                 - sh
                 - -lc
@@ -399,10 +401,12 @@ spec:
                   # Then apply user blueprints (idempotent) with runtime variable expansion
                   for f in /blueprints/user/*.yaml; do
                     [ -f "$f" ] || continue
-                    tmpd="$(mktemp -d)"
-                    tmp="$tmpd/expanded.yaml"  # ensure .yaml suffix so authentik accepts the path
+                    mkdir -p /blueprints/tmp
+                    tmpd="$(mktemp -d /blueprints/tmp/exp.XXXXXX)"
+                    tmp="$tmpd/expanded.yaml"  # ensure .yaml suffix and under /blueprints/* so authentik accepts the path
                     F="$f" "$PY" -c 'import os,sys; p=os.environ["F"]; sys.stdout.write(os.path.expandvars(open(p, "r", encoding="utf-8").read()))' > "$tmp"
                     echo "[ak-blueprints] applying $tmp (source: $f)"
+                    ls -l "$tmp"
                     "$PY" /manage.py apply_blueprint "$tmp"
                   done
                   echo "[ak-blueprints] all done"
@@ -410,6 +414,8 @@ spec:
             - name: user-blueprints
               configMap:
                 name: ak-blueprints
+            - name: blueprints-tmp
+              emptyDir: {}
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/cilium/cilium/main/install/kubernetes/quick-install.yaml
 apiVersion: cilium.io/v2
