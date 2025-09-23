@@ -402,8 +402,9 @@ spec:
                   wait(os.getenv("AUTHENTIK_POSTGRESQL__HOST","authentik-db-rw.authentik.svc"), 5432, "postgres")
                   wait(os.getenv("AUTHENTIK_REDIS__HOST","rfrm-authentik-redis.authentik.svc"), 6379, "redis")
                   PYCODE
-                  # Apply ALL packaged defaults first (sorted to keep stable order)
-                  for f in $(ls -1 /blueprints/default/*.yaml | sort); do
+                  # Apply ALL packaged defaults first (safe even if directory is empty)
+                  for f in /blueprints/default/*.yaml; do
+                    [ -f "$f" ] || continue
                     echo "[ak-blueprints] applying $f"
                     "$PY" /manage.py apply_blueprint "$f"
                   done
@@ -412,12 +413,12 @@ spec:
                     [ -f "$f" ] || continue
                     tmp="$(mktemp)"
                     F="$f" "$PY" - <<'PYEXP' > "$tmp"
-                    import os,sys
-                    p=os.environ['F']
-                    with open(p,'r',encoding='utf-8') as fh:
-                        data=fh.read()
-                    sys.stdout.write(os.path.expandvars(data))
-                    PYEXP
+import os,sys
+p=os.environ['F']
+with open(p,'r',encoding='utf-8') as fh:
+    data=fh.read()
+sys.stdout.write(os.path.expandvars(data))
+PYEXP
                     echo "[ak-blueprints] applying $f"
                     "$PY" /manage.py apply_blueprint "$tmp"
                   done
@@ -553,13 +554,7 @@ spec:
             - port: "443"
               protocol: TCP
 
-    # In CiliumNetworkPolicy authentik-egress .spec.egress add:
-    - toCIDR:
-        - 192.168.222.0/24 # adjust to your node subnet
-      toPorts:
-        - ports:
-            - port: "6443"
-              protocol: TCP
+
 
     # Allow node (host) IPs on 6443 for Kubernetes API (covers kube-proxy/OVN DNAT)
     - toEntities:
