@@ -255,9 +255,9 @@ spec:
           nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
           nginx.ingress.kubernetes.io/proxy-buffering: "off"
           nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+          external-dns.alpha.kubernetes.io/target: ${CLOUDFLARE_TUNNEL_TARGET}
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
           external-dns.alpha.kubernetes.io/hostname: "auth.${DOMAIN}"
-          external-dns.alpha.kubernetes.io/target: "212.107.149.106"
-          external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
           nginx.ingress.kubernetes.io/configuration-snippet: |
             proxy_set_header X-Forwarded-Proto https;
           nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
