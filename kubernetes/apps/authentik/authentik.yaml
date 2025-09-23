@@ -102,7 +102,7 @@ data:
         blueprints.goauthentik.io/description: "Create/maintain Brand for auth.${AK_DOMAIN}"
         blueprints.goauthentik.io/instantiate: "false"  # prevent auto-run; apply via job
     context:
-      domain_url: https://auth.${AK_DOMAIN}:6443
+      domain_url: https://auth.${AK_DOMAIN}
 
     entries:
       - model: authentik_brands.brand
@@ -237,7 +237,7 @@ spec:
         - name: AUTHENTIK_LOG_LEVEL
           value: warning
         - name: AUTHENTIK_HOST
-          value: https://auth.${DOMAIN}:6443
+          value: https://auth.${DOMAIN}
         - name: AUTHENTIK_COOKIE_DOMAIN
           value: .${DOMAIN}
 
@@ -260,7 +260,6 @@ spec:
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
           nginx.ingress.kubernetes.io/configuration-snippet: |
             proxy_set_header X-Forwarded-Proto https;
-            proxy_set_header X-Forwarded-Port 6443;
           nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
 
         hosts:
@@ -372,7 +371,7 @@ spec:
                 - name: AUTHENTIK_LOG_LEVEL
                   value: warning
                 - name: AUTHENTIK_HOST
-                  value: https://auth.${DOMAIN}:6443
+                  value: https://auth.${DOMAIN}
                 - name: AUTHENTIK_COOKIE_DOMAIN
                   value: .${DOMAIN}
                 - name: AK_DOMAIN
