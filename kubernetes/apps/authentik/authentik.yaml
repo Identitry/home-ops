@@ -97,20 +97,20 @@ data:
     # a Brand exists for your domain and leaves flows to the built-in defaults.
     version: 1
     metadata:
-      name: Ensure brand for auth.myk8s.se
+      name: Ensure brand for auth.${AK_DOMAIN}
       labels:
-        blueprints.goauthentik.io/description: "Create/maintain Brand for auth.myk8s.se"
+        blueprints.goauthentik.io/description: "Create/maintain Brand for auth.${AK_DOMAIN}"
         blueprints.goauthentik.io/instantiate: "false"  # prevent auto-run; apply via job
     context:
-      domain_url: https://auth.myk8s.se
+      domain_url: https://auth.${AK_DOMAIN}:6443
 
     entries:
       - model: authentik_brands.brand
         state: present
         identifiers:
-          domain: auth.myk8s.se
+          domain: auth.${AK_DOMAIN}
         attrs:
-          domain: auth.myk8s.se
+          domain: auth.${AK_DOMAIN}
           default: false
           branding_title: "Authentik"
 
@@ -210,21 +210,6 @@ spec:
             secretKeyRef:
               name: authentik-config
               key: secret_key
-        #- name: AUTHENTIK_BOOTSTRAP_PASSWORD
-        #  valueFrom:
-        #    secretKeyRef:
-        #      name: authentik-config
-        #      key: password
-        #- name: AUTHENTIK_BOOTSTRAP_EMAIL
-        #  valueFrom:
-        #    secretKeyRef:
-        #      name: authentik-config
-        #      key: email
-        #- name: AUTHENTIK_BOOTSTRAP_TOKEN
-        #  valueFrom:
-        #    secretKeyRef:
-        #      name: authentik-config
-        #      key: token
         - name: AUTHENTIK_POSTGRESQL__HOST
           value: authentik-db-rw.authentik.svc
         - name: AUTHENTIK_POSTGRESQL__PASSWORD
@@ -390,6 +375,8 @@ spec:
                   value: https://auth.${DOMAIN}:6443
                 - name: AUTHENTIK_COOKIE_DOMAIN
                   value: .${DOMAIN}
+                - name: AK_DOMAIN
+                  value: ${DOMAIN}
               volumeMounts:
                 - name: user-blueprints
                   mountPath: /blueprints/user
@@ -421,11 +408,19 @@ spec:
                     echo "[ak-blueprints] applying $f"
                     "$PY" /manage.py apply_blueprint "$f"
                   done
-                  # Then apply user blueprints (idempotent)
+                  # Then apply user blueprints (idempotent) with runtime variable expansion
                   for f in /blueprints/user/*.yaml; do
                     [ -f "$f" ] || continue
+                    tmp="$(mktemp)"
+                    F="$f" "$PY" - <<'PYEXP' > "$tmp"
+                    import os,sys
+                    p=os.environ['F']
+                    with open(p,'r',encoding='utf-8') as fh:
+                        data=fh.read()
+                    sys.stdout.write(os.path.expandvars(data))
+                    PYEXP
                     echo "[ak-blueprints] applying $f"
-                    "$PY" /manage.py apply_blueprint "$f"
+                    "$PY" /manage.py apply_blueprint "$tmp"
                   done
           volumes:
             - name: user-blueprints
