@@ -389,7 +389,7 @@ spec:
                   set -x
                   PY="$(command -v /ak-root/.venv/bin/python3 || command -v python3)"
                   # wait for Postgres & Redis to be reachable
-                  "$PY" -c 'import os, socket, time, sys;\n\nimport socket as s;\n\ndef wait(h,p,n):\n    for _ in range(60):\n        sock=s.socket(); sock.settimeout(2)\n        try:\n            sock.connect((h,p)); sock.close(); return\n        except Exception:\n            time.sleep(2)\n    print(f"failed waiting for {n}", file=sys.stderr); sys.exit(1)\n\nwait(os.getenv("AUTHENTIK_POSTGRESQL__HOST","authentik-db-rw.authentik.svc"), 5432, "postgres");\nwait(os.getenv("AUTHENTIK_REDIS__HOST","rfrm-authentik-redis.authentik.svc"), 6379, "redis")'
+                  "$PY" -c 'exec("import os, socket, time, sys\nimport socket as s\n\n\ndef wait(h,p,n):\n    for _ in range(60):\n        sock=s.socket(); sock.settimeout(2)\n        try:\n            sock.connect((h,p)); sock.close(); return\n        except Exception:\n            time.sleep(2)\n    print(f\"failed waiting for {n}\", file=sys.stderr); sys.exit(1)\n\nwait(os.getenv(\"AUTHENTIK_POSTGRESQL__HOST\",\"authentik-db-rw.authentik.svc\"), 5432, \"postgres\")\nwait(os.getenv(\"AUTHENTIK_REDIS__HOST\",\"rfrm-authentik-redis.authentik.svc\"), 6379, \"redis\")")'
                   # Apply ALL packaged defaults first (safe even if directory is empty)
                   for f in /blueprints/default/*.yaml; do
                     [ -f "$f" ] || continue
