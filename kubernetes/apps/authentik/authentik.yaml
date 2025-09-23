@@ -369,7 +369,7 @@ spec:
                 - name: AUTHENTIK_DISABLE_UPDATE_CHECK
                   value: "true"
                 - name: AUTHENTIK_LOG_LEVEL
-                  value: warning
+                  value: info
                 - name: AUTHENTIK_HOST
                   value: https://auth.${DOMAIN}
                 - name: AUTHENTIK_COOKIE_DOMAIN
@@ -389,7 +389,7 @@ spec:
                   set -x
                   PY="$(command -v /ak-root/.venv/bin/python3 || command -v python3)"
                   # wait for Postgres & Redis to be reachable
-                  "$PY" -c 'exec("import os, socket, time, sys\nimport socket as s\n\n\ndef wait(h,p,n):\n    for _ in range(60):\n        sock=s.socket(); sock.settimeout(2)\n        try:\n            sock.connect((h,p)); sock.close(); return\n        except Exception:\n            time.sleep(2)\n    print(f\"failed waiting for {n}\", file=sys.stderr); sys.exit(1)\n\nwait(os.getenv(\"AUTHENTIK_POSTGRESQL__HOST\",\"authentik-db-rw.authentik.svc\"), 5432, \"postgres\")\nwait(os.getenv(\"AUTHENTIK_REDIS__HOST\",\"rfrm-authentik-redis.authentik.svc\"), 6379, \"redis\")")'
+                  "$PY" -c 'exec("import os, socket, time, sys\nimport socket as s\n\n\n\ndef wait(h,p,n, attempts=60, strict=True):\n    for _ in range(attempts):\n        sock=s.socket(); sock.settimeout(2)\n        try:\n            sock.connect((h,p)); sock.close(); return\n        except Exception:\n            time.sleep(2)\n    msg=f\"failed waiting for {n}\"\n    if strict:\n        print(msg, file=sys.stderr); sys.exit(1)\n    else:\n        print(\"WARN:\", msg, file=sys.stderr)\n\n# Strict wait for Postgres (required)\nwait(os.getenv(\"AUTHENTIK_POSTGRESQL__HOST\",\"authentik-db-rw.authentik.svc\"), 5432, \"postgres\", attempts=90, strict=True)\n# Best-effort wait for Redis (non-fatal)\nwait(os.getenv(\"AUTHENTIK_REDIS__HOST\",\"rfrm-authentik-redis.authentik.svc\"), 6379, \"redis\", attempts=30, strict=False)")'
                   # Apply ALL packaged defaults first (safe even if directory is empty)
                   for f in /blueprints/default/*.yaml; do
                     [ -f "$f" ] || continue
@@ -404,6 +404,7 @@ spec:
                     echo "[ak-blueprints] applying $f"
                     "$PY" /manage.py apply_blueprint "$tmp"
                   done
+                  echo "[ak-blueprints] all done"
           volumes:
             - name: user-blueprints
               configMap:
