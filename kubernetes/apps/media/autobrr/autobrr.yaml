@@ -94,7 +94,6 @@ spec:
               readOnlyRootFilesystem: true
               capabilities: {drop: ["ALL"]}
             resources:
-
               requests:
                 cpu: 10m
               limits:
@@ -109,7 +108,7 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
 
     service:
-      autbrr:
+      autobrr:
         controller: autobrr
         ports:
           http:

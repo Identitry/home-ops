@@ -105,6 +105,7 @@ spec:
         runAsGroup: 1000
         fsGroup: 1000
         fsGroupChangePolicy: OnRootMismatch
+
     service:
       prowlarr:
         controller: prowlarr
@@ -112,6 +113,7 @@ spec:
           http:
             port: 9696
             targetPort: http
+
     ingress:
       prowlarr:
         enabled: true
