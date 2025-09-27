@@ -69,10 +69,10 @@ spec:
             envFrom:
               - secretRef:
                   name: autobrr-session-secret
-
             ports:
-              http:
-                port: 7474
+              - name: http
+                containerPort: 7474
+                protocol: TCP
 
             probes:
               liveness: &probes
