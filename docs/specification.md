@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a spcification of everything that should be included in the cluster implementation.
+This is a specification of everything that should be included in the cluster implementation.
 
 ## Good links
 
@@ -116,13 +116,15 @@ Nice hyper-converged stack on top of Talos!
 - Linstor DRDB Operator (Piraeus) - Storage ✅
 - Cert-Manager Operator - Let´s Encrypt/Cloudflare ✅
 - MetalB - Load Balancer ✅
-- Kubevirt Operator - Virtual machines in kubernetes ✅
+- Nginx/HA Proxy - Cache och Http Loadbalancer ✅
+- HA Proxy - TCP Loadbalancer
 - PostgreSQL Operator (CNPG) - Database ✅
 - Maria DB Operator - Database ✅
 - Clickhouse Operator (Altinity) - Database ✅
 - Redis Operator (Spotahome) - Key-Value database ✅
 - Kafka Operator (Strimzi) - Distributed event streaming platform ✅
 - RabbitMQ Operator - Messaging and streaming broker ✅
+- Nats - Messaging
 - Victoria Metrics ✅
 - Grafana Operator (Integreatly) - Data visualization ✅
 - Goldpinger - Debugging tool for Kubernetes ✅
@@ -165,6 +167,7 @@ Public Github site that describes the cluster. ✅
 #### Storage/Networking
 
 - Minio (on nas) For backups. ✅
+- S3 Manager (Del av Cozystack?)
 
 #### Web Publishing
 
@@ -241,6 +244,8 @@ Public Github site that describes the cluster. ✅
 - Frigate
   [Helm Chart](https://github.com/blakeblackshear/blakeshome-charts/tree/master/charts/frigate)
 - NodeRed (currently on HAOS VM)
+- n8n (New, automation against SAASs services with AI Agents)
+  [Helm Chart](https://github.com/8gears/n8n-helm-chart)
 
 #### 3D Printing
 

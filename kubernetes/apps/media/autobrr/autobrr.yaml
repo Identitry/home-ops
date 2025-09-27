@@ -1,0 +1,150 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: autobrr-config
+  namespace: media
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: local
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: se-autobrr-session-secret
+  namespace: media
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: infisical
+  target:
+    name: autobrr-session-secret
+    creationPolicy: Owner
+  data:
+    - secretKey: AUTOBRR__SESSION_SECRET
+      remoteRef:
+        key: /MEDIA/AUTOBRR_SESSION_SECRET
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: autobrr
+  namespace: media
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: cozy-fluxcd
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      autobrr:
+        annotations:
+          reloader.stakater.com/match: wildcard-le-tls-cert,autobrr-session-secret
+        containers:
+          app:
+            image:
+              repository: ghcr.io/autobrr/autobrr
+              tag: v1.66.1@sha256:bf25c5c66cb1b8aa60b83932a1b59d2eb88c45edfeb8714e58e4bd1abeee01d1
+            env:
+              AUTOBRR__HOST: 0.0.0.0
+              AUTOBRR__PORT: 7474
+              AUTOBRR__METRICS_ENABLED: true
+              AUTOBRR__METRICS_HOST: 0.0.0.0
+              AUTOBRR__METRICS_PORT: &metricsPort 9094
+              AUTOBRR__CHECK_FOR_UPDATES: false
+              AUTOBRR__LOG_LEVEL: INFO
+            envFrom:
+              - secretRef:
+                  name: autobrr-session-secret
+
+            ports:
+              - name: http
+                containerPort: 7474
+                protocol: TCP
+
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/healthz/liveness
+                    port: 7474
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: {drop: ["ALL"]}
+            resources:
+
+              requests:
+                cpu: 10m
+              limits:
+                memory: 256Mi
+
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      autbrr:
+        controller: autobrr
+        ports:
+          http:
+            port: 7474
+            targetPort: http
+
+    ingress:
+      autobrr:
+        enabled: true
+        className: tenant-root
+        annotations:
+          external-dns.alpha.kubernetes.io/target: ${CLOUDFLARE_TUNNEL_TARGET}
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+          external-dns.alpha.kubernetes.io/hostname: "a-brr.${DOMAIN}"
+        hosts:
+          - host: a-brr.${DOMAIN}
+            paths:
+              - path: /
+                service:
+                  identifier: autobrr
+                  port: http
+        tls:
+          - hosts:
+              - a-brr.${DOMAIN}
+            secretName: wildcard-le-tls-cert
+
+    persistence:
+      config:
+        existingClaim: autobrr-config
+      tmpfs:
+        type: emptyDir
+        advancedMounts:
+          autobrr:
+            app:
+              - path: /config/log
+                subPath: log
+              - path: /tmp
+                subPath: tmp
