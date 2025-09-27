@@ -71,9 +71,8 @@ spec:
                   name: autobrr-session-secret
 
             ports:
-              - name: http
-                containerPort: 7474
-                protocol: TCP
+              http:
+                port: 7474
 
             probes:
               liveness: &probes
@@ -109,6 +108,7 @@ spec:
 
     service:
       autobrr:
+        enabled: true
         controller: autobrr
         ports:
           http:
