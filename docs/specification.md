@@ -187,6 +187,7 @@ Public Github site that describes the cluster. ✅
 - Recyclarr - Trash Guides best practices sync with Radarr/Sonarr ✅
 - FlareSolverr - Proxy server to bypass Cloudflare and DDoS-GUARD protection ✅
 - QBitTorrent with GlueTun for NordVPN ✅
+- Autobrr - Allows for better seeding ✅
 - Sabnzbd with GlueTun for NordVPN (new)
 
 #### Virtual Machines
