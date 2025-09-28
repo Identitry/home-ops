@@ -214,6 +214,7 @@ Public Github site that describes the cluster. ✅
 #### Development Server
 
 - Code-Server
+  - Atuin client.
   - Helm
   - Talosctl
   - Talm
