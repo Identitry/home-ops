@@ -215,7 +215,6 @@ spec:
       "editable": true,
       "fiscalYearStartMonth": 0,
       "graphTooltip": 0,
-      "id": 135,
       "links": [],
       "panels": [
         {
@@ -431,6 +430,7 @@ spec:
           "pluginVersion": "11.4.0",
           "targets": [
             {
+              "datasource": { "type": "prometheus", "uid": "${ds_prometheus}" },
               "disableTextWrap": false,
               "editorMode": "builder",
               "expr": "ups_battery_runtime{ups=\"$device\"}",
@@ -632,6 +632,7 @@ spec:
           "pluginVersion": "11.4.0",
           "targets": [
             {
+              "datasource": { "type": "prometheus", "uid": "${ds_prometheus}" },
               "disableTextWrap": false,
               "editorMode": "builder",
               "exemplar": false,
@@ -717,7 +718,6 @@ spec:
       "timepicker": {},
       "timezone": "browser",
       "title": "PeaNUT",
-      "uid": "bechwosawz2m8c",
       "version": 4,
       "weekStart": ""
     }
@@ -749,3 +749,18 @@ spec:
       ports:
         - protocol: TCP
           port: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-all
+  namespace: peanut
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - {}
+  egress:
+    - {}
