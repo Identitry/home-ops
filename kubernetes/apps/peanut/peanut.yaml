@@ -207,7 +207,7 @@ spec:
       "panels": [
         {
           "datasource": {
-            "type": "prometheus",
+            "type": "datasource",
             "uid": "grafana"
           },
           "fieldConfig": {
