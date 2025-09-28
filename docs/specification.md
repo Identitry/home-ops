@@ -262,7 +262,8 @@ Public Github site that describes the cluster. ✅
 
 #### Maybe in the future
 
-- Atuin (shell history server) ✅
+- Atuin - Shell history server. ✅
+- Peanut - Network UPS Tools GUI and Prometheus metrics. ✅
 - Immich - Photo management (requires postgres and redis)
   https://github.com/gabe565/home-ops/tree/main/kubernetes/gabernetes/apps/immich
 - Immich Drop - Allows dropping photos easily into Immich.
