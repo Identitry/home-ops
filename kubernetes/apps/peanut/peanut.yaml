@@ -1,0 +1,153 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: peanut
+  labels:
+    app.kubernetes.io/name: peanut
+    app.kubernetes.io/instance: peanut
+    ingress.svc.egress: allow # <--- opt-in label for ingress-controller traffic
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: peanut-config
+  namespace: monitoring
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 128Mi
+  storageClassName: local
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: se-nut-upsmon
+  namespace: peanut
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: infisical
+  target:
+    name: nut-upsmon
+    creationPolicy: Owner
+  data:
+    - secretKey: NUT_UPSMON_USER
+      remoteRef:
+        key: /NUT/UPSMON_USER
+    - secretKey: NUT_UPSMON_PASSWORD
+      remoteRef:
+        key: /NUT/UPSMON_PASSWORD
+    - secretKey: NUT_HOST
+      remoteRef:
+        key: /NUT/HOST
+    - secretKey: NUT_PORT
+      remoteRef:
+        key: /NUT/PORT
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: peanut
+  namespace: peanut
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: cozy-fluxcd
+  install:
+    remediation: { retries: -1 }
+  upgrade:
+    cleanupOnFail: true
+    remediation: { retries: 3 }
+  values:
+    controllers:
+      peanut:
+        annotations:
+          reloader.stakater.com/match: wildcard-le-tls-cert,nut-upsmon
+        containers:
+          app:
+            image:
+              repository: brandawg93/peanut
+              tag: "v5.15.0@sha256:e3d60b03dae785d4fcd24074dd369d96d41ae37df23a3c06f3dcb2777cbb54f3"
+            env:
+              WEB_PORT: "8080"
+              TZ: ${TZ}
+            envFrom:
+              - secretRef:
+                  name: nut-upsmon
+            ports:
+              - name: http
+                containerPort: 8080
+                protocol: TCP
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet: { path: /api/ping, port: 8080 }
+                  periodSeconds: 10
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet: { path: /api/ping, port: 8080 }
+                  periodSeconds: 10
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests: { cpu: 10m }
+              limits: { memory: 256Mi }
+
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+
+    service:
+      peanut:
+        enabled: true
+        controller: peanut
+        annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "8080"
+          prometheus.io/path: "/api/v1/metrics"
+        ports:
+          http:
+            port: 8080
+            targetPort: http
+          metrics:
+            port: 8080
+            targetPort: http
+
+    ingress:
+      peanut:
+        enabled: true
+        className: tenant-root
+        annotations:
+          external-dns.alpha.kubernetes.io/target: ${CLOUDFLARE_TUNNEL_TARGET}
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+          external-dns.alpha.kubernetes.io/hostname: "peanut.${DOMAIN}"
+        hosts:
+          - host: peanut.${DOMAIN}
+            paths:
+              - path: /
+                service:
+                  identifier: peanut
+                  port: http
+        tls:
+          - hosts: [ "peanut.${DOMAIN}" ]
+            secretName: wildcard-le-tls-cert
+
+    persistence:
+      config:
+        existingClaim: peanut-config
