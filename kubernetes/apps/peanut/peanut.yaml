@@ -147,6 +147,7 @@ spec:
           # 4) Skicka med originalinfo så Authentik kan göra korrekta beslut/redirects (rekommenderat)
           nginx.ingress.kubernetes.io/auth-snippet: |
             proxy_set_header X-Original-URL $scheme://$http_host$request_uri;
+            proxy_set_header Host auth.${DOMAIN};
             proxy_set_header X-Original-Method $request_method;
             proxy_set_header X-Original-Host $http_host;
             proxy_set_header X-Forwarded-Uri $request_uri;
