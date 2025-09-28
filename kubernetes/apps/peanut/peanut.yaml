@@ -176,6 +176,7 @@ metadata:
   name: peanut
   namespace: peanut
 spec:
+  allowCrossNamespaceImport: true
   folder: ups
   instanceSelector:
     matchLabels:
