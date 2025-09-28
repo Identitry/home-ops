@@ -12,7 +12,7 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: peanut-config
-  namespace: monitoring
+  namespace: peanut
 spec:
   accessModes: ["ReadWriteOnce"]
   resources:
