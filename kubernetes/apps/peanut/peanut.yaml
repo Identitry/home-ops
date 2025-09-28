@@ -168,8 +168,8 @@ spec:
       interval: 30s
       scheme: http
       honorLabels: false
-
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/grafana-operator/grafana-operator/main/config/crd/bases/grafana.integreatly.org_grafanafolders.yaml
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaFolder
 metadata:
@@ -179,7 +179,7 @@ spec:
   instanceSelector:
     matchLabels:
       dashboards: "grafana"
-  title: "UPS"
+  title: "ups"
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/grafana-operator/grafana-operator/main/config/crd/bases/grafana.integreatly.org_grafanadashboards.yaml
 apiVersion: grafana.integreatly.org/v1beta1
