@@ -169,18 +169,6 @@ spec:
       scheme: http
       honorLabels: false
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/grafana-operator/grafana-operator/main/config/crd/bases/grafana.integreatly.org_grafanafolders.yaml
-apiVersion: grafana.integreatly.org/v1beta1
-kind: GrafanaFolder
-metadata:
-  name: ups
-  namespace: peanut
-spec:
-  instanceSelector:
-    matchLabels:
-      dashboards: "grafana"
-  title: "ups"
----
 # yaml-language-server: $schema=https://raw.githubusercontent.com/grafana-operator/grafana-operator/main/config/crd/bases/grafana.integreatly.org_grafanadashboards.yaml
 apiVersion: grafana.integreatly.org/v1beta1
 kind: GrafanaDashboard
@@ -188,12 +176,10 @@ metadata:
   name: peanut
   namespace: peanut
 spec:
-  folderRef: ups
+  folder: ups
   instanceSelector:
     matchLabels:
       dashboards: grafana
-  # Välj ETT av alternativen nedan:
-  # 1) Lägg JSON i 'json' direkt (klipp/klistra från repo)
   json: |
     {
       "annotations": {
