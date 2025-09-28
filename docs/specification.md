@@ -127,7 +127,7 @@ Nice hyper-converged stack on top of Talos!
 - Nats - Messaging
 - Victoria Metrics ✅
 - Grafana Operator (Integreatly) - Data visualization ✅
-- Goldpinger - Debugging tool for Kubernetes ✅
+- Goldpinger - Debugging tool for Kubernetes, cluster internal network ✅
 - External Secrets Operator - Not being updated in CozyStack, installed separately.
 - External DNS Operator - Not being updated in CozyStack, installed separately.
 - Nginx proxy ✅
