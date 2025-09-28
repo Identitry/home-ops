@@ -164,7 +164,7 @@ spec:
               - name: dns-tcp
                 containerPort: 53
                 protocol: TCP
-              - name: doh
+              - name: http
                 containerPort: 443
                 protocol: TCP
               - name: dot
@@ -196,7 +196,7 @@ spec:
           dns-tcp:
             port: 53
             protocol: TCP
-          doh:
+          http:
             port: 443
             protocol: TCP
           dot:
@@ -227,10 +227,13 @@ spec:
             paths:
               - path: /
                 pathType: Prefix
+                service:
+                  port: http
         tls:
           - hosts:
               - blocky.${DOMAIN}
             secretName: wildcard-le-tls-cert
+
       blocky-doh:
         className: tenant-root
         annotations:
@@ -243,7 +246,7 @@ spec:
               - path: /dns-query
                 pathType: Prefix
                 service:
-                  port: doh
+                  port: http
         tls:
           - hosts:
               - doh.${DOMAIN}
