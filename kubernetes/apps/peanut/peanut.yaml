@@ -740,6 +740,12 @@ spec:
           podSelector:
             matchLabels:
               app.kubernetes.io/name: vmagent
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tenant-root
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: ingress-nginx
       ports:
         - protocol: TCP
           port: 8080
