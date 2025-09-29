@@ -263,24 +263,23 @@ Public Github site that describes the cluster. ✅
 
 #### Maybe in the future
 
-- Atuin - Shell history server. ✅
-- Peanut - Network UPS Tools GUI and Prometheus metrics. ✅
 - Immich - Photo management (requires postgres and redis)
   https://github.com/gabe565/home-ops/tree/main/kubernetes/gabernetes/apps/immich
 - Immich Drop - Allows dropping photos easily into Immich.
 - Streamio Server (https://github.com/tsaridas/stremio-docker) + MediaFusion (Debrid support) + GlueTun
 - Gatus - Uptime monitoring
-- Paperless-ngx - Dokumenthantering
+- Paperless-ngx - document management
 - Headscale - Local implementation of Tailscale
   https://github.com/gabe565/home-ops/tree/main/kubernetes/gabernetes/apps/paperless-ngx
 - Gaseous Server - Old games (ROMS) in the browser
-- Invidious - YouTube UI - no adds
-- Brave (https://github.com/linuxserver/docker-brave) - Browser with ad blocking and privacy in mind
+- Invidious - YouTube UI - no adds - Will I need this, Brave is good enough???
+- Brave + VPN (https://github.com/linuxserver/docker-brave) - Browser with ad blocking and privacy in mind
 - Vaultwarden
 - Guacamole
-- TDArr (transcoding)
-- Autobrr (Allows for more seeding quota)
+- TDArr (transcoding , could save a lot of diskspace for media library)
   https://github.com/onedr0p/home-ops/tree/main/kubernetes/apps/default/autobrr
 - Unpackerr
 - exportarr - exports metrics for Sonarr, Radarr, Lidarr, Prowlarr, Readarr, Bazarr and Sabnzbd
+- Atuin - Shell history server. ✅
+- Peanut - Network UPS Tools GUI and Prometheus metrics. ✅
 - ...more to come
