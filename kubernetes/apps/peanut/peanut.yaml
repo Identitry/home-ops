@@ -73,7 +73,8 @@ spec:
           app:
             image:
               repository: brandawg93/peanut
-              tag: "v5.15.0@sha256:e3d60b03dae785d4fcd24074dd369d96d41ae37df23a3c06f3dcb2777cbb54f3"
+              tag: "5.15.0"
+              digest: "sha256:c0ff0632f0a00292243f874b46ea1fdd98072c53434ab8ed84bd681eb95c8b62"
             env:
               WEB_PORT: "8080"
               TZ: ${TZ}
