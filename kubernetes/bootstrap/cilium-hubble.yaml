@@ -27,16 +27,15 @@ spec:
         enabled: true
         relay:
           enabled: true
-          peerService:
-            clusterDomain: cozy.local
-            name: hubble-peer
-            namespace: cozy-cilium
-            port: 443
-            targetPort: 4244
-            selector:
-              k8s-app: cilium
-          extraArgs:
-            - --peer-service=hubble-peer.cozy-cilium.svc.cozy.local:443
+        peerService:
+          enabled: true
+          clusterDomain: cozy.local
+          name: hubble-peer
+          namespace: cozy-cilium
+          port: 443
+          targetPort: 4244
+          selector:
+            k8s-app: cilium
         ui:
           enabled: true
           ingress:
