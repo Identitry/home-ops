@@ -32,6 +32,9 @@ spec:
             name: hubble-peer
             namespace: cozy-cilium
             port: 443
+            targetPort: 4244
+            selector:
+              k8s-app: cilium
         ui:
           enabled: true
           ingress:
