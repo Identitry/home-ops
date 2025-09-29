@@ -167,7 +167,7 @@ Public Github site that describes the cluster. ✅
 #### Storage/Networking
 
 - Minio (on nas) For backups. ✅
-- S3 Manager (Del av Cozystack?)
+- S3 Manager (Part of Cozystack, needed when Minio has a Gui?)
 
 #### Web Publishing
 
@@ -192,7 +192,7 @@ Public Github site that describes the cluster. ✅
 
 #### Virtual Machines
 
-- Kubevirt Manager (https://github.com/kubevirt-manager) -Will I need this?
+- Kubevirt Manager (https://github.com/kubevirt-manager) - Will I need this?
 
 #### PXE Boot
 
