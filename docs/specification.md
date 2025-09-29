@@ -222,6 +222,7 @@ Public Github site that describes the cluster. ✅
   - VirtCtl
   - etcdctl
   - Flux CLI
+  - Cilium CLI
   - VSCode GitOps VSCode extension
   - Git
   - VSCode Yaml Extension
@@ -282,4 +283,5 @@ Public Github site that describes the cluster. ✅
 - exportarr - exports metrics for Sonarr, Radarr, Lidarr, Prowlarr, Readarr, Bazarr and Sabnzbd
 - Atuin - Shell history server. ✅
 - Peanut - Network UPS Tools GUI and Prometheus metrics. ✅
+- Cilium Hubble - Cilium Network Policy observation. ✅
 - ...more to come
