@@ -35,6 +35,8 @@ spec:
             targetPort: 4244
             selector:
               k8s-app: cilium
+          extraArgs:
+            - --peer-service=hubble-peer.cozy-cilium.svc.cozy.local:443
         ui:
           enabled: true
           ingress:
