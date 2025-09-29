@@ -82,3 +82,59 @@ spec:
     ports:
     - protocol: TCP
       port: 8081
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: hubble-ui-egress-relay-dns
+  namespace: cozy-cilium
+spec:
+  podSelector:
+    matchLabels:
+      k8s-app: hubble-ui
+  policyTypes: ["Egress"]
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: cozy-cilium
+      podSelector:
+        matchLabels:
+          k8s-app: hubble-relay
+    ports:
+    - protocol: TCP
+      port: 4245
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns   # (byt till app.kubernetes.io/name: coredns om du använder det)
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: hubble-relay-egress-peers
+  namespace: cozy-cilium
+spec:
+  podSelector:
+    matchLabels:
+      k8s-app: hubble-relay
+  policyTypes: ["Egress"]
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: cozy-cilium
+      podSelector:
+        matchLabels:
+          k8s-app: cilium
+    ports:
+    - protocol: TCP
+      port: 4244

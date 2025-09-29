@@ -35,8 +35,8 @@ spec:
     annotations:
       reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
       reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
-      reflector.v1.k8s.emberstack.com/allowed-namespaces: "media, blocky, authentik, atuin, peanut"
-      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "media, blocky, authentik, atuin, peanut"
+      reflector.v1.k8s.emberstack.com/allowed-namespaces: "media, blocky, authentik, atuin, peanut, cozy-cilium"
+      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "media, blocky, authentik, atuin, peanut, cozy-cilium"
   issuerRef:
     name: letsencrypt-prod
     kind: ClusterIssuer
