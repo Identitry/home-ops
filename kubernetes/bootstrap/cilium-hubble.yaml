@@ -27,6 +27,11 @@ spec:
         enabled: true
         relay:
           enabled: true
+          peerService:
+            clusterDomain: cozy.local
+            name: hubble-peer
+            namespace: cozy-cilium
+            port: 443
         ui:
           enabled: true
           ingress:
