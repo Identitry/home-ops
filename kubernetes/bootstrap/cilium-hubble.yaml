@@ -1,4 +1,6 @@
+---
 # kubernetes/overlays/cilium-hubble/helmrelease-patch.yaml
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd/flux2/main/docs/spec/v1beta2/helmrelease-helmrelease.yaml
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
