@@ -167,7 +167,6 @@ spec:
     ports:
     - protocol: TCP
       port: 8081
-
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -192,3 +191,24 @@ spec:
       port: 53
     - protocol: TCP
       port: 53
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: hubble-relay-temp-egress-open
+  namespace: cozy-cilium
+spec:
+  podSelector:
+    matchLabels:
+      k8s-app: hubble-relay
+  policyTypes: ["Egress"]
+  egress:
+  - to:
+    - ipBlock: { cidr: 10.96.0.0/12 }     # Service CIDR
+    - ipBlock: { cidr: 10.244.0.0/16 }    # Pod CIDR (anpassa vid behov)
+    - ipBlock: { cidr: 192.168.222.0/24 } # Node CIDR (där hubble-peers lyssnar på :4244)
+    ports:
+    - { protocol: TCP, port: 443 }
+    - { protocol: TCP, port: 4244 }
+    - { protocol: UDP, port: 53 }
+    - { protocol: TCP, port: 53 }
