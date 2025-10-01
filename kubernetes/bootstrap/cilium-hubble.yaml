@@ -139,40 +139,45 @@ spec:
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
-  name: hubble-relay-egress-allow
+  name: hubble-relay-egress
   namespace: cozy-cilium
 spec:
   endpointSelector:
     matchLabels:
       k8s-app: hubble-relay
   egress:
-  # 1) Till Hubble-peers via Service-namnet (Cilium expanderar till rätt endpoints)
-  - toServices:
-    - k8sService:
-        namespace: cozy-cilium
-        serviceName: hubble-peer
-    toPorts:
-    - ports:
-      - port: "443"
-        protocol: TCP
-
-  # 2) DNS till CoreDNS
-  - toEndpoints:
-    - matchLabels:
-        k8s-app: kube-dns   # eller app.kubernetes.io/name: coredns om det är din label
-        io.kubernetes.pod.namespace: kube-system
-    toPorts:
-    - ports:
-      - port: "53"
-        protocol: UDP
-      - port: "53"
-        protocol: TCP
-
-  # 3) (Valfritt, men praktiskt om relay hoppar direkt till node-peers)
-  - toEntities:
-    - remote-node
-    toPorts:
-    - ports:
-      - port: "4244"
-        protocol: TCP
-
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: cilium
+      toPorts:
+        - ports:
+            - port: "4244"
+              protocol: TCP
+    - toEndpoints:
+        - matchLabels:
+            k8s-app: kube-dns
+      toPorts:
+        - ports:
+            - port: "53"
+              protocol: ANY
+          rules:
+            dns:
+              - matchPattern: "*"
+---
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: hubble-relay-ingress
+  namespace: cozy-cilium
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s-app: hubble-relay
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s-app: hubble-ui
+      toPorts:
+        - ports:
+            - port: "4245"
+              protocol: TCP
