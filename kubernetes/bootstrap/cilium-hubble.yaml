@@ -30,7 +30,6 @@ spec:
           extraArgs:
             - --peer=192.168.222.21:4244
             - --peer=192.168.222.22:4244
-            - --peer-service=hubble-peer.cozy-cilium.svc.cozy.local:443
           config:
             peer:
               - "192.168.222.21:4244"
