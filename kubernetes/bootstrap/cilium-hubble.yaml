@@ -34,8 +34,8 @@ spec:
             peer:
               - "192.168.222.21:4244"
               - "192.168.222.22:4244"
-        peerService:
-          enabled: false
+          peerService:
+            enabled: false
         ui:
           enabled: true
           ingress:
