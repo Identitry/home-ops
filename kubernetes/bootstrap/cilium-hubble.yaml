@@ -27,6 +27,9 @@ spec:
         enabled: true
         relay:
           enabled: true
+          extraArgs:
+            - --peer=192.168.222.21:4244
+            - --peer=192.168.222.22:4244
         peerService:
           enabled: true
           clusterDomain: cozy.local
