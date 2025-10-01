@@ -175,3 +175,37 @@ spec:
     - ports:
       - port: "4244"
         protocol: TCP
+
+# New NetworkPolicy for hubble-relay egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: hubble-relay-egress-allow-knp
+  namespace: cozy-cilium
+spec:
+  podSelector:
+    matchLabels:
+      k8s-app: hubble-relay
+  policyTypes: ["Egress"]
+  egress:
+  # 1) Allow egress from hubble-relay to the hubble-peer ServiceIP:443
+  - to:
+    - ipBlock:
+        cidr: 10.96.86.174/32   # ServiceIP for cozy-cilium/hubble-peer
+    ports:
+    - protocol: TCP
+      port: 443
+  # 2) Allow DNS to CoreDNS in kube-system
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - protocol: UDP
+      port: 53
+    - protocol: TCP
+      port: 53
