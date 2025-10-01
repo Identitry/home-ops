@@ -36,7 +36,7 @@ spec:
               - "192.168.222.21:4244"
               - "192.168.222.22:4244"
         peerService:
-          enabled: true
+          enabled: false
           clusterDomain: cozy.local
           name: hubble-peer
           namespace: cozy-cilium
