@@ -30,12 +30,13 @@ spec:
           extraArgs:
             - --peer=192.168.222.21:4244
             - --peer=192.168.222.22:4244
+            - --peer-service=hubble-peer.cozy-cilium.svc.cozy.local:443
           config:
             peer:
               - "192.168.222.21:4244"
               - "192.168.222.22:4244"
         peerService:
-          enabled: false
+          enabled: true
           clusterDomain: cozy.local
           name: hubble-peer
           namespace: cozy-cilium
@@ -171,6 +172,20 @@ spec:
           rules:
             dns:
               - matchPattern: "*"
+    - toServices:
+        - k8sService:
+            namespace: cozy-cilium
+            serviceName: hubble-peer
+      toPorts:
+        - ports:
+            - port: "443"
+              protocol: TCP
+    - toEntities:
+        - remote-node
+      toPorts:
+        - ports:
+            - port: "4244"
+              protocol: TCP
 ---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
