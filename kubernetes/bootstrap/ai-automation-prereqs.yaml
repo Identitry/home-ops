@@ -50,6 +50,8 @@ spec:
 
   bootstrap:
     initdb:
+      database: n8n
+      owner: cnpgs
       secret:
         name: ai-automation-db-creds
 
