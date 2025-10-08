@@ -33,6 +33,9 @@ spec:
     - secretKey: encryption_key
       remoteRef:
         key: /AI_AUTOMATION/N8N_ENCRYPTION_KEY
+    - secretKey: license_key
+      remoteRef:
+        key: /AI_AUTOMATION/N8N_LICENSE_KEY
 ---
 # CNPG Database resource for n8n
 #apiVersion: postgresql.cnpg.io/v1
@@ -127,6 +130,11 @@ spec:
           encryption_key:
             existingSecret: n8n-config
             existingSecretKey: encryption_key
+          license:
+            activation:
+              key:
+                existingSecret: n8n-config
+                existingSecretKey: license_key
           db:
             postgresdb:
               password:
