@@ -99,7 +99,7 @@ spec:
     image:
       repository: n8nio/n8n
       pullPolicy: IfNotPresent
-      tag: 1.112.0@sha256:b2394f13f21d9271856040c7bbb15d1bdc55214fe93d65bba22e9b2ca313f614
+      tag: 1.115.1@sha256:ed16e560c40e6d214250cdd41cdfef0fe9774da45f0cbc8adbb8b6b61f3ceb0f
 
     main:
       config:
