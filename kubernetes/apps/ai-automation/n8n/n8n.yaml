@@ -131,6 +131,7 @@ spec:
               password:
                 existingSecret: ai-automation-db-creds
                 existingSecretKey: password
+
       persistence:
         enabled: true
         type: existing
@@ -138,6 +139,7 @@ spec:
         accessModes:
           - ReadWriteOnce
         size: 5Gi
+
       service:
         type: ClusterIP
         port: 80
