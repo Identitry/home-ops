@@ -102,6 +102,8 @@ spec:
       tag: 1.112.0@sha256:b8fb987922fe88b36e70ef85db8ba884d29859c5bd70eb1e3a8e5598a26bfab9
 
     env:
+      N8N_PORT: "5678"
+      N8N_PROTOCOL: http
       N8N_ENCRYPTION_KEY:
         valueFrom:
           secretKeyRef:
