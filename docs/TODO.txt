@@ -1,0 +1,20 @@
+TODO:
+- Skapa Authentik instans (Redis, Postgres, Authentik) ☑️
+   - Byt SecretID ✅
+   - Lägg till appar på ett smidigt sätt ✅
+   - Konfigurera upp Entra (Google och annat?)
+- Sätt upp Atuin (Utan Auth) ✅
+- Konfigurera alla applikationer att använda Authentik. ✅
+- Riv CF Autentisering ❌ - Skippar detta, behövs fortfarande för vissa applikationer.
+- Flytta noder till förrådet (töm optiplex på Wifi-kort+antenn). ✅
+- Se till att Atuin fungerar. ✅
+- Ta tag i Backup av allt
+
+- Nya applikationer
+   - Sabnzbd with GlueTun
+   - Immich + Immich Drop
+   - Streamio
+   - Gatus
+   - n8n
+   - Headscale
+   - Paperless-ngx

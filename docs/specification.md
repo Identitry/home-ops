@@ -237,6 +237,20 @@ Public Github site that describes the cluster. ✅
 - Blocky Grafana Postgres Datasource ✅
 - Blocky Grafana Dashboards ✅
 
+#### AI Workflow/Automation engine
+- n8n - Automation against different services with workflow and AI Agents
+  [Helm Chart](https://github.com/8gears/n8n-helm-chart)
+- nocodb - Postgres backed simple database for use with n8n
+- qdrant operator - vector database
+- graphiti - GraphRAG, requires FalkorDB (redis variant)
+- knative - Environment For spinning up serverless MCP server pods on demand.
+
+##### MCP Servers
+- nocodb
+- qdrant
+- graphiti
+- Apple Find My - Create own service based on FindMy.py (https://github.com/malmeloo/FindMy.py)
+
 #### Home Automation
 
 - Home Assistant OS (kubevirt) - Virtual Machine - currently on truenas-stor.
@@ -247,8 +261,6 @@ Public Github site that describes the cluster. ✅
 - Frigate
   [Helm Chart](https://github.com/blakeblackshear/blakeshome-charts/tree/master/charts/frigate)
 - NodeRed (currently on HAOS VM)
-- n8n (New, automation against SAASs services with AI Agents)
-  [Helm Chart](https://github.com/8gears/n8n-helm-chart)
 
 #### 3D Printing
 
@@ -281,6 +293,8 @@ Public Github site that describes the cluster. ✅
   https://github.com/onedr0p/home-ops/tree/main/kubernetes/apps/default/autobrr
 - Unpackerr
 - exportarr - exports metrics for Sonarr, Radarr, Lidarr, Prowlarr, Readarr, Bazarr and Sabnzbd
+- mathesar - Fantastic Postgres UI
+  https://github.com/mathesar-foundation/mathesar
 - Atuin - Shell history server. ✅
 - Peanut - Network UPS Tools GUI and Prometheus metrics. ✅
 - Cilium Hubble - Cilium Network Policy observation. ✅
