@@ -75,6 +75,30 @@ spec:
             matchLabels:
               kubernetes.io/metadata.name: tenant-root
 ---
+# NetworkPolicy: allow ingress from CNPG operator
+# Purpose: Allow CNPG operator to monitor and manage PostgreSQL pods
+# Required for: status extraction, metrics collection, cluster management
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-from-cnpg-operator
+  namespace: ai-automation
+spec:
+  podSelector:
+    matchLabels:
+      cnpg.io/cluster: ai-automation
+  policyTypes: ["Ingress"]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: cozy-postgres-operator
+      ports:
+        - protocol: TCP
+          port: 8000
+        - protocol: TCP
+          port: 5432
+---
 # NetworkPolicy: allow DNS egress to CoreDNS (kube-system/kube-dns).
 # Purpose: Service discovery and resolving cluster.local names.
 # Ports: TCP/UDP 53 only; adjust if you change CoreDNS service/labels.
