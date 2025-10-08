@@ -11,28 +11,6 @@ spec:
   url: https://8gears.container-registry.com/chartrepo/library
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/external-secrets/refs/heads/main/config/crds/bases/external-secrets.io_externalsecrets.yaml
-# CNPG database credentials for n8n
-apiVersion: external-secrets.io/v1
-kind: ExternalSecret
-metadata:
-  name: es-n8n-db-creds
-  namespace: ai-automation
-spec:
-  secretStoreRef:
-    kind: ClusterSecretStore
-    name: infisical
-  target:
-    name: n8n-db-creds
-    creationPolicy: Owner
-  data:
-    - secretKey: username
-      remoteRef:
-        key: /AI_AUTOMATION/N8N_CNPG_USERNAME
-    - secretKey: password
-      remoteRef:
-        key: /AI_AUTOMATION/N8N_CNPG_PASSWORD
----
-# yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/external-secrets/refs/heads/main/config/crds/bases/external-secrets.io_externalsecrets.yaml
 # n8n application secrets (encryption key, etc.)
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
@@ -51,7 +29,6 @@ spec:
       remoteRef:
         key: /AI_AUTOMATION/N8N_ENCRYPTION_KEY
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/main/config/crd/bases/postgresql.cnpg.io_databases.yaml
 # CNPG Database resource for n8n
 apiVersion: postgresql.cnpg.io/v1
 kind: Database
@@ -62,10 +39,8 @@ spec:
   cluster:
     name: ai-automation
   name: n8n
-  owner: n8n
+  owner: cnpg
   ensure: present
-  secretRef:
-    name: n8n-db-creds
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/spotahome/redis-operator/refs/heads/master/manifests/databases.spotahome.com_redisfailovers.yaml
 # RedisFailover for n8n, used for caching and queue management
@@ -119,7 +94,7 @@ spec:
       type: Recreate
 
     deploymentAnnotations:
-      secret.reloader.stakater.com/reload: n8n-db-creds,n8n-config,wildcard-le-tls-cert
+      secret.reloader.stakater.com/reload: ai-automation-db-creds,n8n-config,wildcard-le-tls-cert
 
     image:
       repository: n8nio/n8n
@@ -138,7 +113,7 @@ spec:
           host: ai-automation-rw.ai-automation.svc.cozy.local
           port: 5432
           database: n8n
-          user: n8n
+          user: cnpg
       encryptionKey:
         existingSecret: n8n-config
         existingSecretKey: encryption_key
@@ -152,7 +127,7 @@ spec:
       database:
         postgresdb:
           password:
-            existingSecret: n8n-db-creds
+            existingSecret: ai-automation-db-creds
             existingSecretKey: password
 
     persistence:

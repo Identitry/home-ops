@@ -10,26 +10,26 @@ metadata:
     ingress.svc.egress: allow # <--- opt-in label for ingress-controller traffic
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/external-secrets/refs/heads/main/config/crds/bases/external-secrets.io_externalsecrets.yaml
-# CNPG initdb credentials for ai-automation cluster
+# CNPG database credentials for ai-automation cluster (shared by all apps)
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: es-ai-automation-initdb-creds
+  name: es-ai-automation-db-creds
   namespace: ai-automation
 spec:
   secretStoreRef:
     kind: ClusterSecretStore
     name: infisical
   target:
-    name: ai-automation-initdb-creds
+    name: ai-automation-db-creds
     creationPolicy: Owner
   data:
     - secretKey: username
       remoteRef:
-        key: /AI_AUTOMATION/CNPG_INITDB_USERNAME
+        key: /AI_AUTOMATION/CNPG_USERNAME
     - secretKey: password
       remoteRef:
-        key: /AI_AUTOMATION/CNPG_INITDB_PASSWORD
+        key: /AI_AUTOMATION/CNPG_PASSWORD
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/main/config/crd/bases/postgresql.cnpg.io_clusters.yaml
 # CloudNativePG Cluster for AI Automation namespace (empty init, no app databases yet)
@@ -51,7 +51,7 @@ spec:
   bootstrap:
     initdb:
       secret:
-        name: ai-automation-initdb-creds
+        name: ai-automation-db-creds
 
   monitoring:
     enablePodMonitor: true
