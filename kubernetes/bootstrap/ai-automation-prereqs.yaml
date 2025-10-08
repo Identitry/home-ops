@@ -1,0 +1,139 @@
+---
+# Namespace for AI Automation
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ai-automation
+  labels:
+    app.kubernetes.io/name: ai-automation
+    app.kubernetes.io/instance: ai-automation
+    ingress.svc.egress: allow # <--- opt-in label for ingress-controller traffic
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/external-secrets/refs/heads/main/config/crds/bases/external-secrets.io_externalsecrets.yaml
+# CNPG database credentials for ai-automation cluster (shared by all apps)
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: es-ai-automation-db-creds
+  namespace: ai-automation
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: infisical
+  target:
+    name: ai-automation-db-creds
+    creationPolicy: Owner
+  data:
+    - secretKey: username
+      remoteRef:
+        key: /AI_AUTOMATION/CNPG_USERNAME
+    - secretKey: password
+      remoteRef:
+        key: /AI_AUTOMATION/CNPG_PASSWORD
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/main/config/crd/bases/postgresql.cnpg.io_clusters.yaml
+# CloudNativePG Cluster for AI Automation namespace (empty init, no app databases yet)
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: ai-automation
+  namespace: ai-automation
+spec:
+  instances: 2
+  affinity:
+    enablePodAntiAffinity: true
+    topologyKey: kubernetes.io/hostname
+    podAntiAffinityType: preferred
+
+  storage:
+    size: 10Gi
+
+  bootstrap:
+    initdb:
+      database: n8n
+      owner: ai-automation-cnpg
+      secret:
+        name: ai-automation-db-creds
+
+  monitoring:
+    enablePodMonitor: true
+---
+# NetworkPolicy: allow ingress from the tenant-root namespace (Ingress controller lives there).
+# Purpose: Let ingress controller reach any app Service/Pod in the ai-automation namespace on any port.
+# Notes: Ingress traffic originates from pods in the `tenant-root` namespace.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-from-tenant-root
+  namespace: ai-automation
+spec:
+  podSelector: {}
+  policyTypes: ["Ingress"]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: tenant-root
+---
+# NetworkPolicy: allow DNS egress to CoreDNS (kube-system/kube-dns).
+# Purpose: Service discovery and resolving cluster.local names.
+# Ports: TCP/UDP 53 only; adjust if you change CoreDNS service/labels.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns-egress-namespace
+  namespace: ai-automation
+spec:
+  podSelector: {} # all pods in 'ai-automation'
+  policyTypes: ["Egress"]
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+---
+# NetworkPolicy: allow HTTPS egress to the Internet for all ai-automation pods.
+# Purpose: Let apps fetch data/APIs over TLS (TCP/443).
+# Note: HTTP (TCP/80) is intentionally blocked; add a separate rule if needed.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-https-egress-namespace
+  namespace: ai-automation
+spec:
+  podSelector: {}
+  policyTypes: ["Egress"]
+  egress:
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+      ports:
+        - protocol: TCP
+          port: 443
+---
+# NetworkPolicy: allow all intra-namespace traffic for ai-automation (Ingress+Egress).
+# Purpose: Apps in the ai-automation namespace can freely communicate with each other on any port.
+# Rationale: AI automation apps often integrate bi-directionally (n8n, nocodb, qdrant, etc.).
+# Scope: Only within the same namespace.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-intra-namespace-all
+  namespace: ai-automation
+spec:
+  podSelector: {}
+  policyTypes: ["Ingress", "Egress"]
+  ingress:
+    - from:
+        - podSelector: {} # any pod in the same namespace
+  egress:
+    - to:
+        - podSelector: {} # any pod in the same namespace
