@@ -104,6 +104,7 @@ spec:
     main:
       config:
         n8n:
+          port: 5678
           executions:
             pruneData: true
             pruneDataMaxAge: 336
