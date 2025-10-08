@@ -80,15 +80,10 @@ metadata:
   name: n8n
   namespace: ai-automation
 spec:
-  chart:
-    spec:
-      chart: n8n
-      version: 1.0.15
-      reconcileStrategy: ChartVersion
-      sourceRef:
-        kind: HelmRepository
-        namespace: ai-automation
-        name: n8n
+  chartRef:
+    kind: OCIRepository
+    name: n8n
+    namespace: cozy-fluxcd
   interval: 1h
   driftDetection:
     mode: enabled
