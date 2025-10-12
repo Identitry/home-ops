@@ -117,18 +117,15 @@ spec:
             probes:
               liveness:
                 enabled: true
-                type: HTTP
-                path: /healthz
+                type: TCP
                 port: http
               readiness:
                 enabled: true
-                type: HTTP
-                path: /healthz
+                type: TCP
                 port: http
               startup:
                 enabled: true
-                type: HTTP
-                path: /healthz
+                type: TCP
                 port: http
                 spec:
                   failureThreshold: 30
