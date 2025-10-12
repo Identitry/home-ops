@@ -72,7 +72,7 @@ spec:
               pullPolicy: IfNotPresent
             env:
               TZ: ${TZ}
-              FLIXIO_API_URL: http://streamio-flixio.media.svc.cluster.local:7000
+              FLIXIO_API_URL: http://streamio-flixio.media.svc.cluster.local:8080
             ports:
               - name: http
                 containerPort: 8080
@@ -112,7 +112,7 @@ spec:
               TZ: ${TZ}
             ports:
               - name: http
-                containerPort: 7000
+                containerPort: 8080
                 protocol: TCP
             probes:
               liveness:
@@ -335,17 +335,17 @@ spec:
               liveness:
                 enabled: true
                 type: HTTP
-                path: /healthz
+                path: /
                 port: http
               readiness:
                 enabled: true
                 type: HTTP
-                path: /healthz
+                path: /
                 port: http
               startup:
                 enabled: true
                 type: HTTP
-                path: /healthz
+                path: /
                 port: http
                 spec:
                   failureThreshold: 60
@@ -373,7 +373,7 @@ spec:
         controller: streamio-flixio
         ports:
           http:
-            port: 7000
+            port: 8080
             targetPort: http
       streamio-server:
         controller: streamio-server
