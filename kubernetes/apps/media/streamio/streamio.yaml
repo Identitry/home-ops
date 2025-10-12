@@ -23,6 +23,18 @@ spec:
       storage: 1Gi
   storageClassName: local
 ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: streamio-flixio-data
+  namespace: media
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: local
+---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -47,6 +59,11 @@ spec:
       streamio-web:
         annotations:
           reloader.stakater.com/match: wildcard-le-tls-cert
+        pod:
+          securityContext:
+            runAsNonRoot: false
+            runAsUser: 0
+            runAsGroup: 0
         containers:
           app:
             image:
@@ -81,7 +98,7 @@ spec:
                   periodSeconds: 5
             securityContext:
               allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
+              readOnlyRootFilesystem: false
               capabilities:
                 drop: ["ALL"]
       streamio-flixio:
@@ -261,7 +278,7 @@ spec:
               VPN_TYPE: wireguard
               HEALTH_VPN_DURATION_INITIAL: 120s
               HEALTH_SUCCESS_WAIT_DURATION: 120s
-              FIREWALL_INPUT_PORTS: "7001"
+              FIREWALL_INPUT_PORTS: "3000"
               TZ: ${TZ}
               VERSION_INFORMATION: "off"
               BLOCK_MALICIOUS: "off"
@@ -312,7 +329,7 @@ spec:
               TZ: ${TZ}
             ports:
               - name: http
-                containerPort: 7001
+                containerPort: 3000
                 protocol: TCP
             probes:
               liveness:
@@ -368,7 +385,7 @@ spec:
         controller: aiostreams
         ports:
           http:
-            port: 7001
+            port: 3000
             targetPort: http
     ingress:
       streamio-web:
@@ -412,6 +429,12 @@ spec:
             app:
               - path: /media
                 readOnly: true
+      streamio-flixio-data:
+        existingClaim: streamio-flixio-data
+        advancedMounts:
+          streamio-flixio:
+            app:
+              - path: /app/data
       aiostreams-config:
         existingClaim: aiostreams-config
         advancedMounts:
