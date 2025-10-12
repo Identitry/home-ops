@@ -124,7 +124,7 @@ Nice hyper-converged stack on top of Talos!
 - Redis Operator (Spotahome) - Key-Value database ✅
 - Kafka Operator (Strimzi) - Distributed event streaming platform ✅
 - RabbitMQ Operator - Messaging and streaming broker ✅
-- Nats - Messaging
+- Nats - Messaging ✅
 - Victoria Metrics ✅
 - Grafana Operator (Integreatly) - Data visualization ✅
 - Goldpinger - Debugging tool for Kubernetes, cluster internal network ✅
@@ -189,6 +189,9 @@ Public Github site that describes the cluster. ✅
 - QBitTorrent with GlueTun for NordVPN ✅
 - Autobrr - Allows for better seeding ✅
 - Sabnzbd with GlueTun for NordVPN (new)
+- Streamio Web + Flixio
+- Streamio Server (behind GlueTun/NordVPN)
+- AIOStreams (behind GlueTun/NordVPN)
 
 #### Virtual Machines
 
@@ -238,7 +241,7 @@ Public Github site that describes the cluster. ✅
 - Blocky Grafana Dashboards ✅
 
 #### AI Workflow/Automation engine
-- n8n - Automation against different services with workflow and AI Agents
+- n8n - Automation against different services with workflow and AI Agents ✅
   [Helm Chart](https://github.com/8gears/n8n-helm-chart)
 - nocodb - Postgres backed simple database for use with n8n
 - qdrant operator - vector database
@@ -250,6 +253,7 @@ Public Github site that describes the cluster. ✅
 - qdrant
 - graphiti
 - Apple Find My - Create own service based on FindMy.py (https://github.com/malmeloo/FindMy.py)
+- SL - Create own service
 
 #### Home Automation
 
