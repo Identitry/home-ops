@@ -116,20 +116,11 @@ spec:
                 protocol: TCP
             probes:
               liveness:
-                enabled: true
-                type: TCP
-                port: http
+                enabled: false
               readiness:
-                enabled: true
-                type: TCP
-                port: http
+                enabled: false
               startup:
-                enabled: true
-                type: TCP
-                port: http
-                spec:
-                  failureThreshold: 30
-                  periodSeconds: 5
+                enabled: false
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
