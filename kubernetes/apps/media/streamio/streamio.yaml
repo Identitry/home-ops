@@ -96,14 +96,12 @@ spec:
               pullPolicy: IfNotPresent
             env:
               TZ: ${TZ}
-              SERVER_URL: http://streamio-server.media.svc:11470
+              SERVER_URL: http://streamio-streamio-server.media.svc.cozy.local:11470
               AUTO_SERVER_URL: 0
-              API_ENDPOINT: http://streamio-flixio.media.svc:8080
-              #FLIXIO_API_URL: http://streamio-flixio.media.svc:8080
+              API_ENDPOINT: http://streamio-streamio-flixio.media.svc.cozy.local:8080
             envFrom:
               - secretRef:
                   name: stremio
-
             ports:
               - name: http
                 containerPort: 8080
