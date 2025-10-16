@@ -28,7 +28,7 @@ spec:
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: se-sonarr-api-key
+  name: es-sonarr-api-key
   namespace: media
 spec:
   secretStoreRef:

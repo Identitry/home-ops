@@ -28,7 +28,7 @@ spec:
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: se-radarr-api-key
+  name: es-radarr-api-key
   namespace: media
 spec:
   secretStoreRef:

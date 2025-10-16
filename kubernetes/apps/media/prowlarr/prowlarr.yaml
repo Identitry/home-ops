@@ -15,7 +15,7 @@ spec:
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: se-prowlarr-api-key
+  name: es-prowlarr-api-key
   namespace: media
 spec:
   secretStoreRef:

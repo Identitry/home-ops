@@ -15,7 +15,7 @@ spec:
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: se-autobrr-session-secret
+  name: es-autobrr-session-secret
   namespace: media
 spec:
   secretStoreRef:
