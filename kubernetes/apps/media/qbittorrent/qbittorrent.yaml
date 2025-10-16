@@ -207,6 +207,8 @@ spec:
     service:
       qbittorrent:
         controller: qbittorrent
+        annotations:
+          lineage.cozystack.io/ignore: "true"
         ports:
           http:
             port: 8080
@@ -217,6 +219,7 @@ spec:
         className: tenant-root
         enabled: true
         annotations:
+          lineage.cozystack.io/ignore: "true"
           external-dns.alpha.kubernetes.io/target: ${CLOUDFLARE_TUNNEL_TARGET}
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
           external-dns.alpha.kubernetes.io/hostname: "qbt.${DOMAIN}"

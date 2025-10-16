@@ -83,6 +83,8 @@ spec:
     service:
       app:
         controller: flaresolverr
+        annotations:
+          lineage.cozystack.io/ignore: "true"
         ports:
           http:
             port: 8191

@@ -78,6 +78,8 @@ spec:
     service:
       bazarr:
         controller: bazarr
+        annotations:
+          lineage.cozystack.io/ignore: "true"
         ports:
           http:
             port: *port
@@ -87,6 +89,7 @@ spec:
         enabled: true
         className: tenant-root
         annotations:
+          lineage.cozystack.io/ignore: "true"
           external-dns.alpha.kubernetes.io/target: ${CLOUDFLARE_TUNNEL_TARGET}
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
           external-dns.alpha.kubernetes.io/hostname: "b-arr.${DOMAIN}"

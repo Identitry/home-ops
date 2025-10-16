@@ -356,24 +356,32 @@ spec:
     service:
       streamio-web:
         controller: streamio-web
+        annotations:
+          lineage.cozystack.io/ignore: "true"
         ports:
           http:
             port: 8080
             targetPort: http
       streamio-flixio:
         controller: streamio-flixio
+        annotations:
+          lineage.cozystack.io/ignore: "true"
         ports:
           http:
             port: 8080
             targetPort: http
       streamio-server:
         controller: streamio-server
+        annotations:
+          lineage.cozystack.io/ignore: "true"
         ports:
           http:
             port: 11470
             targetPort: http
       aiostreams:
         controller: aiostreams
+        annotations:
+          lineage.cozystack.io/ignore: "true"
         ports:
           http:
             port: 3000
@@ -383,6 +391,7 @@ spec:
         enabled: true
         className: tenant-root
         annotations:
+          lineage.cozystack.io/ignore: "true"
           external-dns.alpha.kubernetes.io/target: ${CLOUDFLARE_TUNNEL_TARGET}
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
           external-dns.alpha.kubernetes.io/hostname: str.myk8s.se
