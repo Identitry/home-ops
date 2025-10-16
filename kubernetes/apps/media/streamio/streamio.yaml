@@ -35,6 +35,24 @@ spec:
       storage: 1Gi
   storageClassName: local
 ---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/external-secrets.io/externalsecret_v1.json
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: es-stremio
+  namespace: media
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: infisical
+  target:
+    name: stremio
+    creationPolicy: Owner
+  data:
+    - secretKey: WEB_AUTH_KEY
+      remoteRef:
+        key: /MEDIA/STREMIO_WEB_AUTH_KEY
+---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -74,8 +92,12 @@ spec:
               TZ: ${TZ}
               SERVER_URL: http://streamio-server.media.svc:11470
               AUTO_SERVER_URL: 0
-              WEB_AUTH_KEY: "hRadiator--Scarce-4BluWsh"
+              #WEB_AUTH_KEY: ""
               #FLIXIO_API_URL: http://streamio-flixio.media.svc:8080
+            envFrom:
+              - secretRef:
+                  name: stremio
+
             ports:
               - name: http
                 containerPort: 8080
