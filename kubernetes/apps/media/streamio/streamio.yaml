@@ -74,7 +74,7 @@ spec:
               TZ: ${TZ}
               SERVER_URL: http://streamio-server.media.svc:11470
               AUTO_SERVER_URL: 0
-              WEB_AUTH_KEY: ''
+              WEB_AUTH_KEY: ""
               #FLIXIO_API_URL: http://streamio-flixio.media.svc:8080
             ports:
               - name: http
