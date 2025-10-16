@@ -93,6 +93,7 @@ spec:
               SERVER_URL: http://streamio-server.media.svc:11470
               AUTO_SERVER_URL: 0
               #WEB_AUTH_KEY: ""
+              API_ENDPOINT: http://streamio-flixio.media.svc:8080
               #FLIXIO_API_URL: http://streamio-flixio.media.svc:8080
             envFrom:
               - secretRef:
