@@ -112,7 +112,7 @@ Also runs as NUT and Minio (S3) server.
 Nice hyper-converged stack on top of Talos!
 
 - Flux CD Operator (ControlPlane) ✅
-- Cilium, Kube-OVN - Network CNI ✅
+- Cilium, Kube-OVN, Multus - Network CNI ✅
 - Linstor DRDB Operator (Piraeus) - Storage ✅
 - Cert-Manager Operator - Let´s Encrypt/Cloudflare ✅
 - MetalB - Load Balancer ✅
@@ -120,6 +120,7 @@ Nice hyper-converged stack on top of Talos!
 - HA Proxy - TCP Loadbalancer
 - PostgreSQL Operator (CNPG) - Database ✅
 - Maria DB Operator - Database ✅
+- FerretDB (MongoDB alternative on top of Postgres) ✅
 - Clickhouse Operator (Altinity) - Database ✅
 - Redis Operator (Spotahome) - Key-Value database ✅
 - Kafka Operator (Strimzi) - Distributed event streaming platform ✅
@@ -246,7 +247,7 @@ Public Github site that describes the cluster. ✅
 - nocodb - Postgres backed simple database for use with n8n
 - qdrant operator - vector database
 - graphiti - GraphRAG, requires FalkorDB (redis variant)
-- knative - Environment For spinning up serverless MCP server pods on demand.
+- kMCP - Platform for running MCP-servers in Kubernetes (https://kagent.dev/docs/kmcp)
 
 ##### MCP Servers
 - nocodb
