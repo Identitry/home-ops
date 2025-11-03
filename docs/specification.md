@@ -116,8 +116,8 @@ Nice hyper-converged stack on top of Talos!
 - Linstor DRDB Operator (Piraeus) - Storage ✅
 - Cert-Manager Operator - Let´s Encrypt/Cloudflare ✅
 - MetalB - Load Balancer ✅
-- Nginx/HA Proxy - Cache och Http Loadbalancer ✅
-- HA Proxy - TCP Loadbalancer
+- Nginx/HA Proxy - Cache and http Loadbalancer ✅
+- HA Proxy - TCP Loadbalancer ✅
 - PostgreSQL Operator (CNPG) - Database ✅
 - Maria DB Operator - Database ✅
 - FerretDB (MongoDB alternative on top of Postgres) ✅
@@ -244,10 +244,11 @@ Public Github site that describes the cluster. ✅
 #### AI Workflow/Automation engine
 - n8n - Automation against different services with workflow and AI Agents ✅
   [Helm Chart](https://github.com/8gears/n8n-helm-chart)
-- nocodb - Postgres backed simple database for use with n8n
-- qdrant operator - vector database
+- nocodb - Postgres backed simple database for use with n8n???
+- qdrant - vector database
 - graphiti - GraphRAG, requires FalkorDB (redis variant)
 - kMCP - Platform for running MCP-servers in Kubernetes (https://kagent.dev/docs/kmcp)
+- deepeval - Agent evaluation platform.
 
 ##### MCP Servers
 - nocodb

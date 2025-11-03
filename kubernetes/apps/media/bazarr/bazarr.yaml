@@ -17,6 +17,8 @@ kind: HelmRelease
 metadata:
   name: bazarr
   namespace: media
+  annotations:
+    lineage.cozystack.io/ignore: "true"
 spec:
   interval: 1h
   chartRef:
