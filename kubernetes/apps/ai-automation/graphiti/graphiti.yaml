@@ -159,7 +159,7 @@ spec:
           - key: config.yaml
             path: config.yaml
         globalMounts:
-          - path: /app/mcp/config
+          - path: /app/mcp/config/config.yaml
             subPath: config.yaml
             readOnly: true
       logs:
