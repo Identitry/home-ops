@@ -74,6 +74,7 @@ spec:
           paths:
             - path: /
               pathType: Prefix
+              servicePort: 6333
       tls:
         - hosts:
             - qdrant.${DOMAIN}

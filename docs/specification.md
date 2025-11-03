@@ -244,7 +244,6 @@ Public Github site that describes the cluster. ✅
 #### AI Workflow/Automation engine
 - n8n - Automation against different services with workflow and AI Agents ✅
   [Helm Chart](https://github.com/8gears/n8n-helm-chart)
-- nocodb - Postgres backed simple database for use with n8n???
 - qdrant - vector database
 - graphiti - GraphRAG, requires FalkorDB (redis variant)
 - kMCP - Platform for running MCP-servers in Kubernetes (https://kagent.dev/docs/kmcp)
