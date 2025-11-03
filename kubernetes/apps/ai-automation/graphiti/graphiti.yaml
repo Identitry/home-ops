@@ -135,9 +135,16 @@ spec:
             env:
               - name: CONFIG_PATH
                 value: /app/mcp/config/config.yaml
-            envFrom:
-              - secretRef:
-                  name: graphiti-openai-api-key
+              - name: OPENAI_API_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: graphiti-openai-api-key
+                    key: OPENAI_API_KEY
+              - name: GRAPHITI_MCP_API_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: graphiti-openai-api-key
+                    key: OPENAI_API_KEY
 
             ports:
               - name: mcp
