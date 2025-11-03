@@ -11,11 +11,81 @@ spec:
       storage: 10Gi
   storageClassName: local
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: graphiti-config
+  namespace: ai-automation
+data:
+  config.yaml: |
+    # Graphiti MCP Server – AI Automation
+    server:
+      transport: http
+      host: 0.0.0.0
+      port: 8000
+    llm:
+      provider: openai
+      model: gpt-4.1-mini
+      max_tokens: 4096
+      providers:
+        openai:
+          api_url: https://api.openai.com/v1
+          organization_id: ""
+    embedder:
+      provider: openai
+      model: text-embedding-3-small
+      dimensions: 1536
+      providers:
+        openai:
+          api_url: https://api.openai.com/v1
+          organization_id: ""
+    graph:
+      type: falkordb
+      uri: redis://localhost:6379
+    storage:
+      persistence: true
+      path: /var/lib/falkordb/data
+    embedding_cache:
+      enabled: true
+      provider: redis
+      uri: redis://localhost:6379
+      ttl_seconds: 86400
+    mcp:
+      enabled: true
+      endpoint: /mcp
+      auth:
+        enabled: false
+    graphiti:
+      group_id: main
+      user_id: mcp_user
+      entity_types:
+        - name: Preference
+          description: User preferences, choices, opinions, or selections
+        - name: Requirement
+          description: Specific needs, features, or functionality that must be fulfilled
+        - name: Procedure
+          description: Standard operating procedures and sequential instructions
+        - name: Location
+          description: Physical or virtual places where activities occur
+        - name: Event
+          description: Time-bound activities, occurrences, or experiences
+        - name: Organization
+          description: Companies, institutions, groups, or formal entities
+        - name: Document
+          description: Information content in various forms
+        - name: Topic
+          description: Subject of conversation or knowledge domain
+        - name: Object
+          description: Physical items or tools
+    telemetry:
+      enabled: false
+      allow_error_reporting: false
+---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/external-secrets/main/config/crds/bases/external-secrets.io_externalsecrets.yaml
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: es-graphiti-config
+  name: es-graphiti-openai-api-key
   namespace: ai-automation
 spec:
   refreshInterval: 1h
@@ -23,16 +93,12 @@ spec:
     kind: ClusterSecretStore
     name: infisical
   target:
-    name: graphiti-config
+    name: graphiti-openai-api-key
     creationPolicy: Owner
-    template:
-      type: Opaque
-      data:
-        config.yaml: "{{ .config_yaml }}"
   data:
-    - secretKey: config_yaml
+    - secretKey: openai_api_key
       remoteRef:
-        key: /AI_AUTOMATION/GRAPHITI_CONFIG
+        key: /AI_AUTOMATION/GRAPHITI_OPENAI_API_KEY
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
@@ -59,7 +125,7 @@ spec:
     controllers:
       graphiti:
         annotations:
-          reloader.stakater.com/match: graphiti-config
+          reloader.stakater.com/match: graphiti-config, graphiti-openai-api-key
         containers:
           app:
             image:
@@ -69,6 +135,11 @@ spec:
             env:
               - name: CONFIG_PATH
                 value: /app/mcp/config/config.yaml
+              - name: OPENAI_API_KEY
+                valueFrom:
+                  secretKeyRef:
+                    name: graphiti-openai-api-key
+                    key: openai_api_key
             ports:
               - name: mcp
                 containerPort: 8000
@@ -100,6 +171,8 @@ spec:
           external-dns.alpha.kubernetes.io/target: ${CLOUDFLARE_TUNNEL_TARGET}
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
           external-dns.alpha.kubernetes.io/hostname: "graphiti.${DOMAIN}"
+          nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+          nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
           nginx.ingress.kubernetes.io/auth-url: "http://authentik-server.authentik.svc.cozy.local/outpost.goauthentik.io/auth/nginx"
           nginx.ingress.kubernetes.io/auth-signin: "https://auth.${DOMAIN}/outpost.goauthentik.io/start?rd=$scheme://$http_host$escaped_request_uri"
           nginx.ingress.kubernetes.io/auth-response-headers: "Set-Cookie,X-authentik-username,X-authentik-email,X-authentik-name,X-authentik-uid,X-authentik-groups,X-authentik-jwt,X-authentik-meta"
@@ -126,7 +199,7 @@ spec:
         globalMounts:
           - path: /var/lib/falkordb/data
       config:
-        type: secret
+        type: configMap
         name: graphiti-config
         globalMounts:
           - path: /app/mcp/config
