@@ -15,8 +15,6 @@ kind: HelmRelease
 metadata:
   name: qdrant
   namespace: ai-automation
-  annotations:
-    lineage.cozystack.io/ignore: "true"
 spec:
   interval: 1h
   chart:
@@ -36,11 +34,18 @@ spec:
     remediation:
       retries: 3
   values:
+    image:
+      repository: qdrant/qdrant
+      tag: "sha256:7fdd737f9e0b7664e69238eef44f13e553fdc369a136a60d9bb6969d82d865d7"
+      pullPolicy: IfNotPresent
+      useUnprivilegedImage: false
+
     persistence:
       accessModes:
         - ReadWriteOnce
       size: 10Gi
       storageClassName: local
+
     resources:
       requests:
         cpu: 500m
@@ -48,16 +53,18 @@ spec:
       limits:
         cpu: "2"
         memory: 4Gi
+
     config:
       cluster:
         enabled: false
+
     service:
       type: ClusterIP
+
     ingress:
       enabled: true
-      className: tenant-root
+      ingressClassName: tenant-root
       annotations:
-        lineage.cozystack.io/ignore: "true"
         external-dns.alpha.kubernetes.io/target: ${CLOUDFLARE_TUNNEL_TARGET}
         external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
         external-dns.alpha.kubernetes.io/hostname: "qdrant.${DOMAIN}"
