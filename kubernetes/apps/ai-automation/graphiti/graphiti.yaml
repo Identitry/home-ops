@@ -182,12 +182,13 @@ spec:
             proxy_set_header X-Forwarded-Uri $request_uri;
             proxy_set_header X-Original-Method $request_method;
         hosts:
-          - host: graphiti.${DOMAIN}
-            paths:
+           - host: graphiti.${DOMAIN}
+             paths:
               - path: /
+                pathType: Prefix
                 service:
-                  identifier: graphiti
-                  port: ui
+                  name: graphiti
+                  port: 3000
         tls:
           - hosts:
               - graphiti.${DOMAIN}
