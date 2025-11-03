@@ -11,83 +11,11 @@ spec:
       storage: 10Gi
   storageClassName: local
 ---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: graphiti-config
-  namespace: ai-automation
-data:
-  config.yaml: |
-    # Graphiti MCP Server – AI Automation
-    server:
-      transport: http
-      host: 0.0.0.0
-      port: 8000
-    llm:
-      provider: openai
-      model: gpt-4.1-mini
-      max_tokens: 4096
-      providers:
-        openai:
-          api_url: https://api.openai.com/v1
-          organization_id: ""
-          api_key: "sk-proj-z–9maSXUotcg6Nhm30vB6oggbudv2YaNlDxYq4EzbiK2ggNNUKr-_7VpTrI-Cz3qeWDtwqvO6T3BlbkFJATZLU_lGzvzME9ejpzipem_7eWUesSPGCEkscQri7_MDaPvarlLn5MKY3d2CzongsRmsi2m9sA"
-    embedder:
-      provider: openai
-      model: text-embedding-3-small
-      dimensions: 1536
-      providers:
-        openai:
-          api_url: https://api.openai.com/v1
-          organization_id: ""
-          api_key: "sk-proj-z–9maSXUotcg6Nhm30vB6oggbudv2YaNlDxYq4EzbiK2ggNNUKr-_7VpTrI-Cz3qeWDtwqvO6T3BlbkFJATZLU_lGzvzME9ejpzipem_7eWUesSPGCEkscQri7_MDaPvarlLn5MKY3d2CzongsRmsi2m9sA"
-    graph:
-      type: falkordb
-      uri: redis://localhost:6379
-    storage:
-      persistence: true
-      path: /var/lib/falkordb/data
-    embedding_cache:
-      enabled: true
-      provider: redis
-      uri: redis://localhost:6379
-      ttl_seconds: 86400
-    mcp:
-      enabled: true
-      endpoint: /mcp
-      auth:
-        enabled: false
-    graphiti:
-      group_id: main
-      user_id: mcp_user
-      entity_types:
-        - name: Preference
-          description: User preferences, choices, opinions, or selections
-        - name: Requirement
-          description: Specific needs, features, or functionality that must be fulfilled
-        - name: Procedure
-          description: Standard operating procedures and sequential instructions
-        - name: Location
-          description: Physical or virtual places where activities occur
-        - name: Event
-          description: Time-bound activities, occurrences, or experiences
-        - name: Organization
-          description: Companies, institutions, groups, or formal entities
-        - name: Document
-          description: Information content in various forms
-        - name: Topic
-          description: Subject of conversation or knowledge domain
-        - name: Object
-          description: Physical items or tools
-    telemetry:
-      enabled: false
-      allow_error_reporting: false
----
 # yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/external-secrets/main/config/crds/bases/external-secrets.io_externalsecrets.yaml
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: es-graphiti-openai-api-key
+  name: es-graphiti-config
   namespace: ai-automation
 spec:
   refreshInterval: 1h
@@ -95,12 +23,16 @@ spec:
     kind: ClusterSecretStore
     name: infisical
   target:
-    name: graphiti-openai-api-key
+    name: graphiti-config
     creationPolicy: Owner
+    template:
+      type: Opaque
+      data:
+        config.yml: "{{ .config_yml }}"
   data:
-    - secretKey: OPENAI_API_KEY
+    - secretKey: config_yaml
       remoteRef:
-        key: /AI_AUTOMATION/GRAPHITI_OPENAI_API_KEY
+        key: /AI_AUTOMATION/GRAPHITI_CONFIG
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
@@ -137,16 +69,6 @@ spec:
             env:
               - name: CONFIG_PATH
                 value: /app/mcp/config/config.yaml
-              - name: OPENAI_API_KEY
-                valueFrom:
-                  secretKeyRef:
-                    name: graphiti-openai-api-key
-                    key: OPENAI_API_KEY
-              - name: GRAPHITI_MCP_API_KEY
-                valueFrom:
-                  secretKeyRef:
-                    name: graphiti-openai-api-key
-                    key: OPENAI_API_KEY
 
             ports:
               - name: mcp
@@ -208,10 +130,15 @@ spec:
         globalMounts:
           - path: /var/lib/falkordb/data
       config:
-        type: configMap
+        enabled: true
+        type: secret
         name: graphiti-config
+        items:
+          - key: config.yml
+            path: config.yml
         globalMounts:
           - path: /app/mcp/config
+            subPath: config.yml
             readOnly: true
       logs:
         type: emptyDir
