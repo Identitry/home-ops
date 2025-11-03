@@ -187,7 +187,7 @@ spec:
               - path: /
                 pathType: Prefix
                 service:
-                  name: graphiti
+                  identifier: graphiti
                   port: 3000
         tls:
           - hosts:
