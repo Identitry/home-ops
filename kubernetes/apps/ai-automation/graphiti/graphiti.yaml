@@ -140,7 +140,7 @@ spec:
                 pathType: Prefix
                 service:
                   identifier: graphiti
-                  port: 8000
+                  port: 3000
         tls:
           - hosts:
               - graphiti.${DOMAIN}
