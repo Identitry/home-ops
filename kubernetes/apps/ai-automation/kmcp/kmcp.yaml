@@ -1,0 +1,85 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/source.toolkit.fluxcd.io/gitrepository_v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: kmcp
+  namespace: cozy-fluxcd
+spec:
+  interval: 1h
+  ref:
+    branch: main
+  url: https://github.com/kagent-dev/kmcp.git
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kmcp-crds
+  namespace: ai-automation
+  annotations:
+    lineage.cozystack.io/ignore: "true"
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: ./helm/kmcp-crds
+      sourceRef:
+        kind: GitRepository
+        name: kmcp
+        namespace: cozy-fluxcd
+      interval: 10m
+  install:
+    remediation:
+      retries: -1
+    crds: Create
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+    crds: CreateReplace
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kmcp
+  namespace: ai-automation
+  annotations:
+    lineage.cozystack.io/ignore: "true"
+spec:
+  interval: 1h
+  dependsOn:
+    - name: kmcp-crds
+      namespace: ai-automation
+  chart:
+    spec:
+      chart: ./helm/kmcp
+      sourceRef:
+        kind: GitRepository
+        name: kmcp
+        namespace: cozy-fluxcd
+      interval: 10m
+  install:
+    remediation:
+      retries: -1
+    crds: CreateReplace
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+    crds: CreateReplace
+  values:
+    image:
+      repository: ghcr.io/kagent-dev/kmcp/controller
+      tag: "0.1.9@sha256:8e4781b1c2eebfa3913867ea00e87484978eb4258f938791b4cf97e274b245c3"
+      pullPolicy: IfNotPresent
+    controller:
+      replicaCount: 1
+    resources:
+      limits:
+        cpu: 500m
+        memory: 128Mi
+      requests:
+        cpu: 10m
+        memory: 64Mi

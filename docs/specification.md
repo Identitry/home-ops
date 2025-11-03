@@ -245,17 +245,14 @@ Public Github site that describes the cluster. ✅
 - n8n - Automation against different services with workflow and AI Agents ✅
   [Helm Chart](https://github.com/8gears/n8n-helm-chart)
 - qdrant - vector database ✅
-- graphiti - GraphRAG, requires FalkorDB (redis variant) - https://github.com/getzep/graphiti
-- kMCP - Platform for running MCP-servers in Kubernetes (https://kagent.dev/docs/kmcp)
+- kMCP - Platform for running MCP-servers in Kubernetes (https://kagent.dev/docs/kmcp) ✅
 - deepeval - Agent evaluation platform.
 - presidio - de-identification service for text and images - https://github.com/microsoft/presidio
 
 ##### MCP Servers
-- nocodb
-- qdrant
-- graphiti
-- Apple Find My - Create own service based on FindMy.py (https://github.com/malmeloo/FindMy.py)
-- SL - Create own service
+- graphiti - GraphRAG complete with FalkorDB(Redis) - https://github.com/getzep/graphiti
+- Flux CD - https://fluxcd.io/blog/2025/05/ai-assisted-gitops/
+
 
 #### Home Automation
 
