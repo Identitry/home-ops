@@ -31,6 +31,7 @@ data:
         openai:
           api_url: https://api.openai.com/v1
           organization_id: ""
+          api_key: "sk-proj-z–9maSXUotcg6Nhm30vB6oggbudv2YaNlDxYq4EzbiK2ggNNUKr-_7VpTrI-Cz3qeWDtwqvO6T3BlbkFJATZLU_lGzvzME9ejpzipem_7eWUesSPGCEkscQri7_MDaPvarlLn5MKY3d2CzongsRmsi2m9sA"
     embedder:
       provider: openai
       model: text-embedding-3-small
