@@ -1,0 +1,138 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: graphiti-data
+  namespace: ai-automation
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: local
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/external-secrets/main/config/crds/bases/external-secrets.io_externalsecrets.yaml
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: es-graphiti_config
+  namespace: ai-automation
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: infisical
+  target:
+    name: graphiti_config
+    creationPolicy: Owner
+    template:
+      type: Opaque
+      data:
+        config.yaml: "{{ .config_yaml }}"
+  data:
+    - secretKey: config_yaml
+      remoteRef:
+        key: /AI_AUTOMATION/GRAPHITI_CONFIG
+        property: config.yaml
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: graphiti
+  namespace: ai-automation
+  annotations:
+    lineage.cozystack.io/ignore: "true"
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: cozy-fluxcd
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      graphiti:
+        annotations:
+          reloader.stakater.com/match: graphiti_config
+        containers:
+          app:
+            image:
+              repository: zepai/knowledge-graph-mcp
+              tag: 1.0.0-graphiti-0.22.0@sha256:411ae0d366080f46fd6392c30edc1bebd6557af75b032b7549077e34c9eb391c
+              pullPolicy: IfNotPresent
+            env:
+              - name: CONFIG_PATH
+                value: /app/mcp/config/config.yaml
+            ports:
+              - name: mcp
+                containerPort: 8000
+              - name: ui
+                containerPort: 3000
+            resources:
+              requests:
+                cpu: 200m
+                memory: 1Gi
+              limits:
+                cpu: 1
+                memory: 2Gi
+    service:
+      graphiti:
+        controller: graphiti
+        ports:
+          mcp:
+            port: 8000
+            targetPort: mcp
+          ui:
+            port: 3000
+            targetPort: ui
+    ingress:
+      graphiti:
+        enabled: true
+        className: tenant-root
+        annotations:
+          lineage.cozystack.io/ignore: "true"
+          external-dns.alpha.kubernetes.io/target: ${CLOUDFLARE_TUNNEL_TARGET}
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+          external-dns.alpha.kubernetes.io/hostname: "graphiti.${DOMAIN}"
+          nginx.ingress.kubernetes.io/auth-url: "http://authentik-server.authentik.svc.cozy.local/outpost.goauthentik.io/auth/nginx"
+          nginx.ingress.kubernetes.io/auth-signin: "https://auth.${DOMAIN}/outpost.goauthentik.io/start?rd=$scheme://$http_host$escaped_request_uri"
+          nginx.ingress.kubernetes.io/auth-response-headers: "Set-Cookie,X-authentik-username,X-authentik-email,X-authentik-name,X-authentik-uid,X-authentik-groups,X-authentik-jwt,X-authentik-meta"
+          nginx.ingress.kubernetes.io/auth-snippet: |
+            proxy_set_header X-Forwarded-Host $http_host;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header X-Forwarded-Uri $request_uri;
+            proxy_set_header X-Original-Method $request_method;
+        hosts:
+          - host: graphiti.${DOMAIN}
+            paths:
+              - path: /
+                service:
+                  identifier: graphiti
+                  port: ui
+        tls:
+          - hosts:
+              - graphiti.${DOMAIN}
+            secretName: wildcard-le-tls-cert
+    persistence:
+      data:
+        type: persistentVolumeClaim
+        existingClaim: graphiti-data
+        globalMounts:
+          - path: /var/lib/falkordb/data
+      config:
+        type: secret
+        name: graphiti_config
+        globalMounts:
+          - path: /app/mcp/config
+            readOnly: true
+      logs:
+        type: emptyDir
+        globalMounts:
+          - path: /var/log/graphiti
