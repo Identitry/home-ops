@@ -130,7 +130,7 @@ spec:
           app:
             image:
               repository: zepai/knowledge-graph-mcp
-              tag: 1.0.0-graphiti-0.22.0@sha256:411ae0d366080f46fd6392c30edc1bebd6557af75b032b7549077e34c9eb391c
+              tag: 1.0.0@sha256:411ae0d366080f46fd6392c30edc1bebd6557af75b032b7549077e34c9eb391c
               pullPolicy: IfNotPresent
             env:
               - name: CONFIG_PATH
@@ -188,7 +188,7 @@ spec:
                 pathType: Prefix
                 service:
                   identifier: graphiti
-                  port: 3000
+                  port: 8000
         tls:
           - hosts:
               - graphiti.${DOMAIN}
