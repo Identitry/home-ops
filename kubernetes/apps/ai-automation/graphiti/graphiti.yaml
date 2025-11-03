@@ -34,6 +34,25 @@ spec:
       remoteRef:
         key: /AI_AUTOMATION/GRAPHITI_CONFIG
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/external-secrets/main/config/crds/bases/external-secrets.io_externalsecrets.yaml
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: es-graphiti-openai-api-key
+  namespace: ai-automation
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: infisical
+  target:
+    name: graphiti-openai-api-key
+    creationPolicy: Owner
+  data:
+    - secretKey: OPENAI_API_KEY
+      remoteRef:
+        key: /AI_AUTOMATION/GRAPHITI_OPENAI_API_KEY
+---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -69,6 +88,9 @@ spec:
             env:
               - name: CONFIG_PATH
                 value: /app/mcp/config/config.yaml
+            envFrom:
+              - secretRef:
+                  name: graphiti-openai-api-key
 
             ports:
               - name: mcp
