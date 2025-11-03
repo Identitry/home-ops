@@ -89,7 +89,7 @@ spec:
               - name: CONFIG_PATH
                 value: /app/mcp/config/config.yaml
               - name: BROWSER
-                value: 1
+                value: true
             envFrom:
               - secretRef:
                   name: graphiti-openai-api-key
