@@ -34,6 +34,9 @@ spec:
     remediation:
       retries: 3
   values:
+    podAnnotations:
+      secret.reloader.stakater.com/reload: wildcard-le-tls-cert
+
     image:
       repository: qdrant/qdrant
       tag: v1.15.5
