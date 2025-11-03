@@ -28,7 +28,7 @@ spec:
     template:
       type: Opaque
       data:
-        config.yml: "{{ .config_yml }}"
+        config.yaml: "{{ .config_yaml }}"
   data:
     - secretKey: config_yaml
       remoteRef:
@@ -156,11 +156,11 @@ spec:
         type: secret
         name: graphiti-config
         items:
-          - key: config.yml
-            path: config.yml
+          - key: config.yaml
+            path: config.yaml
         globalMounts:
           - path: /app/mcp/config
-            subPath: config.yml
+            subPath: config.yaml
             readOnly: true
       logs:
         type: emptyDir
