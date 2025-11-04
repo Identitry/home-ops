@@ -32,6 +32,10 @@ spec:
   target:
     name: cloudflare-api-token
     creationPolicy: Owner
+    template:
+      metadata:
+        labels:
+          reloader.stakater.com/auto: "true"
   data:
     - secretKey: api-token
       remoteRef:
@@ -60,7 +64,7 @@ spec:
       name: external-dns
     replicaCount: 1
     podAnnotations:
-      reloader.stakater.com/match: cloudflare-api-token
+      reloader.stakater.com/auto: "true"
 
     provider: cloudflare # Supports AWS, Cloudflare, Google, DigitalOcean, etc.
     policy: sync # Keep DNS records in sync with K8s Ingress

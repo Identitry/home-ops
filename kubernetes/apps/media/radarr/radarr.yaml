@@ -37,6 +37,10 @@ spec:
   target:
     name: radarr-api-key
     creationPolicy: Owner
+    template:
+      metadata:
+        labels:
+          reloader.stakater.com/auto: "true"
   data:
     - secretKey: RADARR__AUTH__APIKEY
       remoteRef:
@@ -65,7 +69,7 @@ spec:
     controllers:
       radarr:
         annotations:
-          reloader.stakater.com/match: wildcard-le-tls-cert,radarr-api-key
+          reloader.stakater.com/auto: "true"
         containers:
           app:
             image:

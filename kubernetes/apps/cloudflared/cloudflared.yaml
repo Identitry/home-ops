@@ -49,6 +49,10 @@ spec:
           # Template: [namespace]-cloudflare-tunnel-remote
           name: cloudflared-cloudflare-tunnel-remote
           creationPolicy: Owner
+          template:
+            metadata:
+              labels:
+                reloader.stakater.com/auto: "true"
         data:
           - secretKey: tunnelToken
             remoteRef:
@@ -73,7 +77,7 @@ spec:
             interval: 10m
         values:
           podAnnotations:
-            reloader.stakater.com/match: cloudflared-cloudflare-tunnel-remote
+            reloader.stakater.com/auto: "true"
           replicaCount: 2
           image:
             repository: docker.io/cloudflare/cloudflared

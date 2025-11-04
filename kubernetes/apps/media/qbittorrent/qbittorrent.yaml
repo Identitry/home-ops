@@ -28,6 +28,10 @@ spec:
   target:
     name: media-gluetun-wg
     creationPolicy: Owner
+    template:
+      metadata:
+        labels:
+          reloader.stakater.com/auto: "true"
   data:
     - secretKey: WIREGUARD_PRIVATE_KEY
       remoteRef:
@@ -76,7 +80,7 @@ spec:
     controllers:
       qbittorrent:
         annotations:
-          reloader.stakater.com/match: wildcard-le-tls-cert,media-gluetun-wg
+          reloader.stakater.com/auto: "true"
 
         initContainers:
           vpn:

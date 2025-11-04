@@ -48,6 +48,10 @@ spec:
   target:
     name: stremio
     creationPolicy: Owner
+    template:
+      metadata:
+        labels:
+          reloader.stakater.com/auto: "true"
   data:
     - secretKey: WEB_AUTH_KEY
       remoteRef:
@@ -85,7 +89,7 @@ spec:
     controllers:
       streamio-web:
         annotations:
-          reloader.stakater.com/match: wildcard-le-tls-cert
+          reloader.stakater.com/auto: "true"
         pod:
           securityContext:
             runAsNonRoot: false
@@ -163,7 +167,7 @@ spec:
                 drop: ["ALL"]
       streamio-server:
         annotations:
-          reloader.stakater.com/match: wildcard-le-tls-cert,media-gluetun-wg
+          reloader.stakater.com/auto: "true"
         pod:
           labels:
             vpn: gluetun
@@ -271,7 +275,7 @@ spec:
                 drop: ["ALL"]
       aiostreams:
         annotations:
-          reloader.stakater.com/match: wildcard-le-tls-cert,media-gluetun-wg
+          reloader.stakater.com/auto: "true"
         pod:
           labels:
             vpn: gluetun

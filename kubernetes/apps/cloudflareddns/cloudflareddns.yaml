@@ -24,6 +24,11 @@ spec:
     name: infisical
   target:
     name: cloudflare-api-token
+    creationPolicy: Owner
+    template:
+      metadata:
+        labels:
+          reloader.stakater.com/auto: "true"
   data:
     - secretKey: apiToken
       remoteRef:
@@ -55,7 +60,7 @@ spec:
       targetPath: cloudflareddns.api_token
   values:
     podAnnotations:
-      reloader.stakater.com/match: cloudflare-api-token
+      reloader.stakater.com/auto: "true"
     cloudflareddns:
       interval: 300 # seconds
       detect_mode: dig-whoami.cloudflare

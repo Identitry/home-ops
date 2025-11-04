@@ -24,6 +24,10 @@ spec:
   target:
     name: autobrr-session-secret
     creationPolicy: Owner
+    template:
+      metadata:
+        labels:
+          reloader.stakater.com/auto: "true"
   data:
     - secretKey: AUTOBRR__SESSION_SECRET
       remoteRef:
@@ -52,7 +56,7 @@ spec:
     controllers:
       autobrr:
         annotations:
-          reloader.stakater.com/match: wildcard-le-tls-cert,autobrr-session-secret
+          reloader.stakater.com/auto: "true"
         containers:
           app:
             image:

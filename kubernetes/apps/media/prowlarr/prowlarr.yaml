@@ -24,6 +24,10 @@ spec:
   target:
     name: prowlarr-api-key
     creationPolicy: Owner
+    template:
+      metadata:
+        labels:
+          reloader.stakater.com/auto: "true"
   data:
     - secretKey: PROWLARR__AUTH__APIKEY
       remoteRef:
@@ -52,7 +56,7 @@ spec:
     controllers:
       prowlarr:
         annotations:
-          reloader.stakater.com/match: wildcard-le-tls-cert,prowlarr-api-key
+          reloader.stakater.com/auto: "true"
         containers:
           app:
             image:

@@ -14,6 +14,10 @@ spec:
   target:
     name: blocky-gluetun-wg
     creationPolicy: Owner
+    template:
+      metadata:
+        labels:
+          reloader.stakater.com/auto: "true"
   data:
     - secretKey: WIREGUARD_PRIVATE_KEY
       remoteRef:
@@ -45,6 +49,9 @@ spec:
     creationPolicy: Owner
     template:
       type: Opaque
+      metadata:
+        labels:
+          reloader.stakater.com/auto: "true"
       data:
         config.yml: "{{ .config_yml }}"
   data:
@@ -91,7 +98,7 @@ spec:
     controllers:
       blocky:
         annotations:
-          reloader.stakater.com/match: blocky-config, blocky-gluetun-wg, wildcard-le-tls-cert
+          reloader.stakater.com/auto: "true"
         type: daemonset
 
         initContainers:

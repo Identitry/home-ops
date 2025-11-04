@@ -74,6 +74,10 @@ spec:
         target:
           name: cozy-nfs-driver-nfs-server
           creationPolicy: Owner
+          template:
+            metadata:
+              labels:
+                reloader.stakater.com/auto: "true"
         data:
           - secretKey: HOST_IP
             remoteRef:

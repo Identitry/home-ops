@@ -87,7 +87,6 @@ spec:
       graphiti:
         annotations:
           reloader.stakater.com/auto: "true"
-          #reloader.stakater.com/match: graphiti-config, graphiti-openai-api-key
         containers:
           app:
             image:

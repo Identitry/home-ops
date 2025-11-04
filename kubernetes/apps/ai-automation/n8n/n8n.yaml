@@ -29,6 +29,10 @@ spec:
   target:
     name: n8n-config
     creationPolicy: Owner
+    template:
+      metadata:
+        labels:
+          reloader.stakater.com/auto: "true"
   data:
     - secretKey: encryption_key
       remoteRef:
@@ -97,7 +101,7 @@ spec:
       type: Recreate
 
     deploymentAnnotations:
-      secret.reloader.stakater.com/reload: ai-automation-db-creds,n8n-config,wildcard-le-tls-cert
+      reloader.stakater.com/auto: "true"
 
     image:
       repository: n8nio/n8n

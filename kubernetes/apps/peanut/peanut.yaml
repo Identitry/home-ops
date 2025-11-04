@@ -33,6 +33,10 @@ spec:
   target:
     name: nut-upsmon
     creationPolicy: Owner
+    template:
+      metadata:
+        labels:
+          reloader.stakater.com/auto: "true"
   data:
     - secretKey: NUT_UPSMON_USER
       remoteRef:
@@ -68,7 +72,7 @@ spec:
     controllers:
       peanut:
         annotations:
-          reloader.stakater.com/match: wildcard-le-tls-cert,nut-upsmon
+          reloader.stakater.com/auto: "true"
         containers:
           app:
             image:

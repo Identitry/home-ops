@@ -21,6 +21,10 @@ spec:
   target:
     name: blocky-db-creds
     creationPolicy: Owner
+    template:
+      metadata:
+        labels:
+          reloader.stakater.com/auto: "true"
   data:
     - secretKey: username
       remoteRef:
