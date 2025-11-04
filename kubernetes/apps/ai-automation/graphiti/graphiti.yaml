@@ -24,11 +24,12 @@ spec:
     name: infisical
   target:
     name: graphiti-config
-    labels:
-      reloader.stakater.com/auto: "true"
     creationPolicy: Owner
     template:
       type: Opaque
+      metadata:
+        labels:
+          reloader.stakater.com/auto: "true"
       data:
         config.yaml: "{{ .config_yaml }}"
   data:
@@ -49,8 +50,11 @@ spec:
     name: infisical
   target:
     name: graphiti-openai-api-key
-    labels:
-      reloader.stakater.com/auto: "true"
+    template:
+      type: Opaque
+      metadata:
+        labels:
+          reloader.stakater.com/auto: "true"
     creationPolicy: Owner
   data:
     - secretKey: OPENAI_API_KEY
