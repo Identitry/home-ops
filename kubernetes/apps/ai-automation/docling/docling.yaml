@@ -57,8 +57,9 @@ spec:
         controller: docling
         ports:
           http:
-            port: 80
+            port: 5001
             targetPort: http
+
     ingress:
       docling:
         enabled: true
@@ -80,8 +81,7 @@ spec:
                 pathType: Prefix
                 service:
                   identifier: docling
-                  port:
-                    name: http
+                  port: 5001
         tls:
           - hosts:
               - docling.${DOMAIN}
