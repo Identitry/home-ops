@@ -58,14 +58,9 @@ spec:
               repository: ghcr.io/docling-project/docling-serve-cpu
               tag: v1.8.0@sha256:e86d26f0b40bc1384ac8ea2f748d94fa7e3da2ad4f8d554cb1b6b6f308c4e137
               pullPolicy: IfNotPresent
-            env:
-              - name: DOCLING_CONFIG_PATH
-                value: /app/config/config.yaml
             ports:
-              - name: api
-                containerPort: 8000
-              - name: ui
-                containerPort: 3000
+              - name: http
+                containerPort: 5001
             resources:
               requests:
                 cpu: 200m
@@ -77,12 +72,9 @@ spec:
       docling:
         controller: docling
         ports:
-          api:
-            port: 8000
-            targetPort: api
-          ui:
-            port: 3000
-            targetPort: ui
+          http:
+            port: 80
+            targetPort: http
     ingress:
       docling:
         enabled: true
@@ -104,7 +96,7 @@ spec:
                 pathType: Prefix
                 service:
                   identifier: docling
-                  port: 3000
+                  port: 80
         tls:
           - hosts:
               - docling.${DOMAIN}
@@ -115,17 +107,6 @@ spec:
         existingClaim: docling-data
         globalMounts:
           - path: /app/data
-      config:
-        enabled: true
-        type: configMap
-        name: docling-config
-        items:
-          - key: config.yaml
-            path: config.yaml
-        globalMounts:
-          - path: /app/config/config.yaml
-            subPath: config.yaml
-            readOnly: true
       logs:
         type: emptyDir
         globalMounts:
