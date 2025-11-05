@@ -1,0 +1,132 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: docling-data
+  namespace: ai-automation
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: local
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: docling-config
+  namespace: ai-automation
+data:
+  config.yaml: |
+    # Minimal Docling configuration
+    server:
+      port: 8000
+      host: 0.0.0.0
+    logging:
+      level: info
+    persistence:
+      path: /data
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: docling-serve
+  namespace: ai-automation
+  annotations:
+    lineage.cozystack.io/ignore: "true"
+spec:
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+    namespace: cozy-fluxcd
+  install:
+    remediation:
+      retries: -1
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    controllers:
+      docling:
+        containers:
+          app:
+            image:
+              repository: ghcr.io/docling-project/docling-serve-cpu
+              tag: v1.8.0@sha256:e86d26f0b40bc1384ac8ea2f748d94fa7e3da2ad4f8d554cb1b6b6f308c4e137
+              pullPolicy: IfNotPresent
+            env:
+              - name: DOCLING_CONFIG_PATH
+                value: /app/config/config.yaml
+            ports:
+              - name: api
+                containerPort: 8000
+              - name: ui
+                containerPort: 3000
+            resources:
+              requests:
+                cpu: 200m
+                memory: 1Gi
+              limits:
+                cpu: 1
+                memory: 2Gi
+    service:
+      docling:
+        controller: docling
+        ports:
+          api:
+            port: 8000
+            targetPort: api
+          ui:
+            port: 3000
+            targetPort: ui
+    ingress:
+      docling:
+        enabled: true
+        className: tenant-root
+        annotations:
+          lineage.cozystack.io/ignore: "true"
+          external-dns.alpha.kubernetes.io/target: ${CLOUDFLARE_TUNNEL_TARGET}
+          external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+          external-dns.alpha.kubernetes.io/hostname: "docling.${DOMAIN}"
+          nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+          nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+          nginx.ingress.kubernetes.io/auth-url: "http://authentik-server.authentik.svc.cozy.local/outpost.goauthentik.io/auth/nginx"
+          nginx.ingress.kubernetes.io/auth-signin: "https://auth.${DOMAIN}/outpost.goauthentik.io/start?rd=$scheme://$http_host$escaped_request_uri"
+          nginx.ingress.kubernetes.io/auth-response-headers: "Set-Cookie,X-authentik-username,X-authentik-email,X-authentik-name,X-authentik-uid,X-authentik-groups,X-authentik-jwt,X-authentik-meta"
+        hosts:
+          - host: docling.${DOMAIN}
+            paths:
+              - path: /
+                pathType: Prefix
+                service:
+                  identifier: docling
+                  port: 3000
+        tls:
+          - hosts:
+              - docling.${DOMAIN}
+            secretName: wildcard-le-tls-cert
+    persistence:
+      data:
+        type: persistentVolumeClaim
+        existingClaim: docling-data
+        globalMounts:
+          - path: /app/data
+      config:
+        enabled: true
+        type: configMap
+        name: docling-config
+        items:
+          - key: config.yaml
+            path: config.yaml
+        globalMounts:
+          - path: /app/config/config.yaml
+            subPath: config.yaml
+            readOnly: true
+      logs:
+        type: emptyDir
+        globalMounts:
+          - path: /var/log/docling

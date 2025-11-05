@@ -11,7 +11,7 @@ TODO:
 - Färdigställ installation av Cilium Hubble.
 - Färdigställ installation av Stremio
 - Ta tag i Backup av allt
-- Se till att Reloader fungerar
+- Se till att Reloader fungerar ✅
 
 - Nya applikationer
    - Cilum Hubble ☑️
