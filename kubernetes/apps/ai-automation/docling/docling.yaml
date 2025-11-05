@@ -12,22 +12,6 @@ spec:
       storage: 1Gi
   storageClassName: local
 ---
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: docling-config
-  namespace: ai-automation
-data:
-  config.yaml: |
-    # Minimal Docling configuration
-    server:
-      port: 8000
-      host: 0.0.0.0
-    logging:
-      level: info
-    persistence:
-      path: /data
----
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -96,7 +80,8 @@ spec:
                 pathType: Prefix
                 service:
                   identifier: docling
-                  port: 80
+                  port:
+                    name: http
         tls:
           - hosts:
               - docling.${DOMAIN}
