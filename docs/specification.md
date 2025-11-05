@@ -246,7 +246,8 @@ Public Github site that describes the cluster. ✅
   [Helm Chart](https://github.com/8gears/n8n-helm-chart)
 - qdrant - vector database ✅
 - kMCP - Platform for running MCP-servers in Kubernetes (https://kagent.dev/docs/kmcp) ✅
-- deepeval - Agent evaluation platform.
+- deepeval-mcp - Agent evaluation platform. ✅
+- docling-serve - Document conversion for RAG (https://github.com/docling-project/docling-serve) ✅
 - presidio - de-identification service for text and images - https://github.com/microsoft/presidio
 
 ##### MCP Servers
