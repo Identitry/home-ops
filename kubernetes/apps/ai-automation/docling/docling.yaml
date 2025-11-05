@@ -85,9 +85,9 @@ spec:
                   identifier: docling
                   port: 5001
         tls:
-        - secretName: wildcard-le-tls-cert
-          hosts:
-            - n8n.${DOMAIN}
+          - secretName: wildcard-le-tls-cert
+            hosts:
+              - n8n.${DOMAIN}
 
     persistence:
       data:
