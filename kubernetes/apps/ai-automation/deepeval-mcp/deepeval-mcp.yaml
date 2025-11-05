@@ -78,9 +78,3 @@ spec:
           mcp:
             port: 8000
             targetPort: mcp
-
-    persistence:
-      data:
-        type: emptyDir
-      logs:
-        type: emptyDir
