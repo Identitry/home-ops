@@ -52,6 +52,12 @@ spec:
               limits:
                 cpu: 1
                 memory: 2Gi
+    env:
+      docling:
+        - name: DOCLING_SERVE_ENABLE_UI
+          value: true
+        - name: DOCLING_LOG_LEVEL
+          value: info
     service:
       docling:
         controller: docling
