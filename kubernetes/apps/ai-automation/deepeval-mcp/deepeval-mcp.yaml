@@ -49,14 +49,14 @@ spec:
   values:
     controllers:
       deepeval-mcp:
+        annotations:
+          reloader.stakater.com/match: deepeval-mcp
         containers:
           app:
             image:
               repository: ghcr.io/identitry/deepeval-mcp
               tag: 3.7.0@sha256:3e6e9deb81074901683f69b9ed5f843eb1f2b03a815a94dddfaec62365c0f869
               pullPolicy: IfNotPresent
-            annotations:
-              reloader.stakater.com/match: deepeval-mcp
             envFrom:
               - secretRef:
                   name: deepeval-mcp
