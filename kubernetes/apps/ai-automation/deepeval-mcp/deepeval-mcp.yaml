@@ -20,7 +20,7 @@ spec:
   data:
     - secretKey: OPENAI_API_KEY
       remoteRef:
-        key: /AI_AUTOMATION/DEEPEVAL_MCP_OPENAI_API_KEY
+        key: /AI_AUTOMATION/DEEPEVAL_MCP_OPENAPI_API_KEY
     - secretKey: API_KEYS
       remoteRef:
         key: /AI_AUTOMATION/DEEPEVAL_MCP_API_KEYS
