@@ -107,6 +107,7 @@ spec:
                 containerPort: 8000
               - name: ui
                 containerPort: 3000
+
             resources:
               requests:
                 cpu: 200m
@@ -114,6 +115,7 @@ spec:
               limits:
                 cpu: 1
                 memory: 2Gi
+
     service:
       graphiti:
         controller: graphiti
