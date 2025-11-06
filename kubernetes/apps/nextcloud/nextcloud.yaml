@@ -409,6 +409,22 @@ spec:
 apiVersion: cilium.io/v2
 kind: CiliumClusterwideNetworkPolicy
 metadata:
+  name: allow-cloudflared-to-ingress
+spec:
+  # Allow cloudflared to reach ingress-nginx (needed for Cloudflare tunnel)
+  endpointSelector:
+    matchLabels:
+      k8s:io.kubernetes.pod.namespace: tenant-root
+      app.kubernetes.io/name: ingress-nginx
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: cloudflared
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/cilium/cilium/main/install/kubernetes/quick-install.yaml
+apiVersion: cilium.io/v2
+kind: CiliumClusterwideNetworkPolicy
+metadata:
   name: egress-nextcloud
 spec:
   # Allow ingress-nginx pods to reach Nextcloud service
