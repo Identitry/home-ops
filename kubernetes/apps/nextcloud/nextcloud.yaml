@@ -375,10 +375,10 @@ spec:
 
     resources:
       requests:
-        cpu: 200m
-        memory: 512Mi
+        cpu: 1
+        memory: 1Gi
       limits:
-        memory: 2Gi
+        memory: 4Gi
 
     # Cron job for background tasks
     cronjob:
