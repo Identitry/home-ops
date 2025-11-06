@@ -439,6 +439,7 @@ spec:
   ingress:
     - fromEndpoints:
         - matchLabels:
+            k8s:io.kubernetes.pod.namespace: tenant-root
             app.kubernetes.io/name: ingress-nginx
       toPorts:
         - ports:
