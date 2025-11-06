@@ -199,6 +199,11 @@ spec:
         usernameKey: nextcloud-username
         passwordKey: nextcloud-password
 
+      # Trusted domains configuration
+      trustedDomains:
+        - localhost
+        - nextcloud.${DOMAIN}
+
       # PHP configuration for performance
       phpConfigs:
         uploadLimit.ini: |
@@ -395,6 +400,15 @@ spec:
       runAsUser: 33
       runAsGroup: 33
       runAsNonRoot: true
+
+    # Fix data directory permissions
+    lifecycle:
+      postStart:
+        exec:
+          command:
+            - /bin/sh
+            - -c
+            - chmod 0770 /var/www/html/data || true
 
     phpClientHttpsFix:
       enabled: true
