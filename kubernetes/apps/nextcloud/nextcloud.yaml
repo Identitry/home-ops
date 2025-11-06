@@ -168,25 +168,6 @@ spec:
 
     replicaCount: 1
 
-    # Init container to fix data directory permissions
-    initContainers:
-      - name: fix-permissions
-        image: busybox:1.37.0
-        command:
-          - sh
-          - -c
-          - |
-            echo "Fixing /var/www/html/data permissions..."
-            chown -R 33:33 /var/www/html/data
-            chmod 0770 /var/www/html/data
-            echo "Permissions fixed!"
-        volumeMounts:
-          - name: nextcloud-data
-            mountPath: /var/www/html
-        securityContext:
-          runAsUser: 0
-          runAsNonRoot: false
-
     ingress:
       enabled: true
       className: tenant-root
