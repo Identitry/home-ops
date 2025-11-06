@@ -214,9 +214,9 @@ spec:
           pm.min_spare_servers = 6
           pm.max_spare_servers = 18
 
-      # S3/Minio Primary Storage Configuration
+      # Custom configuration - merged into a single file to avoid conflicts
       configs:
-        s3.config.php: |-
+        custom.config.php: |-
           <?php
           $s3_bucket = getenv('S3_BUCKET');
           $s3_key = getenv('S3_ACCESS_KEY');
@@ -229,6 +229,7 @@ spec:
           $s3_port = isset($parts[1]) ? (int)$parts[1] : 9000;
 
           $CONFIG = array (
+            // S3/Minio Primary Storage
             'objectstore' => array(
               'class' => '\\OC\\Files\\ObjectStore\\S3',
               'arguments' => array(
@@ -243,12 +244,7 @@ spec:
                 'use_path_style' => true
               ),
             ),
-          );
-
-        # Redis configuration
-        redis.config.php: |-
-          <?php
-          $CONFIG = array (
+            // Redis configuration
             'memcache.local' => '\\OC\\Memcache\\APCu',
             'memcache.distributed' => '\\OC\\Memcache\\Redis',
             'memcache.locking' => '\\OC\\Memcache\\Redis',
@@ -257,12 +253,7 @@ spec:
               'port' => 6379,
               'timeout' => 0.0,
             ),
-          );
-
-        # Additional optimizations
-        custom.config.php: |-
-          <?php
-          $CONFIG = array (
+            // Additional optimizations
             'default_phone_region' => 'SE',
             'maintenance_window_start' => 1,
             'enable_previews' => true,
