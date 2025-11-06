@@ -428,6 +428,26 @@ spec:
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
+  name: nextcloud-ingress
+  namespace: nextcloud
+spec:
+  # Ingress policy for Nextcloud pods - allow traffic from ingress-nginx
+  endpointSelector:
+    matchLabels:
+      app.kubernetes.io/name: nextcloud
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            app.kubernetes.io/name: ingress-nginx
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: TCP
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/cilium/cilium/main/install/kubernetes/quick-install.yaml
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
   name: nextcloud-egress
   namespace: nextcloud
 spec:

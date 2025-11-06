@@ -278,6 +278,9 @@ Public Github site that describes the cluster. ✅
 - Polaris ?
 - Kyverno ?
 
+#### File Storage
+- Nextcloud
+
 #### Maybe in the future
 
 - presidio - deidentification service for text and images - https://github.com/microsoft/presidio
