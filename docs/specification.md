@@ -74,15 +74,15 @@ All nodes have Nut-Client installed and configured against TrueNAS-Stor.
 - Operating System: TrueNAS Scale Fangtooth-25.04.2.4
 - Hostname: nas
 - IP Address: 192.168.222.13
-- Model: homebuild (AsRock Z370M-ITX/ac motherboard)
+- Model: homebuilt (AsRock Z370M-ITX/ac motherboard)
 - CPU: i7-8700 3,2Ghz (8:th gen, 6cores, 12 threads, Q4 2017)
 - RAM: 32GB (2133Mhz)
 - Boot drive: 120GB SATA-SSD (OCZ-VERTEX2)
 - Storage:
-  - 4x12TB 7200rpm HGST/WD DC HC520 in 2 x MIRROR | 2 wide ZFS configuration
+  - 3x12TB 7200rpm HGST/WD DC HC520 + 1x 12GB 7200rpm WD Red Pro in 2 x MIRROR | 2 wide ZFS configuration
   - 1 256GB NVME (Gen3) SLOG drive - not working!
 
-Also runs as NUT and Minio (S3) server.
+Also runs as NUT Server (UPS) and Minio server (S3 Storage).
 
 2. backup (backup.myk8s.se) - Remote location backup
 
@@ -105,7 +105,7 @@ Also runs as NUT and Minio (S3) server.
 - intel-ice-firmware
 - nut-client (needs config)
 - zfs
-- lldpd (likely to be added to Cozystack soon, needs config)
+- lldpd (This is removed in Cozystack 0.37.5)
 
 ### CozyStack ✅
 
@@ -248,7 +248,7 @@ Public Github site that describes the cluster. ✅
 - kMCP - Platform for running MCP-servers in Kubernetes (https://kagent.dev/docs/kmcp) ✅
 - deepeval-mcp - Agent evaluation platform. ✅
 - docling-serve - Document conversion for RAG (https://github.com/docling-project/docling-serve) ✅
-- presidio - de-identification service for text and images - https://github.com/microsoft/presidio
+- mathesar - Fantastic Postgres UI (https://github.com/mathesar-foundation/mathesar, https://hub.docker.com/r/mathesar/mathesar/tags)
 
 ##### MCP Servers
 - graphiti - GraphRAG complete with FalkorDB(Redis) - https://github.com/getzep/graphiti
@@ -280,6 +280,7 @@ Public Github site that describes the cluster. ✅
 
 #### Maybe in the future
 
+- presidio - deidentification service for text and images - https://github.com/microsoft/presidio
 - Immich - Photo management (requires postgres and redis)
   https://github.com/gabe565/home-ops/tree/main/kubernetes/gabernetes/apps/immich
 - Immich Drop - Allows dropping photos easily into Immich.
@@ -296,10 +297,7 @@ Public Github site that describes the cluster. ✅
 - TDArr (transcoding , could save a lot of diskspace for media library)
   https://github.com/onedr0p/home-ops/tree/main/kubernetes/apps/default/autobrr
 - Unpackerr
-- exportarr - exports metrics for Sonarr, Radarr, Lidarr, Prowlarr, Readarr, Bazarr and Sabnzbd
-- mathesar - Fantastic Postgres UI
-  https://github.com/mathesar-foundation/mathesar
 - Atuin - Shell history server. ✅
 - Peanut - Network UPS Tools GUI and Prometheus metrics. ✅
-- Cilium Hubble - Cilium Network Policy observation. ✅
+- Cilium Hubble - Cilium Network Policy observation. ☑️
 - ...more to come

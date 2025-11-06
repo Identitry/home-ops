@@ -1,0 +1,407 @@
+---
+# Namespace for Nextcloud
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nextcloud
+  labels:
+    app.kubernetes.io/name: nextcloud
+    app.kubernetes.io/instance: nextcloud
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd/helm-controller/main/config/crd/bases/helm.toolkit.fluxcd.io_helmrepositories.yaml
+# Helm Repository for Nextcloud
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: nextcloud
+  namespace: nextcloud
+spec:
+  interval: 1h
+  url: https://nextcloud.github.io/helm/
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/external-secrets/refs/heads/main/config/crds/bases/external-secrets.io_externalsecrets.yaml
+# Database credentials for CNPG
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: es-nextcloud-db-creds
+  namespace: nextcloud
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: infisical
+  target:
+    name: nextcloud-db-creds
+    creationPolicy: Owner
+    template:
+      metadata:
+        labels:
+          reloader.stakater.com/auto: "true"
+  data:
+    - secretKey: username
+      remoteRef:
+        key: /NEXTCLOUD/CNPG_USERNAME
+    - secretKey: password
+      remoteRef:
+        key: /NEXTCLOUD/CNPG_PASSWORD
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/external-secrets/refs/heads/main/config/crds/bases/external-secrets.io_externalsecrets.yaml
+# Nextcloud admin and S3 credentials
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: es-nextcloud-config
+  namespace: nextcloud
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: infisical
+  target:
+    name: nextcloud-config
+    creationPolicy: Owner
+    template:
+      metadata:
+        labels:
+          reloader.stakater.com/auto: "true"
+  data:
+    - secretKey: nextcloud-username
+      remoteRef:
+        key: /NEXTCLOUD/ADMIN_USER
+    - secretKey: nextcloud-password
+      remoteRef:
+        key: /NEXTCLOUD/ADMIN_PASSWORD
+    - secretKey: s3-access-key
+      remoteRef:
+        key: /NEXTCLOUD/S3_ACCESS_KEY
+    - secretKey: s3-secret-key
+      remoteRef:
+        key: /NEXTCLOUD/S3_SECRET_KEY
+    - secretKey: s3-bucket
+      remoteRef:
+        key: /NEXTCLOUD/S3_BUCKET
+    - secretKey: s3-hostname
+      remoteRef:
+        key: /NEXTCLOUD/S3_HOSTNAME
+    - secretKey: admin-email
+      remoteRef:
+        key: /NEXTCLOUD/ADMIN_EMAIL
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/main/config/crd/bases/postgresql.cnpg.io_clusters.yaml
+# CloudNativePG Cluster for Nextcloud
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: nextcloud-db
+  namespace: nextcloud
+spec:
+  instances: 2
+  affinity:
+    enablePodAntiAffinity: true
+    topologyKey: kubernetes.io/hostname
+    podAntiAffinityType: preferred
+
+  storage:
+    size: 20Gi
+
+  bootstrap:
+    initdb:
+      database: nextcloud
+      owner: nextcloud
+      secret:
+        name: nextcloud-db-creds
+
+  monitoring:
+    enablePodMonitor: true
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/spotahome/redis-operator/refs/heads/master/manifests/databases.spotahome.com_redisfailovers.yaml
+# RedisFailover for Nextcloud, used for caching and file locking
+apiVersion: databases.spotahome.com/v1
+kind: RedisFailover
+metadata:
+  name: nextcloud-redis
+  namespace: nextcloud
+spec:
+  sentinel:
+    replicas: 3
+  redis:
+    replicas: 3
+---
+# PersistentVolumeClaim for Nextcloud local storage (config, cache, temp)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nextcloud-data
+  namespace: nextcloud
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 10Gi
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd/helm-controller/main/config/crd/bases/helm.toolkit.fluxcd.io_helmreleases.yaml
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: nextcloud
+  namespace: nextcloud
+spec:
+  chart:
+    spec:
+      chart: nextcloud
+      version: 8.5.2
+      reconcileStrategy: ChartVersion
+      sourceRef:
+        kind: HelmRepository
+        namespace: nextcloud
+        name: nextcloud
+  interval: 1h
+  driftDetection:
+    mode: enabled
+  values:
+    deploymentAnnotations:
+      reloader.stakater.com/auto: "true"
+
+    image:
+      repository: nextcloud
+      tag: 32.0.1-apache@sha256:40b1b5dc35bcc9a0e922ec847451e43fa14222c9a99dcd5dfcc03b08f6c15775
+      pullPolicy: IfNotPresent
+
+    replicaCount: 1
+
+    ingress:
+      enabled: true
+      className: tenant-root
+      annotations:
+        external-dns.alpha.kubernetes.io/target: ${CLOUDFLARE_TUNNEL_TARGET}
+        external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+        external-dns.alpha.kubernetes.io/hostname: "nextcloud.${DOMAIN}"
+        nginx.ingress.kubernetes.io/proxy-body-size: "10G"
+        nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+        nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+        nginx.ingress.kubernetes.io/proxy-buffering: "off"
+        nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
+        nginx.ingress.kubernetes.io/enable-cors: "true"
+        # NO Authentik forward-auth - Nextcloud handles its own authentication
+      tls:
+        - secretName: wildcard-le-tls-cert
+          hosts:
+            - nextcloud.${DOMAIN}
+      hosts:
+        - nextcloud.${DOMAIN}
+      path: /
+      pathType: Prefix
+
+    nextcloud:
+      host: nextcloud.${DOMAIN}
+      existingSecret:
+        enabled: true
+        secretName: nextcloud-config
+        usernameKey: nextcloud-username
+        passwordKey: nextcloud-password
+
+      # PHP configuration for performance
+      phpConfigs:
+        uploadLimit.ini: |
+          upload_max_filesize = 16G
+          post_max_size = 16G
+          max_input_time = 3600
+          max_execution_time = 3600
+        www.conf: |
+          [www]
+          pm = dynamic
+          pm.max_children = 120
+          pm.start_servers = 12
+          pm.min_spare_servers = 6
+          pm.max_spare_servers = 18
+
+      # S3/Minio Primary Storage Configuration
+      configs:
+        s3.config.php: |-
+          <?php
+          $s3_bucket = getenv('S3_BUCKET');
+          $s3_key = getenv('S3_ACCESS_KEY');
+          $s3_secret = getenv('S3_SECRET_KEY');
+          $s3_hostname = getenv('S3_HOSTNAME');
+
+          // Parse hostname to extract host and port
+          $parts = explode(':', $s3_hostname);
+          $s3_host = $parts[0];
+          $s3_port = isset($parts[1]) ? (int)$parts[1] : 9000;
+
+          $CONFIG = array (
+            'objectstore' => array(
+              'class' => '\\OC\\Files\\ObjectStore\\S3',
+              'arguments' => array(
+                'bucket' => $s3_bucket,
+                'autocreate' => false,
+                'key' => $s3_key,
+                'secret' => $s3_secret,
+                'hostname' => $s3_host,
+                'port' => $s3_port,
+                'use_ssl' => false,
+                'region' => 'us-east-1',
+                'use_path_style' => true
+              ),
+            ),
+          );
+
+        # Redis configuration
+        redis.config.php: |-
+          <?php
+          $CONFIG = array (
+            'memcache.local' => '\\OC\\Memcache\\APCu',
+            'memcache.distributed' => '\\OC\\Memcache\\Redis',
+            'memcache.locking' => '\\OC\\Memcache\\Redis',
+            'redis' => array(
+              'host' => 'rfrm-nextcloud-redis.nextcloud.svc',
+              'port' => 6379,
+              'timeout' => 0.0,
+            ),
+          );
+
+        # Additional optimizations
+        custom.config.php: |-
+          <?php
+          $CONFIG = array (
+            'default_phone_region' => 'SE',
+            'maintenance_window_start' => 1,
+            'enable_previews' => true,
+            'enabledPreviewProviders' => array (
+              'OC\\Preview\\PNG',
+              'OC\\Preview\\JPEG',
+              'OC\\Preview\\GIF',
+              'OC\\Preview\\BMP',
+              'OC\\Preview\\XBitmap',
+              'OC\\Preview\\MP3',
+              'OC\\Preview\\TXT',
+              'OC\\Preview\\MarkDown',
+              'OC\\Preview\\PDF',
+            ),
+            'preview_max_x' => 2048,
+            'preview_max_y' => 2048,
+            'jpeg_quality' => 60,
+            'trashbin_retention_obligation' => 'auto, 30',
+            'versions_retention_obligation' => 'auto, 30',
+            'log_type' => 'file',
+            'logfile' => '/var/www/html/data/nextcloud.log',
+            'loglevel' => 2,
+            'overwrite.cli.url' => 'https://nextcloud.${DOMAIN}',
+            'overwriteprotocol' => 'https',
+          );
+
+      extraEnv:
+        - name: PHP_MEMORY_LIMIT
+          value: "1024M"
+        - name: PHP_UPLOAD_LIMIT
+          value: "16G"
+        - name: S3_BUCKET
+          valueFrom:
+            secretKeyRef:
+              name: nextcloud-config
+              key: s3-bucket
+        - name: S3_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: nextcloud-config
+              key: s3-access-key
+        - name: S3_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: nextcloud-config
+              key: s3-secret-key
+        - name: S3_HOSTNAME
+          valueFrom:
+            secretKeyRef:
+              name: nextcloud-config
+              key: s3-hostname
+
+      # Install these apps on first deployment
+      extraCommands:
+        - echo "Installing recommended apps..."
+        - su www-data -s /bin/sh -c "php /var/www/html/occ app:install user_oidc || true"
+        - su www-data -s /bin/sh -c "php /var/www/html/occ app:install files_3d || true"
+        - su www-data -s /bin/sh -c "php /var/www/html/occ app:install external || true"
+        - su www-data -s /bin/sh -c "php /var/www/html/occ app:install files_markdown || true"
+        - su www-data -s /bin/sh -c "php /var/www/html/occ app:install files_clipboard || true"
+        - su www-data -s /bin/sh -c "php /var/www/html/occ app:install epubreader || true"
+        - su www-data -s /bin/sh -c "php /var/www/html/occ app:enable files_external || true"
+        - su www-data -s /bin/sh -c "php /var/www/html/occ app:install integration_onedrive || true"
+        - su www-data -s /bin/sh -c "php /var/www/html/occ app:install files_external_dropbox || true"
+        - echo "Apps installation complete"
+
+    internalDatabase:
+      enabled: false
+
+    externalDatabase:
+      enabled: true
+      type: postgresql
+      host: nextcloud-db-rw.nextcloud.svc
+      database: nextcloud
+      existingSecret:
+        enabled: true
+        secretName: nextcloud-db-creds
+        usernameKey: username
+        passwordKey: password
+
+    redis:
+      enabled: false
+
+    persistence:
+      enabled: true
+      existingClaim: nextcloud-data
+      nextcloudData:
+        enabled: true
+        existingClaim: nextcloud-data
+        accessMode: ReadWriteOnce
+        size: 10Gi
+
+    livenessProbe:
+      enabled: true
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
+      successThreshold: 1
+
+    readinessProbe:
+      enabled: true
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 3
+      successThreshold: 1
+
+    startupProbe:
+      enabled: true
+      initialDelaySeconds: 30
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 30
+      successThreshold: 1
+
+    resources:
+      requests:
+        cpu: 200m
+        memory: 512Mi
+      limits:
+        memory: 2Gi
+
+    # Cron job for background tasks
+    cronjob:
+      enabled: true
+      schedule: "*/5 * * * *"
+      annotations: {}
+      successfulJobsHistoryLimit: 1
+      failedJobsHistoryLimit: 2
+
+    # Security context
+    securityContext:
+      runAsUser: 33
+      runAsGroup: 33
+      runAsNonRoot: true
+      fsGroup: 33
+      fsGroupChangePolicy: OnRootMismatch
+
+    phpClientHttpsFix:
+      enabled: true
+      protocol: https
