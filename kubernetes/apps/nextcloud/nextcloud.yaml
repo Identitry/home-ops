@@ -385,13 +385,19 @@ spec:
       successfulJobsHistoryLimit: 1
       failedJobsHistoryLimit: 2
 
-    # Security context
-    securityContext:
+    # Pod-level security context (fsGroup goes here)
+    podSecurityContext:
       runAsUser: 33
       runAsGroup: 33
       runAsNonRoot: true
       fsGroup: 33
       fsGroupChangePolicy: OnRootMismatch
+
+    # Container-level security context
+    securityContext:
+      runAsUser: 33
+      runAsGroup: 33
+      runAsNonRoot: true
 
     phpClientHttpsFix:
       enabled: true
