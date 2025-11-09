@@ -144,6 +144,8 @@ spec:
               password:
                 existingSecret: ai-automation-db-creds
                 existingSecretKey: password
+      extraEnv:
+        - N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
 
       persistence:
         enabled: true
