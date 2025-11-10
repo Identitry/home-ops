@@ -225,23 +225,23 @@ spec:
     - to:
         - podSelector: {} # any pod in the same namespace
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/cilium/cilium/main/install/kubernetes/quick-install.yaml
-apiVersion: cilium.io/v2
-kind: CiliumNetworkPolicy
+# NetworkPolicy: allow Minio/MinIO S3 access for nocodb pods.
+# Purpose: Let nocodb reach the on-prem MinIO gateway on TCP/9000.
+# Scope: only pods with app.kubernetes.io/name=nocodb.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
 metadata:
-  name: ai-automation-egress
+  name: allow-nocodb-minio-egress
   namespace: ai-automation
 spec:
-  # Egress policy for Nextcloud pods
-  endpointSelector:
+  podSelector:
     matchLabels:
-      app.kubernetes.io/name: ai-automation
+      app.kubernetes.io/name: nocodb
+  policyTypes: ["Egress"]
   egress:
-    # Allow egress to Minio S3 (external to cluster)
-    - toCIDR:
-        - 192.168.222.13/32
-      toPorts:
-        - ports:
-            - port: "9000"
-              protocol: TCP
-
+    - to:
+        - ipBlock:
+            cidr: 192.168.222.13/32
+      ports:
+        - protocol: TCP
+          port: 9000
