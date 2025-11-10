@@ -32,7 +32,7 @@ spec:
           reloader.stakater.com/auto: "true"
       data:
         NC_AUTH_JWT_SECRET: "{{ .jwt_secret }}"
-        NC_DB: "pg://ai-automation-rw.ai-automation.svc.cozy.local:5432?u=ai-automation-cnpg&p={{ .cnpg_password }}&d=nocodb"
+        NC_DB: "pg://ai-automation-rw.ai-automation.svc.cozy.local:5432?u={{ .cnpg_username }}&p={{ .cnpg_password }}&d=nocodb"
         NC_STORAGE_PROVIDER: "s3"
         NC_S3_BUCKET_NAME: "nocodb-data"
         NC_S3_ACCESS_KEY: "{{ .minio_access_key }}"
@@ -47,6 +47,9 @@ spec:
     - secretKey: cnpg_password
       remoteRef:
         key: /AI_AUTOMATION/CNPG_PASSWORD
+    - secretKey: cnpg_username
+      remoteRef:
+        key: /AI_AUTOMATION/CNPG_USERNAME
     - secretKey: minio_access_key
       remoteRef:
         key: /AI_AUTOMATION/NOCODB_MINIO_ACCESSKEY
