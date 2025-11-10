@@ -186,23 +186,3 @@ spec:
     securityContext:
       runAsNonRoot: true
       allowPrivilegeEscalation: false
----
-# yaml-language-server: $schema=https://raw.githubusercontent.com/cilium/cilium/main/install/kubernetes/quick-install.yaml
-apiVersion: cilium.io/v2
-kind: CiliumNetworkPolicy
-metadata:
-  name: nextcloud-egress
-  namespace: nextcloud
-spec:
-  # Egress policy for Nextcloud pods
-  endpointSelector:
-    matchLabels:
-      app.kubernetes.io/name: nextcloud
-  egress:
-    # Allow egress to Minio S3 (external to cluster)
-    - toCIDR:
-        - 192.168.222.13/32
-      toPorts:
-        - ports:
-            - port: "9000"
-              protocol: TCP
