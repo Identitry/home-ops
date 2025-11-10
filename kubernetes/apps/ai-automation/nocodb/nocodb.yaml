@@ -49,7 +49,7 @@ spec:
         NC_S3_ACCESS_KEY: "{{ .minio_access_key }}"
         NC_S3_SECRET_KEY: "{{ .minio_secret_key }}"
         NC_S3_ENDPOINT: "{{ .s3_hostname }}"
-        #NC_S3_REGION: "eu-north-1"
+        NC_S3_REGION: "eu-north-1"
         NC_S3_FORCE_PATH_STYLE: "false"
         NC_S3_USE_SSL: "true"
         NC_ADMIN_EMAIL: "{{ .admin_email }}"
