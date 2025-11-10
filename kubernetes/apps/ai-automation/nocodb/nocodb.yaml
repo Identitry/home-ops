@@ -46,6 +46,14 @@ spec:
           }
         NC_ADMIN_EMAIL: "{{ .admin_email }}"
         NC_ADMIN_PASSWORD: "{{ .admin_password }}"
+        MINIO_ROOT_USER: "{{ .minio_access_key }}"
+        MINIO_ROOT_PASSWORD: "{{ .minio_secret_key }}"
+        NC_S3_BUCKET_NAME: "nocodb-data"
+        NC_S3_ACCESS_KEY: "{{ .minio_access_key }}"
+        NC_S3_ACCESS_SECRET: "{{ .minio_secret_key }}"
+        NC_S3_ENDPOINT: "{{ .minio_hostname }}"
+        NC_S3_REGION: "us-east-1"
+        NC_S3_FORCE_PATH_STYLE: “true”
         NC_DISABLE_TELE: "true"
   data:
     - secretKey: cnpg_username
@@ -60,7 +68,7 @@ spec:
     - secretKey: minio_secret_key
       remoteRef:
         key: /AI_AUTOMATION/NOCODB_MINIO_SECRETKEY
-    - secretKey: s3_hostname
+    - secretKey: minio_hostname
       remoteRef:
         key: /AI_AUTOMATION/S3_HOSTNAME
     - secretKey: jwt_secret
@@ -124,7 +132,6 @@ spec:
 
     extraEnvs:
       NC_PUBLIC_URL: https://nocodb.${DOMAIN}
-      NC_DISABLE_TELEMETRY: "true"
       TZ: ${TZ}
 
     extraSecretEnvs: null
