@@ -39,8 +39,8 @@ spec:
               "host": "ai-automation-rw.ai-automation.svc.cozy.local",
               "port": 5432,
               "database": "nocodb",
-              "user": "ai-automation-{{ .cnpg_username }}",
-              "password": "{{ .cnpg_password }}",
+              "user": "ai-automation-cnpg",
+              "password": {{ .cnpg_password | toJson }},
               "ssl": false
             }
           }
