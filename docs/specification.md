@@ -248,7 +248,12 @@ Public Github site that describes the cluster. ✅
 - kMCP - Platform for running MCP-servers in Kubernetes (https://kagent.dev/docs/kmcp) ✅
 - deepeval-mcp - Agent evaluation platform. ✅
 - docling-serve - Document conversion for RAG (https://github.com/docling-project/docling-serve) ✅
-- mathesar - Fantastic Postgres UI (https://github.com/mathesar-foundation/mathesar, https://hub.docker.com/r/mathesar/mathesar/tags)
+- nocodb - spreadsheet like database.
+
+##### Kubernetes Agentic AI
+- Flux CD MCP Server - https://fluxcd.io/blog/2025/05/ai-assisted-gitops/
+- Victoria Metrics MCP Server - https://github.com/VictoriaMetrics-Community/mcp-victoriametrics
+- Kubernetes MCP Server - https://github.com/containers/kubernetes-mcp-server
 
 ##### MCP Servers
 - graphiti - GraphRAG complete with FalkorDB(Redis) - https://github.com/getzep/graphiti
