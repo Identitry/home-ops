@@ -45,15 +45,16 @@ spec:
             }
           }
         #NC_STORAGE_PROVIDER: "s3"
-        NC_S3_BUCKET_NAME: "nocodb-data"
-        NC_S3_ACCESS_KEY: "{{ .minio_access_key }}"
-        NC_S3_SECRET_KEY: "{{ .minio_secret_key }}"
-        NC_S3_ENDPOINT: "{{ .s3_hostname }}"
-        NC_S3_REGION: "eu-north-1"
-        NC_S3_FORCE_PATH_STYLE: "false"
-        NC_S3_USE_SSL: "true"
+        #NC_S3_BUCKET_NAME: "nocodb-data"
+        #NC_S3_ACCESS_KEY: "{{ .minio_access_key }}"
+        #NC_S3_SECRET_KEY: "{{ .minio_secret_key }}"
+        #NC_S3_ENDPOINT: "{{ .s3_hostname }}"
+        #NC_S3_REGION: "eu-north-1"
+        #NC_S3_FORCE_PATH_STYLE: "false"
+        #NC_S3_USE_SSL: "true"
         NC_ADMIN_EMAIL: "{{ .admin_email }}"
         NC_ADMIN_PASSWORD: "{{ .admin_password }}"
+        NC_DISABLE_TELE: "true"
   data:
     - secretKey: cnpg_username
       remoteRef:
