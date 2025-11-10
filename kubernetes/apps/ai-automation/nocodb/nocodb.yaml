@@ -61,7 +61,7 @@ spec:
         key: /AI_AUTOMATION/S3_HOSTNAME
     - secretKey: jwt_secret
       remoteRef:
-        key: /AI_AUTOMATION/NOCODB_AUTH_JWT_SECRET
+        key: /AI_AUTOMATION/NOCODB_JWT_SECRET
     - secretKey: admin_email
       remoteRef:
         key: /AI_AUTOMATION/NOCODB_ADMIN_EMAIL
