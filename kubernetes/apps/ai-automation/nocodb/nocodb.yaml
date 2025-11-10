@@ -79,7 +79,7 @@ spec:
   cluster:
     name: ai-automation
   name: nocodb
-  owner: ai-automation-cnpg
+  owner: cnpg
   ensure: present
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
