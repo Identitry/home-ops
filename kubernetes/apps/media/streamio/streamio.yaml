@@ -142,7 +142,7 @@ spec:
           app:
             image:
               repository: ghcr.io/elfhosted/flixio-api
-              tag: rolling@sha256:0e30427d9c311f806610951cfc8d8a71c1ba6b65c3ea1a93b829ed75e37138c9
+              tag: rolling@sha256:610c9980d9c1124f55b99e0a8938bb1e8034d3e30f81064dd63fec2eceb37a42
               pullPolicy: IfNotPresent
             env:
               TZ: ${TZ}
