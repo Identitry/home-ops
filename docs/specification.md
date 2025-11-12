@@ -249,7 +249,7 @@ Public Github site that describes the cluster. ✅
 - deepeval-mcp - Agent evaluation platform. ✅
 - docling-serve - Document conversion for RAG (https://github.com/docling-project/docling-serve) ✅
 - nocodb - spreadsheet like database.
-- Produkt för långtidsminne agent? Letta?
+- Product for agent long time memory? Letta?
 
 ##### Kubernetes Agentic AI MCP Servers
 - Flux CD MCP Server - https://fluxcd.io/blog/2025/05/ai-assisted-gitops/
@@ -257,6 +257,7 @@ Public Github site that describes the cluster. ✅
 - Kubernetes MCP Server - https://github.com/containers/kubernetes-mcp-server
 - Cilium MCP Server?
 - Infisical - https://github.com/Infisical/infisical-mcp-server
+- docling-mcp - https://github.com/docling-project/docling-mcp
 
 #### Home Automation
 
