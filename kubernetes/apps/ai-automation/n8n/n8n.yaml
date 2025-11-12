@@ -159,6 +159,12 @@ spec:
         port: 80
         targetPort: 5678
 
+    extraEnv:
+      - name: WEBHOOK_URL
+        value: https://n8n.${DOMAIN}
+      - name: WEBHOOK_TUNNEL_URL
+        value: https://n8n.${DOMAIN}
+
     ingress:
       enabled: true
       className: tenant-root
