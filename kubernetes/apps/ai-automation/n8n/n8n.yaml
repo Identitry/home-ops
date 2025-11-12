@@ -109,8 +109,10 @@ spec:
 
     main:
       config:
+        webhook_url: https://n8n.${DOMAIN}
         n8n:
           port: 5678
+          proxy_hops: 1
           executions:
             pruneData: true
             pruneDataMaxAge: 336
@@ -170,12 +172,6 @@ spec:
         type: ClusterIP
         port: 80
         targetPort: 5678
-
-      extraEnv:
-        - name: WEBHOOK_URL
-          value: https://n8n.${DOMAIN}
-        - name: N8N_PROXY_HOPS
-          value: 1
 
     ingress:
       enabled: true
