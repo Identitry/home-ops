@@ -171,11 +171,11 @@ spec:
         port: 80
         targetPort: 5678
 
-      extraEnv:
-        - name: WEBHOOK_URL
-          value: https://n8n.${DOMAIN}
-        - name: N8N_PROXY_HOPS
-          value: 1
+      #extraEnv:
+      #  - name: WEBHOOK_URL
+      #    value: https://n8n.${DOMAIN}
+      #  - name: N8N_PROXY_HOPS
+      #   value: 1
 
     ingress:
       enabled: true
