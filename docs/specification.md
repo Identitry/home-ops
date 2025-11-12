@@ -256,6 +256,7 @@ Public Github site that describes the cluster. ✅
 - Victoria Metrics MCP Server - https://github.com/VictoriaMetrics-Community/mcp-victoriametrics
 - Kubernetes MCP Server - https://github.com/containers/kubernetes-mcp-server
 - Cilium MCP Server?
+- Infisical - https://github.com/Infisical/infisical-mcp-server
 
 #### Home Automation
 

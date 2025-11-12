@@ -166,6 +166,14 @@ spec:
           proxy_set_header X-Forwarded-Proto $scheme;
           proxy_set_header X-Forwarded-Uri $request_uri;
           proxy_set_header X-Original-Method $request_method;
+        # --- Hopefully fixes n8n "Connection Lost" issues ---
+        nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+        nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+        nginx.ingress.kubernetes.io/proxy-buffering: "off"
+        nginx.ingress.kubernetes.io/configuration-snippet: |
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection $connection_upgrade;
       hosts:
         - host: n8n.${DOMAIN}
           paths:
