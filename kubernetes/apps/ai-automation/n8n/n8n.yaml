@@ -175,9 +175,7 @@ spec:
           value: https://n8n.${DOMAIN}
         - name: N8N_PROXY_HOPS
           value: 1
-        - name: N8N_EXTERNAL_STORAGE_S3_ENABLED
-          value: "true"
-        - name: N8N_EXTERNAL_STORAGE_S3_ENDPOINT
+        - name: N8N_EXTERNAL_STORAGE_S3_HOST
           valueFrom:
             secretKeyRef:
               name: n8n-config
@@ -197,10 +195,6 @@ spec:
             secretKeyRef:
               name: n8n-config
               key: minio_secret_key
-        - name: N8N_EXTERNAL_STORAGE_S3_FORCE_PATH_STYLE
-          value: "true"
-        - name: N8N_EXTERNAL_STORAGE_S3_REGION
-          value: "us-east-1"
 
     ingress:
       enabled: true
