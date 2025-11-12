@@ -117,6 +117,7 @@ spec:
             pruneDataMaxAge: 336
           generic:
             timezone: ${TZ}
+            webhook_url: https://n8n.${DOMAIN}
           db:
             type: postgresdb
             postgresdb:

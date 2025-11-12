@@ -249,23 +249,18 @@ Public Github site that describes the cluster. ✅
 - deepeval-mcp - Agent evaluation platform. ✅
 - docling-serve - Document conversion for RAG (https://github.com/docling-project/docling-serve) ✅
 - nocodb - spreadsheet like database.
+- Produkt för långtidsminne agent? Letta?
 
-##### Kubernetes Agentic AI
+##### Kubernetes Agentic AI MCP Servers
 - Flux CD MCP Server - https://fluxcd.io/blog/2025/05/ai-assisted-gitops/
 - Victoria Metrics MCP Server - https://github.com/VictoriaMetrics-Community/mcp-victoriametrics
 - Kubernetes MCP Server - https://github.com/containers/kubernetes-mcp-server
-
-##### MCP Servers
-- graphiti - GraphRAG complete with FalkorDB(Redis) - https://github.com/getzep/graphiti
-- Flux CD - https://fluxcd.io/blog/2025/05/ai-assisted-gitops/
-
+- Cilium MCP Server?
 
 #### Home Automation
 
 - Home Assistant OS (kubevirt) - Virtual Machine - currently on truenas-stor.
-- Generic Device Plugin (for connecting node USB device to pod)
-  https://github.com/gabe565/home-ops/tree/main/kubernetes/gabernetes/apps/generic-device-plugin
-- Zigbee2MQTT (USB passtrough) (currently on HAOS VM)
+- Zigbee2MQTT (currently on HAOS VM)
 - ESP Home
 - Frigate
   [Helm Chart](https://github.com/blakeblackshear/blakeshome-charts/tree/master/charts/frigate)
@@ -284,15 +279,15 @@ Public Github site that describes the cluster. ✅
 - Kyverno ?
 
 #### File Storage
-- Nextcloud
+
+- Nextcloud ✅
 
 #### Maybe in the future
 
-- presidio - deidentification service for text and images - https://github.com/microsoft/presidio
 - Immich - Photo management (requires postgres and redis)
   https://github.com/gabe565/home-ops/tree/main/kubernetes/gabernetes/apps/immich
 - Immich Drop - Allows dropping photos easily into Immich.
-- Streamio Server (https://github.com/tsaridas/stremio-docker) + MediaFusion (Debrid support) + GlueTun
+- Streamio Server (https://github.com/tsaridas/stremio-docker) + MediaFusion (Debrid support) + GlueTun ☑️
 - Gatus - Uptime monitoring
 - Paperless-ngx - document management
 - Headscale - Local implementation of Tailscale
@@ -304,7 +299,7 @@ Public Github site that describes the cluster. ✅
 - Guacamole
 - TDArr (transcoding , could save a lot of diskspace for media library)
   https://github.com/onedr0p/home-ops/tree/main/kubernetes/apps/default/autobrr
-- Unpackerr
+- Unpackerr - Unpacks downloaded files in case they're rared or zipped.
 - Atuin - Shell history server. ✅
 - Peanut - Network UPS Tools GUI and Prometheus metrics. ✅
 - Cilium Hubble - Cilium Network Policy observation. ☑️
