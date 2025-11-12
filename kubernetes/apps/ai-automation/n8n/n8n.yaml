@@ -53,19 +53,6 @@ spec:
       remoteRef:
         key: /AI_AUTOMATION/N8N_MINIO_BUCKET
 ---
-# CNPG Database resource for n8n
-#apiVersion: postgresql.cnpg.io/v1
-#kind: Database
-#metadata:
-#  name: n8n
-#  namespace: ai-automation
-#spec:
-#  cluster:
-#    name: ai-automation
-#  name: n8n
-#  owner: cnpg
-#  ensure: present
----
 # yaml-language-server: $schema=https://raw.githubusercontent.com/spotahome/redis-operator/refs/heads/master/manifests/databases.spotahome.com_redisfailovers.yaml
 # RedisFailover for n8n, used for caching and queue management
 apiVersion: databases.spotahome.com/v1
