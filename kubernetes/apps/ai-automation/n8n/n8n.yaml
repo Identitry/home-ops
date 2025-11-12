@@ -49,9 +49,6 @@ spec:
     - secretKey: s3_endpoint
       remoteRef:
         key: /AI_AUTOMATION/S3_HOSTNAME
-    - secretKey: minio_bucket
-      remoteRef:
-        key: /AI_AUTOMATION/N8N_MINIO_BUCKET
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/spotahome/redis-operator/refs/heads/master/manifests/databases.spotahome.com_redisfailovers.yaml
 # RedisFailover for n8n, used for caching and queue management
@@ -108,6 +105,7 @@ spec:
       tag: 1.120.1@sha256:12e72a8df1a52d04878906e1c03108405ed118c337f3872a779f8f306af4377b
 
     main:
+      # All non secret configuration for n8n goes here...
       config:
         webhook_url: https://n8n.${DOMAIN}
         n8n:
@@ -130,6 +128,11 @@ spec:
               redis:
                 host: rfrm-n8n-redis.ai-automation.svc
                 port: 6379
+          external_storage:
+            s3:
+              bucket: n8n-data
+
+      # All secret configuration for n8n goes here...
       secret:
         n8n:
           encryption_key:
@@ -150,9 +153,6 @@ spec:
               host:
                 existingSecret: n8n-config
                 existingSecretKey: s3_endpoint
-              bucket:
-                existingSecret: n8n-config
-                existingSecretKey: minio_bucket
               access_key:
                 existingSecret: n8n-config
                 existingSecretKey: minio_access_key
