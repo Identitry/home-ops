@@ -119,8 +119,8 @@ spec:
               redis:
                 host: rfrm-n8n-redis.ai-automation.svc
                 port: 6379
-          #community_packages:
-          #  allow_tool_usage: true
+          community_packages:
+            allow_tool_usage: true
 
       # All secret configuration for n8n goes here...
       secret:
