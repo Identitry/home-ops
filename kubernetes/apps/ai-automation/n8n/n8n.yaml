@@ -156,6 +156,20 @@ spec:
               password:
                 existingSecret: ai-automation-db-creds
                 existingSecretKey: password
+          external_storage:
+            s3:
+              host:
+                existingSecret: n8n-config
+                existingSecretKey: s3_endpoint
+              bucket:
+                existingSecret: n8n-config
+                existingSecretKey: minio_bucket
+              access_key:
+                existingSecret: n8n-config
+                existingSecretKey: minio_access_key
+              secret_key:
+                existingSecret: n8n-config
+                existingSecretKey: minio_secret_key
 
       persistence:
         enabled: true
@@ -175,26 +189,26 @@ spec:
           value: https://n8n.${DOMAIN}
         - name: N8N_PROXY_HOPS
           value: 1
-        - name: N8N_EXTERNAL_STORAGE_S3_HOST
-          valueFrom:
-            secretKeyRef:
-              name: n8n-config
-              key: s3_endpoint
-        - name: N8N_EXTERNAL_STORAGE_S3_BUCKET_NAME
-          valueFrom:
-            secretKeyRef:
-              name: n8n-config
-              key: minio_bucket
-        - name: N8N_EXTERNAL_STORAGE_S3_ACCESS_KEY
-          valueFrom:
-            secretKeyRef:
-              name: n8n-config
-              key: minio_access_key
-        - name: N8N_EXTERNAL_STORAGE_S3_ACCESS_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: n8n-config
-              key: minio_secret_key
+        #- name: N8N_EXTERNAL_STORAGE_S3_HOST
+        #  valueFrom:
+        #   secretKeyRef:
+        #     name: n8n-config
+        #      key: s3_endpoint
+        #- name: N8N_EXTERNAL_STORAGE_S3_BUCKET_NAME
+        #  valueFrom:
+        #    secretKeyRef:
+        #      name: n8n-config
+        #      key: minio_bucket
+        #- name: N8N_EXTERNAL_STORAGE_S3_ACCESS_KEY
+        #  valueFrom:
+        #    secretKeyRef:
+        #      name: n8n-config
+        #      key: minio_access_key
+        #- name: N8N_EXTERNAL_STORAGE_S3_ACCESS_SECRET
+        #  valueFrom:
+        #    secretKeyRef:
+        #      name: n8n-config
+        #      key: minio_secret_key
 
     ingress:
       enabled: true
