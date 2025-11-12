@@ -40,15 +40,6 @@ spec:
     - secretKey: license_key
       remoteRef:
         key: /AI_AUTOMATION/N8N_LICENSE_KEY
-    - secretKey: minio_access_key
-      remoteRef:
-        key: /AI_AUTOMATION/N8N_MINIO_ACCESSKEY
-    - secretKey: minio_secret_key
-      remoteRef:
-        key: /AI_AUTOMATION/N8N_MINIO_SECRETKEY
-    - secretKey: s3_endpoint
-      remoteRef:
-        key: /AI_AUTOMATION/S3_HOSTNAME
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/spotahome/redis-operator/refs/heads/master/manifests/databases.spotahome.com_redisfailovers.yaml
 # RedisFailover for n8n, used for caching and queue management
@@ -128,9 +119,6 @@ spec:
               redis:
                 host: rfrm-n8n-redis.ai-automation.svc
                 port: 6379
-          external_storage:
-            s3:
-              bucket: n8n-data
 
       # All secret configuration for n8n goes here...
       secret:
@@ -148,17 +136,6 @@ spec:
               password:
                 existingSecret: ai-automation-db-creds
                 existingSecretKey: password
-          external_storage:
-            s3:
-              host:
-                existingSecret: n8n-config
-                existingSecretKey: s3_endpoint
-              access_key:
-                existingSecret: n8n-config
-                existingSecretKey: minio_access_key
-              secret_key:
-                existingSecret: n8n-config
-                existingSecretKey: minio_secret_key
 
       persistence:
         enabled: true
