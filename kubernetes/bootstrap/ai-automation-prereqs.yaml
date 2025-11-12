@@ -234,9 +234,7 @@ metadata:
   name: allow-nocodb-minio-egress
   namespace: ai-automation
 spec:
-  podSelector:
-    matchLabels:
-      app.kubernetes.io/name: nocodb
+  podSelector: {}
   policyTypes: ["Egress"]
   egress:
     - to:
