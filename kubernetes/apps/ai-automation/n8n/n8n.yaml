@@ -172,10 +172,11 @@ spec:
         nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
         nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
         nginx.ingress.kubernetes.io/proxy-buffering: "off"
-        #nginx.ingress.kubernetes.io/configuration-snippet: |
-        #  proxy_http_version 1.1;
-        #  proxy_set_header Upgrade $http_upgrade;
-        # proxy_set_header Connection $connection_upgrade;
+        nginx.ingress.kubernetes.io/configuration-snippet: |
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection $connection_upgrade;
+          proxy_set_header Host $host;
       hosts:
         - host: n8n.${DOMAIN}
           paths:
