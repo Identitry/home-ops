@@ -99,6 +99,8 @@ spec:
       # All non secret configuration for n8n goes here...
       config:
         webhook_url: https://n8n.${DOMAIN}
+        node:
+          function_allow_builtin: "*"
         n8n:
           port: 5678
           proxy_hops: 1
