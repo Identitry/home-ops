@@ -105,7 +105,7 @@ spec:
           vpn:
             image:
               repository: qmcgaw/gluetun
-              tag: v3.40.1@sha256:dc38bac12b40bb935e477f0dbd88adf174001c84b144c86648b25ff5f14ef54a
+              tag: v3.40.3@sha256:ef4a44819a60469682c7b5e69183e6401171891feaa60186652d292c59e41b30
               pullPolicy: IfNotPresent
             restartPolicy: Always
             securityContext:
@@ -120,6 +120,7 @@ spec:
               VPN_TYPE: "wireguard"
               DNS_PLAINTEXT_ADDRESS: "10.96.0.10" # <- set to your kube-dns IP
               FIREWALL_INPUT_PORTS: "53,853,443" # <- let DNS/DoT/DoH reach Blocky
+              FIREWALL_OUTBOUND_SUBNETS: "10.96.0.0/12,10.96.188.241/32,10.244.0.0/16,192.168.222.0/24"
               HEALTH_VPN_DURATION_INITIAL: 120s
               HEALTH_SUCCESS_WAIT_DURATION: 120s
               DOT: "off"
