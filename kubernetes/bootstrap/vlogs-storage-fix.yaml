@@ -1,0 +1,11 @@
+# Ensures VictoriaLogs "generic" PVC request stays at or above the existing 15Gi capacity.
+apiVersion: operator.victoriametrics.com/v1beta1
+kind: VLogs
+metadata:
+  name: generic
+  namespace: tenant-root
+spec:
+  storage:
+    resources:
+      requests:
+        storage: 15Gi
