@@ -471,6 +471,8 @@ data:
     CREATE INDEX idx_user_agreements_user_id ON user_agreements(user_id);
     CREATE INDEX idx_user_agreements_version ON user_agreements(agreement_version);
 
+# end of ConfigMap data
+---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/main/config/crd/bases/postgresql.cnpg.io_clusters.yaml
 # CloudNativePG Cluster — small footprint (1Gi) for PowerDNS
 apiVersion: postgresql.cnpg.io/v1
