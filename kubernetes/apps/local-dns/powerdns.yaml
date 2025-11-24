@@ -306,11 +306,11 @@ spec:
             volumeMounts:
               - name: powerdns-schema
                 mountPath: /schema
-            containers:
-              app:
-                image:
-                  repository: docker.io/powerdns/pdns-auth-49
-                  tag: "4.9.11@sha256:69e0e8ce5671f5f18e19c86746783ff6990555884cb9673b9845959fe05cdb46"
+        containers:
+          app:
+            image:
+              repository: docker.io/powerdns/pdns-auth-49
+              tag: "4.9.11@sha256:69e0e8ce5671f5f18e19c86746783ff6990555884cb9673b9845959fe05cdb46"
             args:
               - --config-dir=/etc/powerdns
             env:
