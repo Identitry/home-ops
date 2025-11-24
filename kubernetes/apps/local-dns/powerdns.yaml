@@ -496,6 +496,13 @@ spec:
       owner: powerdns
       secret:
         name: powerdns-db-creds
+      postInitApplicationSQLRefs:
+        - key: schema.sql
+          configMapRef:
+            name: powerdns-schema
+        - key: poweradmin-pgsql-db-structure.sql
+          configMapRef:
+            name: powerdns-schema
 
   monitoring:
     enablePodMonitor: true
