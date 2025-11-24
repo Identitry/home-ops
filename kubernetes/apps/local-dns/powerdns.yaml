@@ -513,6 +513,22 @@ spec:
               }
               apply /schema/schema.sql
               apply /schema/poweradmin-pgsql-db-structure.sql
+              echo "Ensuring NS records exist for all domains..."
+              PGPASSWORD="$DB_PASSWORD" psql -h powerdns-db-rw.local-dns.svc -U "$DB_USERNAME" -d powerdns <<'SQL'
+DO $$
+DECLARE
+  r record;
+BEGIN
+  FOR r IN SELECT id, name FROM domains LOOP
+    IF NOT EXISTS (SELECT 1 FROM records WHERE domain_id = r.id AND type = 'NS') THEN
+      INSERT INTO records(domain_id, name, type, content, ttl, prio, disabled, auth)
+      VALUES
+        (r.id, r.name, 'NS', 'ns1.${DOMAIN}', 3600, 0, false, true),
+        (r.id, r.name, 'NS', 'ns2.${DOMAIN}', 3600, 0, false, true);
+    END IF;
+  END LOOP;
+END $$;
+SQL
               echo "Schemas applied"
           volumeMounts:
             - name: powerdns-schema
