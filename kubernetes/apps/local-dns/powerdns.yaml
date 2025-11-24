@@ -514,7 +514,7 @@ spec:
               apply /schema/schema.sql
               apply /schema/poweradmin-pgsql-db-structure.sql
               echo "Ensuring NS records exist for all domains..."
-              PGPASSWORD="$DB_PASSWORD" psql -h powerdns-db-rw.local-dns.svc -U "$DB_USERNAME" -d powerdns <<'SQL'
+              cat <<'SQL' >/tmp/ns.sql
 DO $$
 DECLARE
   r record;
@@ -529,6 +529,7 @@ BEGIN
   END LOOP;
 END $$;
 SQL
+              PGPASSWORD="$DB_PASSWORD" psql -h powerdns-db-rw.local-dns.svc -U "$DB_USERNAME" -d powerdns -f /tmp/ns.sql
               echo "Schemas applied"
           volumeMounts:
             - name: powerdns-schema
