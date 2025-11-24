@@ -303,9 +303,6 @@ spec:
                 fi
                 echo "Applying PowerDNS schema...";
                 PGPASSWORD="$DB_PASSWORD" psql -h powerdns-db-rw.local-dns.svc -U "$DB_USERNAME" -d powerdns -f /schema/schema.sql
-            volumeMounts:
-              - name: powerdns-schema
-                mountPath: /schema
         containers:
           app:
             image:
