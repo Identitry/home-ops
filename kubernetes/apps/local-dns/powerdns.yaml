@@ -507,9 +507,6 @@ spec:
                 fi
                 echo "Applying PowerAdmin schema...";
                 PGPASSWORD="$DB_PASSWORD" psql -h powerdns-db-rw.local-dns.svc -U "$DB_USERNAME" -d powerdns -f /schema/poweradmin-pgsql-db-structure.sql
-            volumeMounts:
-              - name: powerdns-schema
-                mountPath: /schema
         containers:
           app:
             image:
