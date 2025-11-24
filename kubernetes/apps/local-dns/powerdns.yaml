@@ -204,9 +204,9 @@ data:
     CREATE UNIQUE INDEX namealgoindex ON tsigkeys(name, algorithm);
   poweradmin-pgsql-db-structure.sql: |
     -- Adminer 4.8.1 PostgreSQL 14.5 (Debian 14.5-1.pgdg110+1) dump
-    
+
     CREATE SEQUENCE log_users_id_seq1 INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
-    
+
     CREATE TABLE "public"."log_users" (
                                           "id" integer DEFAULT nextval('log_users_id_seq1') NOT NULL,
                                           "event" character varying(2048),
@@ -214,10 +214,10 @@ data:
                                           "priority" integer,
                                           CONSTRAINT "log_users_pkey" PRIMARY KEY ("id")
     ) WITH (oids = false);
-    
-    
+
+
     CREATE SEQUENCE log_zones_id_seq1 INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
-    
+
     CREATE TABLE "public"."log_zones" (
                                           "id" integer DEFAULT nextval('log_zones_id_seq1') NOT NULL,
                                           "event" character varying(2048),
@@ -226,8 +226,8 @@ data:
                                           "zone_id" integer,
                                           CONSTRAINT "log_zones_pkey" PRIMARY KEY ("id")
     ) WITH (oids = false);
-    
-    
+
+
     CREATE TABLE "public"."migrations" (
                                            "version" bigint NOT NULL,
                                            "migration_name" character varying(100),
@@ -236,17 +236,17 @@ data:
                                            "breakpoint" boolean NOT NULL DEFAULT false,
                                            CONSTRAINT "migrations_pkey" PRIMARY KEY ("version")
     ) WITH (oids = false);
-    
-    
+
+
     CREATE SEQUENCE perm_items_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
-    
+
     CREATE TABLE "public"."perm_items" (
                                            "id" integer DEFAULT nextval('perm_items_id_seq') NOT NULL,
                                            "name" character varying(64),
                                            "descr" character varying(1024),
                                            CONSTRAINT "perm_items_pkey" PRIMARY KEY ("id")
     ) WITH (oids = false);
-    
+
     INSERT INTO "perm_items" ("id", "name", "descr") VALUES
                                                          (41,	'zone_master_add',	'User is allowed to add new master zones.'),
                                                          (42,	'zone_slave_add',	'User is allowed to add new slave zones.'),
@@ -272,40 +272,40 @@ data:
                                                          (62,	'zone_content_edit_own_as_client',	'User is allowed to edit record, but not SOA and NS.'),
                                                          (63,	'zone_templ_add',	'User is allowed to add new zone templates.'),
                                                          (64,	'zone_templ_edit',	'User is allowed to edit existing zone templates.');
-    
+
     CREATE SEQUENCE perm_templ_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
-    
+
     CREATE TABLE "public"."perm_templ" (
                                                "id" integer DEFAULT nextval('perm_templ_id_seq') NOT NULL,
                                                "name" character varying(128),
                                                "descr" character varying(1024),
                                                CONSTRAINT "perm_templ_pkey" PRIMARY KEY ("id")
     ) WITH (oids = false);
-    
+
     INSERT INTO "perm_templ" ("id", "name", "descr") VALUES
         (1,	'Administrator',	'Administrator template with full rights.');
-    
+
     CREATE SEQUENCE perm_templ_items_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
-    
+
     CREATE TABLE "public"."perm_templ_items" (
                                                  "id" integer DEFAULT nextval('perm_templ_items_id_seq') NOT NULL,
                                                  "templ_id" integer,
                                                  "perm_id" integer,
                                                  CONSTRAINT "perm_templ_items_pkey" PRIMARY KEY ("id")
     ) WITH (oids = false);
-    
+
     INSERT INTO "perm_templ_items" ("id", "templ_id", "perm_id") VALUES
         (1,	1,	53);
-    
+
     CREATE TABLE "public"."records_zone_templ" (
                                                    "domain_id" integer,
                                                    "record_id" integer,
                                                    "zone_templ_id" integer
     ) WITH (oids = false);
-    
-    
+
+
     CREATE SEQUENCE users_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
-    
+
     CREATE TABLE "public"."users" (
                                       "id" integer DEFAULT nextval('users_id_seq') NOT NULL,
                                       "username" character varying(64),
@@ -318,9 +318,9 @@ data:
                                       "use_ldap" integer,
                                       CONSTRAINT "users_pkey" PRIMARY KEY ("id")
     ) WITH (oids = false);
-    
+
     CREATE SEQUENCE login_attempts_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
-    
+
     CREATE TABLE "public"."login_attempts" (
         "id" integer DEFAULT nextval('login_attempts_id_seq') NOT NULL,
         "user_id" integer NULL,
@@ -330,13 +330,13 @@ data:
         CONSTRAINT "login_attempts_pkey" PRIMARY KEY ("id"),
         CONSTRAINT "fk_login_attempts_users" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
     ) WITH (oids = false);
-    
+
     CREATE INDEX "idx_login_attempts_user_id" ON "public"."login_attempts" USING btree ("user_id");
     CREATE INDEX "idx_login_attempts_ip_address" ON "public"."login_attempts" USING btree ("ip_address");
     CREATE INDEX "idx_login_attempts_timestamp" ON "public"."login_attempts" USING btree ("timestamp");
-    
+
     CREATE SEQUENCE zone_templ_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
-    
+
     CREATE TABLE "public"."zone_templ" (
                                            "id" integer DEFAULT nextval('zone_templ_id_seq') NOT NULL,
                                            "name" character varying(128),
@@ -346,10 +346,10 @@ data:
                                            CONSTRAINT "zone_templ_pkey" PRIMARY KEY ("id"),
                                            CONSTRAINT "fk_zone_templ_users" FOREIGN KEY ("created_by") REFERENCES "users" ("id") ON DELETE SET NULL
     ) WITH (oids = false);
-    
-    
+
+
     CREATE SEQUENCE zone_templ_records_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
-    
+
     CREATE TABLE "public"."zone_templ_records" (
                                                    "id" integer DEFAULT nextval('zone_templ_records_id_seq') NOT NULL,
                                                    "zone_templ_id" integer,
@@ -360,10 +360,10 @@ data:
                                                    "prio" integer,
                                                    CONSTRAINT "zone_templ_records_pkey" PRIMARY KEY ("id")
     ) WITH (oids = false);
-    
-    
+
+
     CREATE SEQUENCE zones_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
-    
+
     CREATE TABLE "public"."zones" (
                                       "id" integer DEFAULT nextval('zones_id_seq') NOT NULL,
                                       "domain_id" integer,
@@ -372,9 +372,9 @@ data:
                                       "zone_templ_id" integer,
                                       CONSTRAINT "zones_pkey" PRIMARY KEY ("id")
     ) WITH (oids = false);
-    
+
     CREATE SEQUENCE api_keys_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
-    
+
     CREATE TABLE "public"."api_keys" (
         "id" integer DEFAULT nextval('api_keys_id_seq') NOT NULL,
         "name" character varying(255) NOT NULL,
@@ -387,13 +387,13 @@ data:
         CONSTRAINT "api_keys_pkey" PRIMARY KEY ("id"),
         CONSTRAINT "fk_api_keys_users" FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE SET NULL
     ) WITH (oids = false);
-    
+
     CREATE UNIQUE INDEX "idx_api_keys_secret_key" ON "public"."api_keys" USING btree ("secret_key");
     CREATE INDEX "idx_api_keys_created_by" ON "public"."api_keys" USING btree ("created_by");
     CREATE INDEX "idx_api_keys_disabled" ON "public"."api_keys" USING btree ("disabled");
-    
+
     CREATE SEQUENCE user_mfa_id_seq INCREMENT 1 MINVALUE 1 MAXVALUE 2147483647 CACHE 1;
-    
+
     CREATE TABLE "public"."user_mfa" (
         "id" integer DEFAULT nextval('user_mfa_id_seq') NOT NULL,
         "user_id" integer NOT NULL,
@@ -408,10 +408,10 @@ data:
         CONSTRAINT "user_mfa_pkey" PRIMARY KEY ("id"),
         CONSTRAINT "fk_user_mfa_users" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     ) WITH (oids = false);
-    
+
     CREATE UNIQUE INDEX "idx_user_mfa_user_id" ON "public"."user_mfa" USING btree ("user_id");
     CREATE INDEX "idx_user_mfa_enabled" ON "public"."user_mfa" USING btree ("enabled");
-    
+
     CREATE TABLE "user_preferences" (
         "id" serial NOT NULL,
         "user_id" integer NOT NULL,
@@ -420,10 +420,10 @@ data:
         CONSTRAINT "user_preferences_pkey" PRIMARY KEY ("id"),
         CONSTRAINT "fk_user_preferences_users" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     ) WITH (oids = false);
-    
+
     CREATE UNIQUE INDEX "idx_user_preferences_user_key" ON "public"."user_preferences" USING btree ("user_id", "preference_key");
     CREATE INDEX "idx_user_preferences_user_id" ON "public"."user_preferences" USING btree ("user_id");
-    
+
     CREATE TABLE "zone_template_sync" (
         "id" serial NOT NULL,
         "zone_id" integer NOT NULL,
@@ -437,11 +437,11 @@ data:
         CONSTRAINT "fk_zone_template_sync_zone" FOREIGN KEY (zone_id) REFERENCES zones(id) ON DELETE CASCADE,
         CONSTRAINT "fk_zone_template_sync_templ" FOREIGN KEY (zone_templ_id) REFERENCES zone_templ(id) ON DELETE CASCADE
     ) WITH (oids = false);
-    
+
     CREATE UNIQUE INDEX "idx_zone_template_unique" ON "public"."zone_template_sync" USING btree ("zone_id", "zone_templ_id");
     CREATE INDEX "idx_zone_templ_id" ON "public"."zone_template_sync" USING btree ("zone_templ_id");
     CREATE INDEX "idx_needs_sync" ON "public"."zone_template_sync" USING btree ("needs_sync");
-    
+
     -- 2022-09-29 19:10:39.890321+00
     CREATE TABLE password_reset_tokens (
         id SERIAL PRIMARY KEY,
@@ -452,11 +452,11 @@ data:
         used BOOLEAN NOT NULL DEFAULT FALSE,
         ip_address VARCHAR(45) DEFAULT NULL
     );
-    
+
     CREATE INDEX idx_prt_email ON password_reset_tokens(email);
     CREATE UNIQUE INDEX idx_prt_token ON password_reset_tokens(token);
     CREATE INDEX idx_prt_expires ON password_reset_tokens(expires_at);
-    
+
     CREATE TABLE user_agreements (
         id SERIAL PRIMARY KEY,
         user_id INTEGER NOT NULL,
@@ -466,7 +466,7 @@ data:
         user_agent TEXT DEFAULT NULL,
         CONSTRAINT fk_user_agreements_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
     );
-    
+
     CREATE UNIQUE INDEX unique_user_agreement ON user_agreements(user_id, agreement_version);
     CREATE INDEX idx_user_agreements_user_id ON user_agreements(user_id);
     CREATE INDEX idx_user_agreements_version ON user_agreements(agreement_version);
