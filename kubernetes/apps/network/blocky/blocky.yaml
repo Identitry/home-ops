@@ -218,7 +218,7 @@ spec:
         annotations:
           nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
           nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-          external-dns.alpha.kubernetes.io/target: cluster-ingress.${DOMAIN}
+          external-dns.alpha.kubernetes.io/target: ${CLOUDFLARE_TUNNEL_TARGET}
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
           external-dns.alpha.kubernetes.io/hostname: "blocky.${DOMAIN}"
           # --- Authentik forward-auth (NGINX Ingress) ---
