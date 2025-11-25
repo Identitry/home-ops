@@ -848,6 +848,10 @@ spec:
             targetPort: api
       admin:
         controller: admin
+        annotations:
+          external-dns.alpha.kubernetes.io/internal: "true"
+          external-dns.alpha.kubernetes.io/hostname: "powerdns.${DOMAIN}"
+          external-dns.alpha.kubernetes.io/target: "cluster-ingress.${DOMAIN}"
         ports:
           http:
             port: 80
