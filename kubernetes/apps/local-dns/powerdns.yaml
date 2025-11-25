@@ -812,8 +812,6 @@ spec:
         type: LoadBalancer
         annotations:
           metallb.io/address-pool: cozystack
-          external-dns.alpha.kubernetes.io/hostname: "ns1.${DOMAIN}"
-          external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
         loadBalancerIP: 192.168.222.101
         externalTrafficPolicy: Local
         ports:
@@ -830,8 +828,6 @@ spec:
         type: LoadBalancer
         annotations:
           metallb.io/address-pool: cozystack
-          external-dns.alpha.kubernetes.io/hostname: "ns2.${DOMAIN}"
-          external-dns.alpha.kubernetes.io/cloudflare-proxied: "false"
         loadBalancerIP: 192.168.222.102
         externalTrafficPolicy: Local
         ports:
