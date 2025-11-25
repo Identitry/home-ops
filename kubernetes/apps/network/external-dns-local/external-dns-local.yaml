@@ -64,7 +64,7 @@ spec:
       - --domain-filter=${DOMAIN}
       - --pdns-server=http://powerdns.local-dns.svc:8081
       - --pdns-api-key=$(PDNS_API_KEY)
-      - --pdns-api-server-id=localhost
+      - --pdns-server-id=localhost
       - --pdns-api-tls-skip-verify
     env:
       - name: PDNS_API_KEY
