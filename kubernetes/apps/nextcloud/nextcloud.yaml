@@ -169,6 +169,12 @@ spec:
 
     replicaCount: 1
 
+    service:
+      annotations:
+        external-dns.alpha.kubernetes.io/internal: "true"
+        external-dns.alpha.kubernetes.io/hostname: "nextcloud.${DOMAIN}"
+        external-dns.alpha.kubernetes.io/target: "cluster-ingress.${DOMAIN}"
+
     ingress:
       enabled: true
       className: tenant-root
