@@ -485,7 +485,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: apply-schemas
-          image: docker.io/library/postgres:16-alpine
+          image: docker.io/library/postgres:18-alpine
           env:
             - name: DB_USERNAME
               valueFrom:
@@ -608,7 +608,7 @@ spec:
           init-schema:
             image:
               repository: docker.io/library/postgres
-              tag: "16-alpine"
+              tag: "18-alpine"
             env:
               - name: DB_USERNAME
                 valueFrom:
@@ -691,7 +691,7 @@ spec:
           init-schema:
             image:
               repository: docker.io/library/postgres
-              tag: "16-alpine"
+              tag: "18-alpine"
             env:
               - name: DB_USERNAME
                 valueFrom:
