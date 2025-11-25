@@ -61,7 +61,6 @@ spec:
     txtOwnerId: "k8s-external-dns"
     sources:
       - ingress
-      - service
     domainFilters:
       - ${DOMAIN} # Restrict changes to your domain
     extraArgs:

@@ -54,7 +54,6 @@ spec:
     txtOwnerId: "k8s-local-dns"
     txtPrefix: local-
     sources:
-      - ingress
       - service
     domainFilters:
       - ${DOMAIN} # Restrict changes to your domain
