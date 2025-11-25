@@ -951,6 +951,26 @@ spec:
         - protocol: TCP
           port: 8081
 ---
+# Allow external-dns-local namespace to reach the PowerDNS API
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-api-from-external-dns-local
+  namespace: local-dns
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: powerdns
+  policyTypes: ["Ingress"]
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: external-dns-local
+      ports:
+        - protocol: TCP
+          port: 8081
+---
 # Allow ingress from tenant-root (ingress-nginx) to services in this namespace
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy

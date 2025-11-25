@@ -1,0 +1,11 @@
+
+---
+# HelmRepository for ExternalDNS.
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: external-dns
+  namespace: cozy-fluxcd
+spec:
+  interval: 1h
+  url: https://kubernetes-sigs.github.io/external-dns

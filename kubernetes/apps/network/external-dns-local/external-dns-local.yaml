@@ -1,0 +1,77 @@
+---
+# Namespace for External DNS
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-dns-local
+  labels:
+    app.kubernetes.io/name: external-dns-local
+    app.kubernetes.io/instance: external-dns-local
+---
+# External secret for Cloudflare API Token, used by External DNS to authenticate with Cloudflare.
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: es-powerdns-api-key
+  namespace: external-dns-local
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: infisical
+  target:
+    name: powerdns-api-key
+    creationPolicy: Owner
+    template:
+      metadata:
+        labels:
+          reloader.stakater.com/auto: "true"
+  data:
+    - secretKey: api-key
+      remoteRef:
+        key: /POWERDNS/API_KEY
+---
+# Helmrelease for External DNS.
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: external-dns-local
+  namespace: external-dns-local
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: external-dns
+      version: "1.19.0" # Check latest version at https://artifacthub.io/packages/helm/external-dns/external-dns
+      sourceRef:
+        kind: HelmRepository
+        name: external-dns
+        namespace: cozy-fluxcd
+      interval: 1m
+  values:
+    serviceAccount:
+      create: true
+      name: external-dns-local
+    replicaCount: 1
+    podAnnotations:
+      reloader.stakater.com/auto: "true"
+    provider: pdns
+    policy: sync
+    txtOwnerId: "k8s-local-dns"
+    sources:
+      - ingress
+      - service
+    domainFilters:
+      - ${DOMAIN}
+    env:
+      - name: PDNS_API_URL
+        value: http://powerdns.local-dns.svc:8081
+      - name: PDNS_API_KEY
+        valueFrom:
+          secretKeyRef:
+            name: powerdns-api-key
+            key: api-key
+      - name: PDNS_API_SERVERIDS
+        value: "localhost"
+      - name: PDNS_API_TLS_SKIP_VERIFY
+        value: "true"

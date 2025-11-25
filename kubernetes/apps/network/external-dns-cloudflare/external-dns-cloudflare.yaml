@@ -8,16 +8,6 @@ metadata:
     app.kubernetes.io/name: external-dns
     app.kubernetes.io/instance: external-dns
 ---
-# HelmRepository for ExternalDNS.
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: external-dns
-  namespace: cozy-fluxcd
-spec:
-  interval: 1h
-  url: https://kubernetes-sigs.github.io/external-dns
----
 # External secret for Cloudflare API Token, used by External DNS to authenticate with Cloudflare.
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
