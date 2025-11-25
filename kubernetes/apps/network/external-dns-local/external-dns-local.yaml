@@ -55,23 +55,20 @@ spec:
     replicaCount: 1
     podAnnotations:
       reloader.stakater.com/auto: "true"
-    provider: pdns
-    policy: sync
-    txtOwnerId: "k8s-local-dns"
-    sources:
-      - ingress
-      - service
-    domainFilters:
-      - ${DOMAIN}
+    extraArgs:
+      - --provider=pdns
+      - --policy=sync
+      - --txt-owner-id=k8s-local-dns
+      - --source=ingress
+      - --source=service
+      - --domain-filter=${DOMAIN}
+      - --pdns-server=http://powerdns.local-dns.svc:8081
+      - --pdns-api-key=$(PDNS_API_KEY)
+      - --pdns-api-server-id=localhost
+      - --pdns-api-tls-skip-verify
     env:
-      - name: PDNS_API_URL
-        value: http://powerdns.local-dns.svc:8081
       - name: PDNS_API_KEY
         valueFrom:
           secretKeyRef:
             name: powerdns-api-key
             key: api-key
-      - name: PDNS_API_SERVERIDS
-        value: "localhost"
-      - name: PDNS_API_TLS_SKIP_VERIFY
-        value: "true"
