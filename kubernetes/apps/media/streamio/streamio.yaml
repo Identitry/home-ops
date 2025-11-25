@@ -403,6 +403,9 @@ spec:
         controller: streamio-web
         annotations:
           lineage.cozystack.io/ignore: "true"
+          external-dns.alpha.kubernetes.io/internal: "true"
+          external-dns.alpha.kubernetes.io/hostname: "blocky.${DOMAIN}"
+          external-dns.alpha.kubernetes.io/target: "cluster-ingress.${DOMAIN}"
         ports:
           http:
             port: 8080
