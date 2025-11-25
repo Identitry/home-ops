@@ -28,5 +28,11 @@ spec:
   values:
     ingress-nginx:
       controller:
+        service:
+          type: LoadBalancer
+          externalTrafficPolicy: Local
+          loadBalancerIP: 192.168.222.103
+          annotations:
+            metallb.io/address-pool: cozystack
         extraArgs:
           default-ssl-certificate: tenant-root/wildcard-le-tls-cert
