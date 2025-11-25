@@ -50,6 +50,13 @@ spec:
       interval: 1m
   values:
     provider: pdns
+    policy: sync # Keep DNS records in sync with K8s Ingress
+    txtOwnerId: "k8s-local-dns"
+    sources:
+      - ingress
+      - service
+    domainFilters:
+      - ${DOMAIN} # Restrict changes to your domain
     serviceAccount:
       create: true
       name: external-dns-local
@@ -57,15 +64,9 @@ spec:
     podAnnotations:
       reloader.stakater.com/auto: "true"
     extraArgs:
-      - --policy=sync
-      - --txt-owner-id=k8s-local-dns
-      - --source=ingress
-      - --source=service
-      - --domain-filter=${DOMAIN}
       - --pdns-server=http://powerdns.local-dns.svc:8081
       - --pdns-api-key=$(PDNS_API_KEY)
       - --pdns-server-id=localhost
-      #- --pdns-api-tls-skip-verify
     env:
       - name: PDNS_API_KEY
         valueFrom:
