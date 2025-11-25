@@ -69,7 +69,7 @@ spec:
       enabled: true
       ingressClassName: tenant-root
       annotations:
-        external-dns.alpha.kubernetes.io/target: ${CLOUDFLARE_TUNNEL_TARGET}
+        external-dns.alpha.kubernetes.io/target: cluster-ingress.${DOMAIN}
         external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
         external-dns.alpha.kubernetes.io/hostname: "qdrant.${DOMAIN}"
         nginx.ingress.kubernetes.io/auth-url: "http://authentik-server.authentik.svc.cozy.local/outpost.goauthentik.io/auth/nginx"

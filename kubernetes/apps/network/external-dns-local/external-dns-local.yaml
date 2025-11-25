@@ -52,11 +52,14 @@ spec:
     provider: pdns
     policy: sync # Keep DNS records in sync with K8s Ingress
     txtOwnerId: "k8s-local-dns"
+    txtPrefix: local-
     sources:
       - ingress
       - service
     domainFilters:
       - ${DOMAIN} # Restrict changes to your domain
+    annotationFilter:
+      - external-dns.alpha.kubernetes.io/internal=true
     serviceAccount:
       create: true
       name: external-dns-local
