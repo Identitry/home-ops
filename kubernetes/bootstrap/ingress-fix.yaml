@@ -36,3 +36,24 @@ spec:
             metallb.io/address-pool: cozystack
         extraArgs:
           default-ssl-certificate: tenant-root/wildcard-le-tls-cert
+---
+# NetworkPolicy: allow ingress to ingress-nginx from LAN (192.168.0.0/16) on 80/443
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-from-lan
+  namespace: tenant-root
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: ingress-nginx
+  policyTypes: ["Ingress"]
+  ingress:
+    - from:
+        - ipBlock:
+            cidr: 192.168.0.0/16
+      ports:
+        - protocol: TCP
+          port: 80
+        - protocol: TCP
+          port: 443
