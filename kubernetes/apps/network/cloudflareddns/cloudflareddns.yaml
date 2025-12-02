@@ -61,6 +61,17 @@ spec:
   values:
     podAnnotations:
       reloader.stakater.com/auto: "true"
+    workload:
+      main:
+        podSpec:
+          containers:
+            main:
+              # The upstream image expects s6's /command/with-contenv which is missing.
+              # Force bash to run the bundled script directly instead.
+              command:
+                - /bin/bash
+                - /app/cloudflare-ddns.sh
+                - /config
     cloudflareddns:
       interval: 300 # seconds
       detect_mode: dig-whoami.cloudflare

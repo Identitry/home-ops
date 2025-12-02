@@ -168,7 +168,7 @@ Public Github site that describes the cluster. ✅
 #### Storage/Networking
 
 - Minio (on nas) For backups. ✅
-- S3 Manager (Part of Cozystack, needed when Minio has a Gui?)
+- S3 Manager (Part of Cozystack, good thing for managing Minio buckets since Minio GUI isn't working)
 
 #### Web Publishing
 
