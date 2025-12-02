@@ -45,6 +45,7 @@ metadata:
     app.kubernetes.io/instance: cloudflare-ddns
 spec:
   interval: 5m
+  timeout: 10m
   chart:
     spec:
       chart: cloudflareddns
@@ -53,6 +54,10 @@ spec:
         kind: HelmRepository
         name: truecharts
         namespace: cozy-fluxcd
+  install:
+    timeout: 10m
+  upgrade:
+    timeout: 10m
   valuesFrom:
     - kind: Secret
       name: cloudflare-api-token
