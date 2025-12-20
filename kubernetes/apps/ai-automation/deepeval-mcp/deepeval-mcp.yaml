@@ -55,7 +55,7 @@ spec:
           app:
             image:
               repository: ghcr.io/identitry/deepeval-mcp
-              tag: 3.7.6@sha256:a2fd888126ba4d08e7b1f3e1b96accf29e7f99eecd2e408e4db18c573d52723e
+              tag: 3.7.6@sha256:2f99da18a017fa2696f2715ed8be3ad2c825e903298a5f27b726b06c864035ea
               pullPolicy: IfNotPresent
             envFrom:
               - secretRef:
