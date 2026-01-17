@@ -164,7 +164,7 @@ spec:
 
     image:
       repository: nextcloud
-      tag: 32.0.4-apache@sha256:9ca3f78fcca340ea32ab7bf1a01b2a2fd3eae64ffc0e791fd71eb9d72c3d2efe
+      tag: 32.0.5-apache@sha256:1024417454580e8408647314a4f76ef97aad41f8a31f7a3d010f3bf70d5e59a1
       pullPolicy: IfNotPresent
 
     replicaCount: 1
