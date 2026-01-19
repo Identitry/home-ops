@@ -126,19 +126,19 @@ spec:
               DOT: "off"
               TZ: ${TZ}
               VERSION_INFORMATION: "off"
-            probes:
-              liveness: &probe
-                enabled: true
-                custom: true
-                spec:
-                  exec: &exec
-                    command: [/gluetun-entrypoint, healthcheck]
-                  periodSeconds: 60
-              startup:
-                <<: *probe
-                spec:
-                  exec: *exec
-                  periodSeconds: 5
+            #probes:
+            #  liveness: &probe
+            #    enabled: true
+            #    custom: true
+            #    spec:
+            #      exec: &exec
+            #        command: [/gluetun-entrypoint, healthcheck]
+            #      periodSeconds: 60
+            #  startup:
+            #    <<: *probe
+            #    spec:
+            #      exec: *exec
+            #      periodSeconds: 5
 
           wait-vpn:
             image:
