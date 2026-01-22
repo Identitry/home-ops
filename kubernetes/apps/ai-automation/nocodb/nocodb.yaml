@@ -8,7 +8,7 @@ metadata:
 spec:
   interval: 1h
   ref:
-    commit: f9ddc62f510385851bda7dae54afa2367cd76306
+    commit: f9a1824881945226975c9dc42ae2283f63993e42
   url: https://github.com/nocodb/nocodb.git
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/external-secrets.io/externalsecret_v1.json
