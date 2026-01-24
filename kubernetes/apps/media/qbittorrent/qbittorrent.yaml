@@ -113,21 +113,6 @@ spec:
               BLOCK_ADS: "off"
               DNS_UPDATE_PERIOD: "0"
               WIREGUARD_MTU: "1280"
-            probes:
-              liveness: &probe
-                enabled: true
-                custom: true
-                spec:
-                  exec: &exec
-                    command: [/gluetun-entrypoint, healthcheck]
-                  periodSeconds: 60
-              startup:
-                <<: *probe
-                spec:
-                  exec: *exec
-                  periodSeconds: 5
-                  failureThreshold: 120
-                  timeoutSeconds: 5
 
           wait-vpn:
             image:
