@@ -120,11 +120,6 @@ spec:
               startup:
                 enabled: false
             resources: {}
-            volumeMounts:
-              - name: media
-                mountPath: /media
-              - name: tmp
-                mountPath: /tmp
 
           app:
             image:
