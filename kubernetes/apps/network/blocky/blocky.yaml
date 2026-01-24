@@ -101,14 +101,15 @@ spec:
           reloader.stakater.com/auto: "true"
         type: daemonset
 
-        initContainers:
+        containers:
           vpn:
             image:
               repository: qmcgaw/gluetun
               tag: v3.41.0@sha256:6b54856716d0de56e5bb00a77029b0adea57284cf5a466f23aad5979257d3045
               pullPolicy: IfNotPresent
-            restartPolicy: Always
             securityContext:
+              runAsNonRoot: false
+              runAsUser: 0
               allowPrivilegeEscalation: false
               capabilities:
                 add:
@@ -126,40 +127,15 @@ spec:
               DOT: "off"
               TZ: ${TZ}
               VERSION_INFORMATION: "off"
-            #probes:
-            #  liveness: &probe
-            #    enabled: true
-            #    custom: true
-            #    spec:
-            #      exec: &exec
-            #        command: [/gluetun-entrypoint, healthcheck]
-            #      periodSeconds: 60
-            #  startup:
-            #    <<: *probe
-            #    spec:
-            #      exec: *exec
-            #      periodSeconds: 5
+            probes:
+              liveness:
+                enabled: false
+              readiness:
+                enabled: false
+              startup:
+                enabled: false
+            resources: {}
 
-          wait-vpn:
-            image:
-              repository: docker.io/library/busybox
-              tag: "1.37.0"
-              pullPolicy: IfNotPresent
-            securityContext:
-              readOnlyRootFilesystem: true
-              allowPrivilegeEscalation: false
-            command:
-              - sh
-              - -c
-              - |
-                echo "Waiting for Gluetun tunnel connectivity..."
-                while ! (nc -z -w3 1.1.1.1 53 || nc -z -w3 8.8.8.8 53); do
-                  echo "Check failed, retrying in 5 seconds..."
-                  sleep 5
-                done
-                echo "Connectivity OK, proceeding"
-
-        containers:
           app:
             image:
               repository: ghcr.io/0xerr0r/blocky

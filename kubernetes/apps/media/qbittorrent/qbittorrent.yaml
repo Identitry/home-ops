@@ -82,13 +82,12 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
 
-        initContainers:
+        containers:
           vpn:
             image:
               repository: qmcgaw/gluetun
               tag: v3.41.0@sha256:6b54856716d0de56e5bb00a77029b0adea57284cf5a466f23aad5979257d3045
               pullPolicy: IfNotPresent
-            restartPolicy: Always
             securityContext:
               runAsNonRoot: false
               runAsUser: 0
@@ -113,27 +112,20 @@ spec:
               BLOCK_ADS: "off"
               DNS_UPDATE_PERIOD: "0"
               WIREGUARD_MTU: "1280"
+            probes:
+              liveness:
+                enabled: false
+              readiness:
+                enabled: false
+              startup:
+                enabled: false
+            resources: {}
+            volumeMounts:
+              - name: media
+                mountPath: /media
+              - name: tmp
+                mountPath: /tmp
 
-          wait-vpn:
-            image:
-              repository: docker.io/library/busybox
-              tag: "1.37.0"
-              pullPolicy: IfNotPresent
-            securityContext:
-              readOnlyRootFilesystem: true
-              allowPrivilegeEscalation: false
-            command:
-              - sh
-              - -c
-              - |
-                echo "Waiting for Gluetun health on :9999..."
-                until wget -q --spider --timeout=2 --tries=1 http://127.0.0.1:9999; do
-                  echo "Gluetun not healthy yet, retrying in 2s..."
-                  sleep 2
-                done
-                echo "Connectivity OK, proceeding"
-
-        containers:
           app:
             image:
               repository: ghcr.io/home-operations/qbittorrent
