@@ -149,7 +149,7 @@ spec:
   values:
     image:
       repository: otwld/velero-ui
-      tag: "0.10.0@sha256:5e502c8799ea84a3a784e12de44b3279b6cbf5170db21ca08064848f01a34e98"
+      tag: "0.10.1@sha256:d52893e4a4976ccc7e4c6830cf8b1d4e5125a1bdcac38f7c1f65f201479bffc3"
 
     serviceAccount:
       create: false
