@@ -83,6 +83,20 @@ roleRef:
   kind: Role
   name: velero-ui
 ---
+# Allow velero-ui to read cluster-scoped discovery info (namespaces, nodes, etc.)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: velero-ui-view
+subjects:
+  - kind: ServiceAccount
+    name: velero-ui
+    namespace: velero-ui
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: view
+---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
