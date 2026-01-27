@@ -13,6 +13,10 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: velero-ui
+  labels:
+    app.kubernetes.io/name: velero-ui
+    app.kubernetes.io/instance: velero-ui
+    ingress.svc.egress: allow # <--- opt-in label for ingress-controller traffic
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/external-secrets/external-secrets/refs/heads/main/config/crds/bases/external-secrets.io_externalsecrets.yaml
 apiVersion: external-secrets.io/v1
