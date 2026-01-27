@@ -1,0 +1,46 @@
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: es-velero-minio-credentials
+  namespace: cozy-velero
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: infisical
+  target:
+    name: velero-minio-credentials
+    creationPolicy: Owner
+    template:
+      type: Opaque
+      data:
+        cloud: |
+          [default]
+          aws_access_key_id={{ .aws_access_key_id }}
+          aws_secret_access_key={{ .aws_secret_access_key }}
+  data:
+    - secretKey: aws_access_key_id
+      remoteRef:
+        key: /VELERO/MINIO_ACCESS_KEY
+    - secretKey: aws_secret_access_key
+      remoteRef:
+        key: /VELERO/MINIO_SECRET_KEY
+---
+apiVersion: velero.io/v1
+kind: BackupStorageLocation
+metadata:
+  name: minio
+  namespace: cozy-velero
+spec:
+  provider: aws
+  accessMode: ReadWrite
+  default: true
+  objectStorage:
+    bucket: velero
+  credential:
+    name: velero-minio-credentials
+    key: cloud
+  config:
+    region: minio
+    s3ForcePathStyle: "true"
+    s3Url: http://192.168.222.13:9000
