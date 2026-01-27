@@ -169,6 +169,8 @@ spec:
 
     # Authentik via generic OIDC/OAuth2
     env:
+      - name: BASIC_AUTH_ENABLED
+        value: "false"
       - name: OAUTH_AUTH_ENABLED
         value: "true"
       - name: OAUTH_NAME
