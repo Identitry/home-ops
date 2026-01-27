@@ -62,6 +62,7 @@ rules:
     resources:
       - secrets
       - pods
+      - pods/status
       - pods/log
       - persistentvolumeclaims
       - services
