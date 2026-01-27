@@ -36,6 +36,27 @@ spec:
       remoteRef:
         key: /VELERO_UI/PASS_PHRASE
 ---
+# OAuth/OIDC client credentials for Authentik
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: es-velero-ui-oidc
+  namespace: velero-ui
+spec:
+  secretStoreRef:
+    kind: ClusterSecretStore
+    name: infisical
+  target:
+    name: velero-ui-oidc
+    creationPolicy: Owner
+  data:
+    - secretKey: client_id
+      remoteRef:
+        key: /VELERO_UI/OIDC_CLIENT_ID
+    - secretKey: client_secret
+      remoteRef:
+        key: /VELERO_UI/OIDC_CLIENT_SECRET
+---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -145,6 +166,35 @@ spec:
           useSecret: true
           existingSecret: velero-ui-passphrase
           key: pass_phrase
+
+    # Authentik via generic OIDC/OAuth2
+    env:
+      - name: OAUTH_AUTH_ENABLED
+        value: "true"
+      - name: OAUTH_NAME
+        value: "Authentik"
+      - name: OAUTH_AUTHORIZATION_URL
+        value: "https://auth.${DOMAIN}/application/o/authorize/"
+      - name: OAUTH_TOKEN_URL
+        value: "https://auth.${DOMAIN}/application/o/token/"
+      - name: OAUTH_USER_INFO_URL
+        value: "https://auth.${DOMAIN}/application/o/userinfo/"
+      - name: OAUTH_OAUTH_SCOPE
+        value: "openid profile email"
+      - name: OAUTH_REDIRECT_URI
+        value: "https://velero.${DOMAIN}/login"
+      - name: OAUTH_GROUP_CLAIM
+        value: "groups"
+      - name: OAUTH_CLIENT_ID
+        valueFrom:
+          secretKeyRef:
+            name: velero-ui-oidc
+            key: client_id
+      - name: OAUTH_CLIENT_SECRET
+        valueFrom:
+          secretKeyRef:
+            name: velero-ui-oidc
+            key: client_secret
 
     ingress:
       enabled: true
