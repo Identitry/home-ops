@@ -59,8 +59,14 @@ rules:
       - volumesnapshotlocations
     verbs: ["get", "list", "watch", "create", "update", "patch", "delete"]
   - apiGroups: [""]
-    resources: ["secrets"]
-    verbs: ["get", "list"]
+    resources:
+      - secrets
+      - pods
+      - pods/log
+      - persistentvolumeclaims
+      - services
+      - events
+    verbs: ["get", "list", "watch"]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
