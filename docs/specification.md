@@ -205,7 +205,8 @@ Public Github site that describes the cluster. ✅
 #### Backup
 
 - Velero configuration (https://cozystack.io/docs/kubernetes/backup-and-recovery/)
-- Velero UI - UI for Velero that is included in CozyStack
+- Velero UI - UI for Velero ✅
+- CNPG database backups to Minio
 
 #### Maybe in the future
 
