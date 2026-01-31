@@ -172,10 +172,9 @@ spec:
         nginx.ingress.kubernetes.io/auth-snippet: |
           proxy_set_header Host $host;
           proxy_set_header X-Original-URL $scheme://$host$escaped_request_uri;
-          proxy_set_header X-Forwarded-Host $http_host;
+          proxy_set_header X-Original-Method $request_method;
           proxy_set_header X-Forwarded-Proto $scheme;
           proxy_set_header X-Forwarded-Uri $request_uri;
-          proxy_set_header X-Original-Method $request_method;
         # --- Hopefully fixes n8n "Connection Lost" issues ---
         nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
         nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
