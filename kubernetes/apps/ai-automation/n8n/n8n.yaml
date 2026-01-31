@@ -183,7 +183,8 @@ spec:
       hosts:
         - host: n8n.${DOMAIN}
           paths:
-            - /
+            - path: /
+              pathType: Prefix
       tls:
         - secretName: wildcard-le-tls-cert
           hosts:
