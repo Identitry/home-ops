@@ -121,7 +121,7 @@ Nice hyper-converged stack on top of Talos!
 - PostgreSQL Operator (CNPG) - Database ✅
 - Maria DB Operator - Database ✅
 - FerretDB (MongoDB alternative on top of Postgres) ✅
-- MongoDB (Percona) ✅
+- MongoDB operator (Percona) ✅
 - Clickhouse Operator (Altinity) - Database ✅
 - Redis Operator (Spotahome) - Key-Value database ✅
 - Kafka Operator (Strimzi) - Distributed event streaming platform ✅
