@@ -31,7 +31,7 @@ Nodes will get their IP from DHCP, flagged as static in router.
 ### Kubernetes Nodes (Talos/CozyStack)
 
 Three schedulable control plane nodes.
-Operating System: Talos 1.10.6 opionated with CozyStack 0.36.0 (2025-09-17)
+Operating System: Talos 1.11.6 opionated with CozyStack 0.41.7 (2026-02-06)
 All nodes have Nut-Client installed and configured against TrueNAS-Stor.
 
 1. k8s01
@@ -121,6 +121,7 @@ Nice hyper-converged stack on top of Talos!
 - PostgreSQL Operator (CNPG) - Database ✅
 - Maria DB Operator - Database ✅
 - FerretDB (MongoDB alternative on top of Postgres) ✅
+- MongoDB (Percona) ✅
 - Clickhouse Operator (Altinity) - Database ✅
 - Redis Operator (Spotahome) - Key-Value database ✅
 - Kafka Operator (Strimzi) - Distributed event streaming platform ✅
