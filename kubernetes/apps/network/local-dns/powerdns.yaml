@@ -769,8 +769,6 @@ spec:
                   secretKeyRef:
                     name: powerdns-secret
                     key: BOOTSTRAP_EMAIL
-              - name: PA_PDNS_DB_NAME
-                value: public
               - name: PA_PDNS_API_URL
                 value: http://powerdns.local-dns.svc:8081
               - name: PA_PDNS_API_KEY
