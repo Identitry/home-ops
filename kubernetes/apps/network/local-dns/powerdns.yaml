@@ -635,7 +635,7 @@ spec:
           app:
             image:
               repository: docker.io/powerdns/pdns-auth-49
-              tag: "4.9.12@sha256:b2918e4fed8f67cb6201d0ffb0d32ad8b1f0b1f7aac5eff0fc5431c4900b6b2b"
+              tag: "4.9.13@sha256:375b016e89fb1d1f28ffecb3325e44e9156b7bb5b4dbac2a964e2ea0a7472dd6"
             args:
               - --config-dir=/etc/powerdns
             env:
