@@ -11,8 +11,12 @@ spec:
     {
       "cniVersion": "0.3.1",
       "name": "iot-vlan233",
-      "type": "bridge",
-      "bridge": "br233",
-      "promiscMode": true,
-      "ipam": {}
+      "plugins": [
+        {
+          "type": "bridge",
+          "bridge": "br233",
+          "promiscMode": true,
+          "disableContainerInterface": true
+        }
+      ]
     }
