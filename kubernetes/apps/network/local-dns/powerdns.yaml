@@ -526,7 +526,7 @@ spec:
             name: powerdns-schema
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/cloudnative-pg/cloudnative-pg/main/config/crd/bases/postgresql.cnpg.io_clusters.yaml
-# CloudNativePG Cluster — small footprint (1Gi) for PowerDNS
+# CloudNativePG Cluster for PowerDNS
 apiVersion: postgresql.cnpg.io/v1
 kind: Cluster
 metadata:
@@ -540,7 +540,7 @@ spec:
     podAntiAffinityType: preferred
 
   storage:
-    size: 1Gi
+    size: 8Gi
 
   bootstrap:
     initdb:
