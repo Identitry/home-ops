@@ -316,6 +316,7 @@ data:
                                       "perm_templ" integer,
                                       "active" integer,
                                       "use_ldap" integer,
+                                      "auth_method" character varying(20) DEFAULT 'sql' NOT NULL,
                                       CONSTRAINT "users_pkey" PRIMARY KEY ("id")
     ) WITH (oids = false);
 
@@ -710,7 +711,10 @@ spec:
                 set -e
                 if PGPASSWORD="$DB_PASSWORD" psql -h powerdns-db-rw.local-dns.svc -U "$DB_USERNAME" -d powerdns -tAc "SELECT 1 FROM pg_tables WHERE tablename='users';" | grep -q 1; then
                   echo "PowerAdmin schema already present";
-                  exit 0;
+                  echo "Running PowerAdmin compatibility migration checks...";
+                  PGPASSWORD="$DB_PASSWORD" psql -h powerdns-db-rw.local-dns.svc -U "$DB_USERNAME" -d powerdns -c "ALTER TABLE users ADD COLUMN IF NOT EXISTS auth_method VARCHAR(20) NOT NULL DEFAULT 'sql';"
+                  PGPASSWORD="$DB_PASSWORD" psql -h powerdns-db-rw.local-dns.svc -U "$DB_USERNAME" -d powerdns -c "UPDATE users SET auth_method='ldap' WHERE use_ldap=1;"
+                  exit 0
                 fi
                 echo "Applying PowerAdmin schema...";
                 PGPASSWORD="$DB_PASSWORD" psql -h powerdns-db-rw.local-dns.svc -U "$DB_USERNAME" -d powerdns -f /schema/poweradmin-pgsql-db-structure.sql
