@@ -57,7 +57,7 @@ spec:
     spec:
       architecture: amd64
       nodeSelector:
-        kubernetes.io/hostname: k8s02
+        kubernetes.io/hostname: k8s01
       domain:
         machine:
           type: q35
