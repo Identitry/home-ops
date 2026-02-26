@@ -91,7 +91,6 @@ spec:
             - name: iotvlan
               bridge: {}
               model: virtio
-              macAddress: "02:00:00:23:00:10"
       networks:
         - name: default
           pod: {}
@@ -111,15 +110,9 @@ spec:
             networkData: |
               version: 2
               ethernets:
-                lan0:
-                  match:
-                    macaddress: "02:00:00:00:00:10"
-                  set-name: enp1s0
+                enp1s0:
                   dhcp4: true
-                iot0:
-                  match:
-                    macaddress: "02:00:00:23:00:10"
-                  set-name: enp2s0
+                enp2s0:
                   dhcp4: false
                   addresses:
                     - 192.168.233.4/24
