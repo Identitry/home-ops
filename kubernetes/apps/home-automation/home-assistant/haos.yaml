@@ -74,7 +74,7 @@ spec:
             efi:
               secureBoot: false
         devices:
-          autoattachPodInterface: true
+          autoattachPodInterface: false
           disks:
             - name: rootdisk
               bootOrder: 1
@@ -84,13 +84,14 @@ spec:
               disk:
                 bus: virtio
           interfaces:
-            - name: default
-              masquerade: {}
+            - name: iotvlan
+              bridge: {}
               model: virtio
-              macAddress: "02:00:00:00:00:10"
+              macAddress: "02:00:00:22:00:10"
       networks:
-        - name: default
-          pod: {}
+        - name: iotvlan
+          multus:
+            networkName: default/iot-vlan222
       volumes:
         - name: rootdisk
           dataVolume:
