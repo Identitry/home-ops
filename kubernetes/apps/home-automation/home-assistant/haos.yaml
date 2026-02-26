@@ -113,6 +113,7 @@ spec:
                 enp1s0:
                   dhcp4: true
                   dhcp4-overrides:
+                    use-routes: false
                     route-metric: 300
                 enp2s0:
                   dhcp4: false
