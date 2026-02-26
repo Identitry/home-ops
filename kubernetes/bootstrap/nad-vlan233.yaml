@@ -11,8 +11,8 @@ spec:
     {
       "cniVersion": "0.3.1",
       "name": "iot-vlan233",
-      "type": "macvlan",
-      "master": "enp0s31f6.233",
-      "mode": "bridge",
+      "type": "bridge",
+      "bridge": "br233",
+      "promiscMode": true,
       "ipam": {}
     }
