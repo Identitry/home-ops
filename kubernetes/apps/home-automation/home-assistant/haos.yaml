@@ -112,10 +112,20 @@ spec:
               ethernets:
                 enp1s0:
                   dhcp4: true
+                  dhcp4-overrides:
+                    route-metric: 300
                 enp2s0:
                   dhcp4: false
                   addresses:
                     - 192.168.233.4/24
+                  routes:
+                    - to: 0.0.0.0/0
+                      via: 192.168.233.1
+                      metric: 90
+                  nameservers:
+                    addresses:
+                      - 192.168.233.1
+                      - 1.1.1.1
 ---
 apiVersion: v1
 kind: Service
