@@ -31,7 +31,7 @@ Nodes will get their IP from DHCP, flagged as static in router.
 ### Kubernetes Nodes (Talos/CozyStack)
 
 Three schedulable control plane nodes.
-Operating System: Talos 1.11.6 opionated with CozyStack 0.41.7 (2026-02-06)
+Operating System: Talos 1.11.6 opionated with CozyStack 0.41.9 (2026-03-01)
 All nodes have Nut-Client installed and configured against TrueNAS-Stor.
 
 1. k8s01
@@ -49,7 +49,7 @@ All nodes have Nut-Client installed and configured against TrueNAS-Stor.
 
 - Hostname: k8s02
 - IP: 102.168.222.22
-- Model:
+- Model: Dell Optiplex 5090M
 - CPU: Intel i5-10500T 2,3GHz (10:th gen, 6 cores/12 threads Q2 2020)
 - GPU: Intel UHD 630 iGPU
 - RAM: 64GB (2x 32GB Kingston Fury DDR4 3200MHz)
@@ -135,6 +135,8 @@ Nice hyper-converged stack on top of Talos!
 - Kamaji Operator (ControlPlane) ✅
 - Vertical Pod Autoscaler Operator ✅
 - Velero Operator - Backups to Minio on Stor (Needs to be enabled in cozy config "bundle-enable") ✅
+- Quadrant - Vector DB ✅
+- Harbor - Container registry ✅
 - and more...
 
 ### Initial cluster settings - Components/Bootstrap ✅

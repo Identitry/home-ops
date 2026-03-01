@@ -55,9 +55,7 @@ spec:
               ATUIN_DB_URI: sqlite:///config/atuin.db
               TZ: ${TZ}
             command:
-              - atuin
-              - server
-              - start
+              - /usr/local/bin/atuin-server
             ports:
               - name: http
                 containerPort: 8080
