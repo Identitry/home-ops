@@ -56,6 +56,8 @@ spec:
               TZ: ${TZ}
             command:
               - /usr/local/bin/atuin-server
+            args:
+              - start
             ports:
               - name: http
                 containerPort: 8080
