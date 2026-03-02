@@ -31,7 +31,7 @@ Nodes will get their IP from DHCP, flagged as static in router.
 ### Kubernetes Nodes (Talos/CozyStack)
 
 Three schedulable control plane nodes.
-Operating System: Talos 1.11.6 opionated with CozyStack 0.41.9 (2026-03-01)
+Operating System: Talos 1.11.6 opionated with CozyStack 1.0.0 (2026-03-02)
 All nodes have Nut-Client installed and configured against TrueNAS-Stor.
 
 1. k8s01
@@ -105,7 +105,6 @@ Also runs as NUT Server (UPS) and Minio server (S3 Storage).
 - intel-ice-firmware
 - nut-client (needs config)
 - zfs
-- lldpd (This is removed in Cozystack 0.37.5)
 
 ### CozyStack ✅
 
