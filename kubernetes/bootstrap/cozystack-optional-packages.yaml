@@ -1,0 +1,21 @@
+apiVersion: cozystack.io/v1alpha1
+kind: Package
+metadata:
+  name: cozystack.velero
+  namespace: cozy-system
+spec:
+  variant: default
+  components:
+    velero:
+      values:
+        tolerations:
+          - key: drbd.linbit.com/lost-quorum
+            operator: Exists
+---
+apiVersion: cozystack.io/v1alpha1
+kind: Package
+metadata:
+  name: cozystack.nfs-driver
+  namespace: cozy-system
+spec:
+  variant: default
