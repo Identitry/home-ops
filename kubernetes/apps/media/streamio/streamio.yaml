@@ -99,7 +99,7 @@ spec:
           app:
             image:
               repository: ghcr.io/elfhosted/stremio-web
-              tag: rolling@sha256:de20030d591000b871519899ccbcead9e958a8e1eb5e98d05b65e033286a7e2a
+              tag: rolling@sha256:d2795ad81e0892a4b31b1e0e1fb6626d0e86c4d29b27918ffbc770e04321ad91
               pullPolicy: IfNotPresent
             env:
               TZ: ${TZ}
