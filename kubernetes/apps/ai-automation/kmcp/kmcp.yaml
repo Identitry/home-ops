@@ -72,7 +72,7 @@ spec:
   values:
     image:
       repository: ghcr.io/kagent-dev/kmcp/controller
-      tag: "0.2.6@sha256:40332dac8e75a56795740856c8fa14dac4ee0b16ee43276410b5e1f20dd80d8e"
+      tag: "0.2.7@sha256:5161c682e4603c4c3ad50d62e5b300a639f4dfc2a76f08871324e43ccb1b1c00"
       pullPolicy: IfNotPresent
     controller:
       replicaCount: 1
