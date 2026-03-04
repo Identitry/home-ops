@@ -149,7 +149,7 @@ Settings to complete the cluster setup.
 - Cert-Manager cluster-issuer for Cloudflare ✅
 - Cert-Manager wildcard certificate for myk8s.se ✅
 - External Secrets Operator, connected to against Infisical SAAS. ✅
-- Intel Device Plugin Operator for iGPUs, will be removed when K8s 1.34 with stable DRA is deployed ✅
+- Intel Device Plugin Operator for iGPUs (current production path). DRA migration is under evaluation and should be piloted before replacing i915 extended resources. ☑️
 - Cozy NFS Driver (CSI NFS Driver for Kubernetes) - For being able to connect to storage on truenas-stor. ✅
 - Media NFS PVs (Read Write/Read Only) ✅
 - Reflector - Tool for syncing certs and config maps between namespaces, mainly use for syncing wildcard TLS cert. ✅
