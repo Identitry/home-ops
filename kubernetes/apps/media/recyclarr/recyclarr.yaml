@@ -57,10 +57,14 @@ data:
         quality_profiles:
           - name: SQP-1 (2160p)
 
+        # Recyclarr 8.x: quality definition uses dedicated field, and
+        # profile/custom-format templates are v4-prefixed.
+        quality_definition:
+          type: sqp-streaming
+
         include:
-          - template: radarr-quality-definition-sqp-streaming
-          - template: radarr-quality-profile-sqp-1-2160p-default
-          - template: radarr-custom-formats-sqp-1-2160p
+          - template: radarr-v4-quality-profile-sqp-1-2160p-default
+          - template: radarr-v4-custom-formats-sqp-1-2160p
 
         custom_formats:
           - trash_ids:

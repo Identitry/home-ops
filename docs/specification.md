@@ -31,7 +31,7 @@ Nodes will get their IP from DHCP, flagged as static in router.
 ### Kubernetes Nodes (Talos/CozyStack)
 
 Three schedulable control plane nodes.
-Operating System: Talos 1.11.6 opionated with CozyStack 1.0.0 (2026-03-02)
+Operating System: Talos 1.12.1 opionated with CozyStack 1.1.0 (2026-03-08)
 All nodes have Nut-Client installed and configured against TrueNAS-Stor.
 
 1. k8s01
@@ -44,6 +44,7 @@ All nodes have Nut-Client installed and configured against TrueNAS-Stor.
 - RAM: 64GB (2x 32GB Kingston Fury DDR4 3200Mhz)
 - Boot drive: 250GB SATA-SSD (PNY CS900)
 - Storage drive: 1TB NVME Storage Drive (Kingston Fury Renegade PCIe 4.0)
+- NIC: Intel i219-LM
 
 2. k8s02
 
@@ -55,6 +56,7 @@ All nodes have Nut-Client installed and configured against TrueNAS-Stor.
 - RAM: 64GB (2x 32GB Kingston Fury DDR4 3200MHz)
 - Boot drive: 250GB SATA-SSD (PNY CS900)
 - Storage drive: 1TB NVME (Kingston Fury Renegade PCIe 4.0)
+- NIC: Intel i219-LM
 
 3. k8s03
 
@@ -66,6 +68,7 @@ All nodes have Nut-Client installed and configured against TrueNAS-Stor.
 - RAM: 64GB (2x 32GB Kingston Fury DDR4 3200MHz)
 - Boot drive: 250GB SATA-SSD (PNY CS900)
 - Storage drive: 1TB NVME (Kingston Fury Renegade PCIe 4.0)
+- NIC: Intel I219-V
 
 ### External storage, TrueNAS Scale:
 
