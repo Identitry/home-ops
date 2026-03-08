@@ -21,8 +21,3 @@ spec:
       kind: Deployment
       name: external-secrets
       namespace: external-secrets
-    # Health check for wildcard TLS certificate in tenant-root namespace.
-    - apiVersion: v1
-      kind: Secret
-      name: wildcard-cert
-      namespace: tenant-root
