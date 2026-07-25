@@ -19,3 +19,22 @@ metadata:
   namespace: cozy-system
 spec:
   variant: default
+---
+apiVersion: cozystack.io/v1alpha1
+kind: Package
+metadata:
+  name: cozystack.vertical-pod-autoscaler
+  namespace: cozy-system
+spec:
+  variant: default
+  components:
+    vertical-pod-autoscaler:
+      values:
+        vertical-pod-autoscaler:
+          recommender:
+            resources:
+              requests:
+                cpu: 100m
+                memory: 1Gi
+              limits:
+                memory: 1Gi
