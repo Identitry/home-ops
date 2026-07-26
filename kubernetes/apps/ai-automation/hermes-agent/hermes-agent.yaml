@@ -33,6 +33,176 @@ data:
     ]
     urllib.request.install_opener(_opener)
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hermes-agent-config-bootstrap
+  namespace: ai-automation
+data:
+  ensure-custom-providers.py: |
+    from pathlib import Path
+    import yaml
+
+
+    CONFIG_PATH = Path("/opt/data/config.yaml")
+
+    WANTED = {
+        "ollama-fast": {
+            "name": "ollama-fast",
+            "base_url": "http://ollama-fast.ai-automation.svc.cozy.local:11434",
+            "model": "llama3.2:3b",
+            "models": {
+                "llama3.2:3b": {"context_length": 131072},
+                "qwen3:1.7b": {"context_length": 40960},
+            },
+        },
+        "ollama-default": {
+            "name": "ollama-default",
+            "base_url": "http://ollama-default.ai-automation.svc.cozy.local:11434",
+            "model": "llama3.1:8b",
+            "models": {
+                "llama3.1:8b": {"context_length": 131072},
+            },
+        },
+    }
+    AUXILIARY = {
+        "compression": {
+            "provider": "openrouter",
+            "model": "openai/gpt-5-mini",
+            "base_url": "",
+            "api_key": "",
+            "timeout": 120,
+        },
+        "web_extract": {
+            "provider": "openrouter",
+            "model": "openai/gpt-5-mini",
+            "base_url": "",
+            "api_key": "",
+            "timeout": 360,
+        },
+        "mcp": {
+            "provider": "openrouter",
+            "model": "openai/gpt-5-mini",
+            "base_url": "",
+            "api_key": "",
+            "timeout": 30,
+        },
+        "approval": {
+            "provider": "openrouter",
+            "model": "openai/gpt-5-mini",
+            "base_url": "",
+            "api_key": "",
+            "timeout": 30,
+        },
+        "title_generation": {
+            "provider": "custom:ollama-fast",
+            "model": "llama3.2:3b",
+            "base_url": "",
+            "api_key": "",
+            "timeout": 30,
+        },
+        "triage_specifier": {
+            "provider": "custom:ollama-fast",
+            "model": "llama3.2:3b",
+            "base_url": "",
+            "api_key": "",
+            "timeout": 120,
+        },
+        "kanban_decomposer": {
+            "provider": "custom:ollama-fast",
+            "model": "llama3.2:3b",
+            "base_url": "",
+            "api_key": "",
+            "timeout": 180,
+        },
+        "skills_hub": {
+            "provider": "custom:ollama-default",
+            "model": "llama3.1:8b",
+            "base_url": "",
+            "api_key": "",
+            "timeout": 30,
+        },
+        "profile_describer": {
+            "provider": "custom:ollama-default",
+            "model": "llama3.1:8b",
+            "base_url": "",
+            "api_key": "",
+            "timeout": 60,
+        },
+        "curator": {
+            "provider": "custom:ollama-default",
+            "model": "llama3.1:8b",
+            "base_url": "",
+            "api_key": "",
+            "timeout": 600,
+        },
+    }
+
+
+    with CONFIG_PATH.open() as f:
+        config = yaml.safe_load(f) or {}
+
+    providers = config.get("custom_providers")
+    if not isinstance(providers, list):
+        providers = []
+
+    by_name = {
+        str(entry.get("name", "")).strip(): entry
+        for entry in providers
+        if isinstance(entry, dict)
+    }
+
+    changed = False
+    for name, wanted in WANTED.items():
+        existing = by_name.get(name)
+        if existing is None:
+            providers.append(wanted)
+            changed = True
+            continue
+
+        for key in ("name", "base_url", "model"):
+            if existing.get(key) != wanted[key]:
+                existing[key] = wanted[key]
+                changed = True
+
+        models = existing.get("models")
+        if not isinstance(models, dict):
+            models = {}
+
+        for model_name, model_cfg in wanted["models"].items():
+            if models.get(model_name) != model_cfg:
+                models[model_name] = model_cfg
+                changed = True
+
+        existing["models"] = models
+
+    if changed:
+        config["custom_providers"] = providers
+
+    auxiliary = config.get("auxiliary")
+    if not isinstance(auxiliary, dict):
+        auxiliary = {}
+
+    for slot, wanted in AUXILIARY.items():
+        current = auxiliary.get(slot)
+        if not isinstance(current, dict):
+            auxiliary[slot] = dict(wanted)
+            changed = True
+            continue
+        for key, value in wanted.items():
+            if current.get(key) != value:
+                current[key] = value
+                changed = True
+
+    if changed:
+        config["custom_providers"] = providers
+        config["auxiliary"] = auxiliary
+        with CONFIG_PATH.open("w") as f:
+            yaml.safe_dump(config, f, sort_keys=False, allow_unicode=False)
+        print("updated Hermes config bootstrap state")
+    else:
+        print("Hermes config already up to date")
+---
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
@@ -64,6 +234,9 @@ spec:
     - secretKey: HERMES_DASHBOARD_OIDC_CLIENT_SECRET
       remoteRef:
         key: /HERMES/DASHBOARD_OIDC_CLIENT_SECRET
+    - secretKey: OPENROUTER_API_KEY
+      remoteRef:
+        key: /HERMES/OPENROUTER_API_KEY
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
@@ -94,6 +267,18 @@ spec:
       hermes-agent:
         annotations:
           reloader.stakater.com/auto: "true"
+        initContainers:
+          ensure-hermes-config:
+            image:
+              repository: nousresearch/hermes-agent
+              tag: v2026.7.7.2@sha256:3db34ce19adfa080736a2a3feb0316dbcccc588faa9afe7fd8ae1c03b4f1a53a
+              pullPolicy: IfNotPresent
+            command:
+              - /opt/hermes/.venv/bin/python
+              - /opt/hermes-bootstrap/ensure-custom-providers.py
+            securityContext:
+              runAsUser: 0
+              runAsGroup: 0
         containers:
           app:
             image:
@@ -153,6 +338,13 @@ spec:
         globalMounts:
           - path: /opt/hermes-overrides/sitecustomize.py
             subPath: sitecustomize.py
+            readOnly: true
+      hermes-bootstrap:
+        type: configMap
+        name: hermes-agent-config-bootstrap
+        globalMounts:
+          - path: /opt/hermes-bootstrap/ensure-custom-providers.py
+            subPath: ensure-custom-providers.py
             readOnly: true
 
     service:
