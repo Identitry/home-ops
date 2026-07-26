@@ -12,6 +12,27 @@ spec:
       storage: 5Gi
   storageClassName: local
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hermes-agent-python-overrides
+  namespace: ai-automation
+data:
+  sitecustomize.py: |
+    """Cluster-local Python startup overrides for Hermes."""
+
+    import urllib.request
+
+
+    # Cloudflare is returning HTTP 403 to Python's default urllib user agent
+    # during JWKS fetches. Install a browser-like default opener so Hermes'
+    # PyJWKClient can resolve Authentik keys reliably.
+    _opener = urllib.request.build_opener()
+    _opener.addheaders = [
+        ("User-Agent", "Mozilla/5.0 Hermes-JWKS-Workaround"),
+    ]
+    urllib.request.install_opener(_opener)
+---
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
@@ -93,6 +114,8 @@ spec:
                 value: "9119"
               - name: HERMES_DASHBOARD_PUBLIC_URL
                 value: "https://hermes.${DOMAIN}"
+              - name: PYTHONPATH
+                value: "/opt/hermes-overrides"
               - name: HERMES_DASHBOARD_OIDC_ISSUER
                 value: "https://auth.${DOMAIN}/application/o/hermes/"
               - name: HERMES_DASHBOARD_OIDC_SCOPES
@@ -124,6 +147,13 @@ spec:
         existingClaim: hermes-agent-data
         globalMounts:
           - path: /opt/data
+      python-overrides:
+        type: configMap
+        name: hermes-agent-python-overrides
+        globalMounts:
+          - path: /opt/hermes-overrides/sitecustomize.py
+            subPath: sitecustomize.py
+            readOnly: true
 
     service:
       hermes-agent:
