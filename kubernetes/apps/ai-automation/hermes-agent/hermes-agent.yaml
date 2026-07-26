@@ -158,13 +158,19 @@ data:
         "reference_temperature": None,
         "aggregator_temperature": None,
         "max_tokens": 4096,
-        "reference_max_tokens": 600,
+        "reference_max_tokens": 800,
         "fanout": "user_turn",
     }
 
 
     with CONFIG_PATH.open() as f:
         config = yaml.safe_load(f) or {}
+
+    changed = False
+
+    if "toolsets" in config:
+        del config["toolsets"]
+        changed = True
 
     providers = config.get("custom_providers")
     if not isinstance(providers, list):
@@ -176,7 +182,6 @@ data:
         if isinstance(entry, dict)
     }
 
-    changed = False
     for name, wanted in WANTED.items():
         existing = by_name.get(name)
         if existing is None:
