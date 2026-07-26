@@ -391,7 +391,7 @@ spec:
               - name: HERMES_DASHBOARD_OIDC_ISSUER
                 value: "https://auth.${DOMAIN}/application/o/hermes/"
               - name: HERMES_DASHBOARD_OIDC_SCOPES
-                value: "openid profile email"
+                value: "openid profile email offline_access"
             envFrom:
               - secretRef:
                   name: hermes-agent-env
