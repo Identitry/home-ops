@@ -37,6 +37,12 @@ spec:
     - secretKey: HOME_ASSISTANT_URL
       remoteRef:
         key: /HERMES/HOME_ASSISTANT_URL
+    - secretKey: HERMES_DASHBOARD_OIDC_CLIENT_ID
+      remoteRef:
+        key: /HERMES/DASHBOARD_OIDC_CLIENT_ID
+    - secretKey: HERMES_DASHBOARD_OIDC_CLIENT_SECRET
+      remoteRef:
+        key: /HERMES/DASHBOARD_OIDC_CLIENT_SECRET
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
@@ -81,12 +87,16 @@ spec:
                 value: ${TZ}
               - name: HERMES_DASHBOARD
                 value: "1"
-              - name: HERMES_DASHBOARD_INSECURE
-                value: "1"
               - name: HERMES_DASHBOARD_HOST
                 value: 0.0.0.0
               - name: HERMES_DASHBOARD_PORT
                 value: "9119"
+              - name: HERMES_DASHBOARD_PUBLIC_URL
+                value: "https://hermes.${DOMAIN}"
+              - name: HERMES_DASHBOARD_OIDC_ISSUER
+                value: "https://auth.${DOMAIN}/application/o/hermes/"
+              - name: HERMES_DASHBOARD_OIDC_SCOPES
+                value: "openid profile email"
             envFrom:
               - secretRef:
                   name: hermes-agent-env
