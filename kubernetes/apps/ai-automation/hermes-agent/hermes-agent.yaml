@@ -138,6 +138,30 @@ data:
         },
     }
 
+    MOA_PRESET_NAME = "homelab-balanced"
+    MOA_PRESET = {
+        "enabled": True,
+        "reference_models": [
+            {
+                "provider": "custom:ollama-fast",
+                "model": "llama3.2:3b",
+            },
+            {
+                "provider": "openrouter",
+                "model": "google/gemini-2.5-flash-lite",
+            },
+        ],
+        "aggregator": {
+            "provider": "openrouter",
+            "model": "openai/gpt-5.1-codex-mini",
+        },
+        "reference_temperature": None,
+        "aggregator_temperature": None,
+        "max_tokens": 4096,
+        "reference_max_tokens": 600,
+        "fanout": "user_turn",
+    }
+
 
     with CONFIG_PATH.open() as f:
         config = yaml.safe_load(f) or {}
@@ -194,9 +218,31 @@ data:
                 current[key] = value
                 changed = True
 
+    moa = config.get("moa")
+    if not isinstance(moa, dict):
+        moa = {}
+
+    presets = moa.get("presets")
+    if not isinstance(presets, dict):
+        presets = {}
+
+    current_preset = presets.get(MOA_PRESET_NAME)
+    if current_preset != MOA_PRESET:
+        presets[MOA_PRESET_NAME] = dict(MOA_PRESET)
+        changed = True
+
+    if moa.get("default_preset") != MOA_PRESET_NAME:
+        moa["default_preset"] = MOA_PRESET_NAME
+        changed = True
+
+    if moa.get("presets") != presets:
+        moa["presets"] = presets
+        changed = True
+
     if changed:
         config["custom_providers"] = providers
         config["auxiliary"] = auxiliary
+        config["moa"] = moa
         with CONFIG_PATH.open("w") as f:
             yaml.safe_dump(config, f, sort_keys=False, allow_unicode=False)
         print("updated Hermes config bootstrap state")
