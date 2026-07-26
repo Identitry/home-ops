@@ -161,6 +161,15 @@ data:
         "reference_max_tokens": 800,
         "fanout": "user_turn",
     }
+    DISPLAY = {
+        "personality": "helpful",
+    }
+    SECURITY = {
+        "tirith_fail_open": False,
+    }
+    SESSIONS = {
+        "auto_prune": True,
+    }
 
 
     with CONFIG_PATH.open() as f:
@@ -223,6 +232,30 @@ data:
                 current[key] = value
                 changed = True
 
+    display = config.get("display")
+    if not isinstance(display, dict):
+        display = {}
+    for key, value in DISPLAY.items():
+        if display.get(key) != value:
+            display[key] = value
+            changed = True
+
+    security = config.get("security")
+    if not isinstance(security, dict):
+        security = {}
+    for key, value in SECURITY.items():
+        if security.get(key) != value:
+            security[key] = value
+            changed = True
+
+    sessions = config.get("sessions")
+    if not isinstance(sessions, dict):
+        sessions = {}
+    for key, value in SESSIONS.items():
+        if sessions.get(key) != value:
+            sessions[key] = value
+            changed = True
+
     moa = config.get("moa")
     if not isinstance(moa, dict):
         moa = {}
@@ -247,6 +280,9 @@ data:
     if changed:
         config["custom_providers"] = providers
         config["auxiliary"] = auxiliary
+        config["display"] = display
+        config["security"] = security
+        config["sessions"] = sessions
         config["moa"] = moa
         with CONFIG_PATH.open("w") as f:
             yaml.safe_dump(config, f, sort_keys=False, allow_unicode=False)
