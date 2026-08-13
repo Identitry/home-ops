@@ -133,6 +133,12 @@ spec:
         globalMounts:
           - path: /media
             readOnly: true
+      media-discover:
+        type: persistentVolumeClaim
+        existingClaim: media-rwx
+        globalMounts:
+          - path: /media/discover
+            subPath: discover
       tmpfs:
         type: emptyDir
         medium: Memory
