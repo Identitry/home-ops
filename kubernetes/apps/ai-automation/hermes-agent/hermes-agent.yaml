@@ -358,7 +358,7 @@ spec:
           ensure-hermes-config:
             image:
               repository: nousresearch/hermes-agent
-              tag: v2026.7.7.2@sha256:3db34ce19adfa080736a2a3feb0316dbcccc588faa9afe7fd8ae1c03b4f1a53a
+              tag: v2026.8.16.2@sha256:00a3150dc11dbb3293ed524d1f905c84d3d0c934725125e0b29abe196288fa98
               pullPolicy: IfNotPresent
             command:
               - /opt/hermes/.venv/bin/python
@@ -370,7 +370,7 @@ spec:
           app:
             image:
               repository: nousresearch/hermes-agent
-              tag: v2026.7.7.2@sha256:3db34ce19adfa080736a2a3feb0316dbcccc588faa9afe7fd8ae1c03b4f1a53a
+              tag: v2026.8.16.2@sha256:00a3150dc11dbb3293ed524d1f905c84d3d0c934725125e0b29abe196288fa98
               pullPolicy: IfNotPresent
             args:
               - gateway
