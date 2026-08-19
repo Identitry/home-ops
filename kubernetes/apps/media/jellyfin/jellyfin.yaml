@@ -127,6 +127,8 @@ spec:
         existingClaim: jellyfin-cache
         globalMounts:
           - path: /config/metadata
+          - path: /cache
+            subPath: cache
       media:
         type: persistentVolumeClaim
         existingClaim: media-rox
@@ -146,8 +148,6 @@ spec:
         advancedMounts:
           jellyfin:
             app:
-              - path: /cache
-                subPath: cache
               - path: /config/log
                 subPath: log
               - path: /tmp
